@@ -11,7 +11,19 @@ import { CrearEquipoComponent } from './crear-equipo/crear-equipo.component';
 import { AgendaComponent } from './agenda/agenda.component';
 import { ActualizarOrdenComponent } from './actualizar-orden/actualizar-orden.component';
 import { ParametrosComponent } from './parametros/parametros.component';
-
+import { Routes, RouterModule } from '@angular/router';
+import { MenuComponent } from './menu/menu.component';
+const appRoutes: Routes = [
+  {path: '', component: HomeComponent},
+  {path: 'home', component: HomeComponent},
+  {path: 'login', component: LoginComponent},
+  {path: 'agenda', component: AgendaComponent},
+  {path: 'actualizar-orden', component: ActualizarOrdenComponent},
+  {path: 'crear-cliente', component: CrearClienteComponent},
+  {path: 'crear-equipo', component: CrearEquipoComponent},
+  {path: 'crear-usuario', component: CrearUsuarioComponent},
+  {path: 'parametros', component: ParametrosComponent}
+];
 @NgModule({
   declarations: [
     AppComponent,
@@ -22,11 +34,13 @@ import { ParametrosComponent } from './parametros/parametros.component';
     CrearEquipoComponent,
     AgendaComponent,
     ActualizarOrdenComponent,
-    ParametrosComponent
+    ParametrosComponent,
+    MenuComponent
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    RouterModule.forRoot(appRoutes)
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -1,3 +1,18 @@
-<p>
-  home works!
-</p>
+
+<h1>HOME</h1>
+<h3>Amigos</h3>
+<ng-container *ngFor="let user of friends; let i = index">
+  <p *ngIf="user.friend" >
+    {{i+1}}. {{user.nick}} - {{user.email}}
+  </p>
+</ng-container>
+
+<h3>No agregados</h3>
+<ng-container *ngFor="let user of friends; let i = index">
+  <p *ngIf="!user.friend" >
+    {{i+1}}. {{user.nick}} - {{user.email}}
+  </p>
+</ng-container>
+
+
+
