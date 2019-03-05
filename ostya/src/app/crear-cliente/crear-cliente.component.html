@@ -1,3 +1,71 @@
-<p>
-  crear-cliente works!
-</p>
+<div class="container">
+  <h1>CREAR CLIENTE</h1>
+<form>
+  <!-- Primera fila -->
+  <div class="form-row">
+    <div class="form-group col-md-2">
+      <label for="inputId">Identificacion</label>
+      <input type="number" class="form-control" id="inputId" placeholder="Identificacion" required [(ngModel)]="cliente.identificacion" name="identificacion">
+    </div>
+    <div class="form-group col-md-6">
+      <label for="inputNombre">Nombre</label>
+      <input type="text" class="form-control" id="inputNombre" placeholder="Nombre" required [(ngModel)]="cliente.nombre" name="nombre">
+    </div>
+    <div class="form-group col-md-4">
+      <label for="inputCorreo">Correo</label>
+      <input type="email" class="form-control" id="inputCorreo" placeholder="Correo" required [(ngModel)]="cliente.correo" name="correo">
+    </div>
+  </div>
+  <!-- Segunda Fila -->
+  <div class="form-row">
+      <div class="form-group col-md-8">
+        <label for="inputDir">Direccion</label>
+        <input type="text" class="form-control" id="inputDir" placeholder="Direccion" required [(ngModel)]="cliente.direccion" name="direccion">
+      </div>
+      <div class="form-group col-md-2">
+        <label for="inputTel">Telefono</label>
+        <input type="text" class="form-control" id="inputTel" placeholder="Telefono" required [(ngModel)]="cliente.telefono" name="telefono">
+      </div>
+      <div class="form-group col-md-2">
+        <label for="inputCel">Celular</label>
+        <input type="text" class="form-control" id="inputCel" placeholder="Celular" required [(ngModel)]="cliente.celular" name="celular">
+      </div>
+    </div>
+
+  <div class="form-row">
+    <div class="form-group col-md-5">
+      <label for="inputContact">Contacto</label>
+      <input type="text" class="form-control" id="inputContact" placeholder="Contacto" [(ngModel)]="cliente.contacto" name="contacto">
+    </div>
+    <div class="form-group col-md-3">
+      <label for="inputTipo">State</label>
+      <select id="inputTipo" class="form-control" required [(ngModel)]="cliente.tipo" name="tipo">
+        <option selected>Seleccione...</option>
+        <option>Persona Natural</option>
+        <option>Persona Juridica</option>
+      </select>
+    </div>
+    <div class="form-group col-md-2">
+      <label for="inputLat">Latitud</label>
+      <input type="number" class="form-control" id="inputLat" placeholder="Latitud" [(ngModel)]="cliente.latitud" name="latitud">
+    </div>
+    <div class="form-group col-md-2">
+      <label for="inputLong">Longitud</label>
+      <input type="number" class="form-control" id="inputLong" placeholder="Longitud" [(ngModel)]="cliente.logitud" name="longitud">
+    </div>
+  </div>
+
+
+  <div class="form-group">
+    <div class="form-check">
+      <input class="form-check-input" type="checkbox" id="accesoOstya">
+      <label class="form-check-label" for="accesoOstya">
+        Dar acceso a Ostya.
+      </label>
+    </div>
+  </div>
+
+
+  <button type="submit" class="btn btn-primary" (click)="guardarCliente()">Crear Cliente</button>
+</form>
+</div>
