@@ -1,27 +1,36 @@
 <div class="container">
   <h1>CREAR CLIENTE</h1>
-<form>
+<form [formGroup]="formGroup" (validSubmit)="guardarCliente()">
   <!-- Primera fila -->
-  <div class="form-row">    
+  <div class="form-row">
     <div class="form-group col-md-2">
       <label for="inputId">Identificacion</label>
-      <input type="number" class="form-control" id="inputId" placeholder="Identificacion" required [(ngModel)]="cliente.id" name="identificacion" >
+      <input type="number" class="form-control" formControlName="Id" placeholder="Identificacion" [(ngModel)]="cliente.id" name="identificacion">
     </div>
-    <div class="form-group col-md-6">
+     <div class="form-group col-md-6">
       <label for="inputNombre">Nombre</label>
-      <input type="text" class="form-control" id="inputNombre" placeholder="Nombre" required [(ngModel)]="cliente.nombre" name="nombre">
+      <input type="text" class="form-control" formControlName="Nombre" placeholder="Nombre" [(ngModel)]="cliente.nombre" name="Nombre">
     </div>
-    <div class="form-group col-md-4">
+    <!--<div class="form-group col-md-4">
       <label for="inputCorreo">Correo</label>
-      <input type="email" class="form-control" id="inputCorreo" placeholder="Correo" required [(ngModel)]="cliente.correo" name="correo">
-    </div>
+      <input type="email" class="form-control" id="inputCorreo" placeholder="Correo" required [(ngModel)]="cliente.correo" name="correo" #name3="ngModel">
+      <div *ngIf="name3.invalid && (name2.dirty || name2.touched)" class="alert alert-danger">
+          <div *ngIf="name3.errors.required">
+            Requerido.
+          </div>
+          <div *ngIf="name3.errors.minlength">
+              6 digitos minimo.
+          </div>
+        </div>
+    </div> -->
+
   </div>
-  <!-- Segunda fila -->                  
-  <div class="form-row">
+  <!-- Segunda fila -->
+  <!-- <div class="form-row">
     <div class="form-group col-md-8">
       <label for="inputDir">Direccion</label>
       <input type="text" class="form-control" id="inputDir" placeholder="Direccion" required [(ngModel)]="cliente.direcciones[0]" name="direccion">
-    </div> 
+    </div>
     <div class="form-group col-md-2">
       <label for="inputTel">Telefono</label>
       <input type="text" class="form-control" id="inputTel" placeholder="Telefono" required [(ngModel)]="cliente.telefono" name="telefono">
@@ -30,9 +39,9 @@
       <label for="inputCel">Celular</label>
       <input type="text" class="form-control" id="inputCel" placeholder="Celular" required [(ngModel)]="cliente.celular" name="celular">
     </div>
-  </div>
+  </div> -->
 <!-- Tercera fila -->
-  <div class="form-row">
+  <!-- <div class="form-row">
     <div class="form-group col-md-5">
       <label for="inputContact">Contacto</label>
       <input type="text" class="form-control" id="inputContact" placeholder="Contacto" [(ngModel)]="cliente.contacto" name="contacto">
@@ -53,15 +62,33 @@
       <label for="inputLong">Longitud</label>
       <input type="number" class="form-control" id="inputLong" placeholder="Longitud" [(ngModel)]="cliente.coordenadas[1]" name="longitud">
     </div>
-  </div>
+  </div> -->
 <!-- Cuarta fila -->
-  <div class="form-group">
+  <!-- <div class="form-group">
     <div class="form-check">
       <input class="form-check-input" type="checkbox" name="accesoOstya" [(ngModel)]="cliente.acceder">
       <label class="form-check-label" for="accesoOstya">
         Dar acceso a Ostya.
       </label>
     </div>
-  </div> 
-  <button type="submit" class="btn btn-primary" (click)="guardarCliente()">Crear Cliente</button>
+  </div> -->
+  <div *ngIf="formGroup.status == 'VALID'">
+    <button type="submit" class="btn btn-primary">Crear Cliente</button>
+  </div>
+  <div *ngIf="formGroup.status == 'INVALID'">
+    <button type="submit" class="btn btn-danger" (click)="onReset()">Reset</button>
+  </div>
+
+
 </form>
+<!-- <div class="container">
+
+    <h3>CLIENTES ACTUALES</h3>
+    <ul class="list-group">
+      <ng-container *ngFor="let cliente of clientesfire">
+        <li *ngIf="cliente.identificacion == 73579100">{{cliente.identificacion}}</li>
+      </ng-container>
+
+
+    </ul>
+</div> -->

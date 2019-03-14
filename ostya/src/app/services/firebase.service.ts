@@ -11,7 +11,10 @@ export class FirebaseService {
 
   public guardarCliente(cliente){
     console.log(cliente);
-   // this.afBD.database.ref('clientes/'+ cliente.identificacion).set(cliente);
+   this.afBD.database.ref('clientes/'+ cliente.identificacion).set(cliente);
+  }
+  public getCliente(){
+    return this.afBD.list('clientes/');
   }
   constructor(private afBD:AngularFireDatabase) { }
 }

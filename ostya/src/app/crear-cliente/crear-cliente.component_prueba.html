@@ -1,0 +1,139 @@
+<!--
+<div class="container">
+  <h1>CREAR CLIENTE</h1>
+<form name="formGroup">
+   Primera fila -->
+  <!-- <div class="form-row">
+    <div class="form-group col-md-2">
+      <label for="Id">Identificacion</label>
+      <input type="number" class="form-control" placeholder="Identificacion" [(ngModel)]="cliente.id" name="Id" formControlName="Id">
+        <span>error: {{ getError('Id')}}</span> --> -->
+          <!-- <div *ngIf="name.invalid && (name.dirty || name.touched)" class="alert alert-danger">
+          <div *ngIf="name.errors.required">
+            Requerido.
+          </div>
+        </div> -->
+    <!-- </div>
+    <div class="form-group col-md-6"> -->
+      <!-- <label for="Nombre">Nombre</label>
+      <input type="text" class="form-control" placeholder="Nombre" [(ngModel)]="cliente.nombre" name="Nombre">
+      <div>
+        <span>{{ getError('Nombre')}}</span>
+      </div> -->
+      <!-- <div *ngIf="name2.invalid && (name2.dirty || name2.touched)" class="alert alert-danger">
+          <div *ngIf="name2.errors.required">
+            Requerido.
+          </div>
+          <div *ngIf="name2.errors.minlength">
+              6 digitos minimo.
+          </div>
+        </div> -->
+    <!-- </div>
+    <div class="form-group col-md-4">
+      <label for="Correo">Correo</label>
+      <input type="email" class="form-control" placeholder="Correo" [(ngModel)]="cliente.correo" name="Correo"> -->
+      <!-- <div *ngIf="name3.invalid && (name2.dirty || name2.touched)" class="alert alert-danger">
+          <div *ngIf="name3.errors.required">
+            Requerido.
+          </div>
+          <div *ngIf="name3.errors.minlength">
+              6 digitos minimo.
+          </div>
+        </div> -->
+    <!-- </div>
+
+  </div> -->
+  <!-- Segunda fila -->
+  <!-- <div class="form-row">
+    <div class="form-group col-md-8">
+      <label for="Dir">Direccion</label>
+      <input type="text" class="form-control" placeholder="Direccion" [(ngModel)]="cliente.direcciones[0]" name="Dir">
+    </div>
+    <div class="form-group col-md-2">
+      <label for="Tel">Telefono</label>
+      <input type="number" class="form-control" placeholder="Telefono" [(ngModel)]="cliente.telefono" name="Tel">
+    </div>
+    <div class="form-group col-md-2">
+      <label for="Cel">Celular</label>
+      <input type="text" class="form-control" placeholder="Celular" [(ngModel)]="cliente.celular" name="Cel">
+    </div>
+  </div> -->
+<!-- Tercera fila -->
+  <!-- <div class="form-row">
+    <div class="form-group col-md-5">
+      <label for="Contact">Contacto</label>
+      <input type="text" class="form-control" placeholder="Contacto" [(ngModel)]="cliente.contacto" name="Contact">
+    </div>
+    <div class="form-group col-md-3">
+      <label for="Tipo">State</label>
+      <select class="form-control" [(ngModel)]="cliente.tipo" name="Tipo">
+        <option selected>Persona Natural</option>
+        <option>Persona Juridica</option>
+      </select>
+    </div>
+    <div class="form-group col-md-2">
+      <label for="Lat">Latitud</label>
+      <input type="number" class="form-control" placeholder="Latitud" [(ngModel)]="cliente.coordenadas[0]" name="Lat">
+    </div>
+    <div class="form-group col-md-2">
+      <label for="Long">Longitud</label>
+      <input type="number" class="form-control" placeholder="Longitud" [(ngModel)]="cliente.coordenadas[1]" name="Long">
+    </div>
+  </div> -->
+<!-- Cuarta fila -->
+  <!-- <div class="form-group">
+    <div class="form-check">
+      <input class="form-check-input" type="checkbox" name="accesoOstya" [(ngModel)]="cliente.acceder">
+      <label class="form-check-label" for="accesoOstya">
+        Dar acceso a Ostya.
+      </label>
+    </div>
+  </div>
+  <button type="submit" class="btn btn-primary" [disabled]="formGroup.invalid" (click)="guardarCliente()">Crear Cliente</button>
+</form>
+<hr>
+<div class="container">
+    <h3>CLIENTES ACTUALES</h3>
+    <ul class="list-group">
+      <ng-container *ngFor="let cliente of clientesfire">
+        <li *ngIf="cliente.identificacion == 73579100">{{cliente.identificacion}}</li>
+      </ng-container>
+    </ul>
+</div> -->
+<hr>
+<h2>
+  User registration
+</h2>
+<form [formGroup]="formGroup">
+  <section>
+    <label for="registeredOn">Registered On</label>
+    <input name="registeredOn"
+           formControlName="registeredOn"
+           type="date" />
+  </section>
+  <section>
+    <label for="Nombre">Name</label>
+    <input name="Nombre"
+           formControlName="Nombre"
+           type="text" />
+    <span>{{ getError('Nombre')}}</span>
+  </section>
+  <section>
+    <label for="Correo">E-mail</label>
+    <input name="Correo"
+           formControlName="Correo"
+           type="email" />
+    <span>{{ getError('Correo')}}</span>
+  </section>
+  <section>
+    <label for="password">Password</label>
+    <input name="password"
+           formControlName="password"
+           type="password" />
+    <span>{{ getError('password')}}</span>
+  </section>
+  <section>
+    <button
+            [disabled]="formGroup.invalid">Register me!</button>
+  </section>
+</form>
