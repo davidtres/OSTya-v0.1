@@ -11,67 +11,58 @@
       <label for="inputNombre">Nombre</label>
       <input type="text" class="form-control" formControlName="Nombre" placeholder="Nombre" [(ngModel)]="cliente.nombre" name="Nombre">
     </div>
-    <!--<div class="form-group col-md-4">
-      <label for="inputCorreo">Correo</label>
-      <input type="email" class="form-control" id="inputCorreo" placeholder="Correo" required [(ngModel)]="cliente.correo" name="correo" #name3="ngModel">
-      <div *ngIf="name3.invalid && (name2.dirty || name2.touched)" class="alert alert-danger">
-          <div *ngIf="name3.errors.required">
-            Requerido.
-          </div>
-          <div *ngIf="name3.errors.minlength">
-              6 digitos minimo.
-          </div>
-        </div>
-    </div> -->
+    <div class="form-group col-md-4">
+      <label for="Correo">Correo</label>
+      <input type="email" class="form-control" formControlName="Correo" placeholder="Correo" [(ngModel)]="cliente.correo" name="Correo">
+    </div>
 
   </div>
   <!-- Segunda fila -->
-  <!-- <div class="form-row">
+  <div class="form-row">
     <div class="form-group col-md-8">
-      <label for="inputDir">Direccion</label>
-      <input type="text" class="form-control" id="inputDir" placeholder="Direccion" required [(ngModel)]="cliente.direcciones[0]" name="direccion">
+      <label for="Dir">Direccion</label>
+      <input type="text" class="form-control" formControlName="Dir" placeholder="Direccion" [(ngModel)]="cliente.direcciones[0]" name="Dir">
     </div>
     <div class="form-group col-md-2">
-      <label for="inputTel">Telefono</label>
-      <input type="text" class="form-control" id="inputTel" placeholder="Telefono" required [(ngModel)]="cliente.telefono" name="telefono">
+      <label for="Tel">Telefono</label>
+      <input type="text" class="form-control" formControlName="Tel" placeholder="Telefono" [(ngModel)]="cliente.telefono" name="Tel">
     </div>
     <div class="form-group col-md-2">
-      <label for="inputCel">Celular</label>
-      <input type="text" class="form-control" id="inputCel" placeholder="Celular" required [(ngModel)]="cliente.celular" name="celular">
+      <label for="Cel">Celular</label>
+      <input type="text" class="form-control" formControlName="Cel" placeholder="Celular" [(ngModel)]="cliente.celular" name="Cel">
     </div>
-  </div> -->
+  </div>
 <!-- Tercera fila -->
-  <!-- <div class="form-row">
+  <div class="form-row">
     <div class="form-group col-md-5">
-      <label for="inputContact">Contacto</label>
-      <input type="text" class="form-control" id="inputContact" placeholder="Contacto" [(ngModel)]="cliente.contacto" name="contacto">
+      <label for="Contact">Contacto</label>
+      <input type="text" class="form-control" formControlName="Contact" placeholder="Contacto" [(ngModel)]="cliente.contacto" name="Contact">
     </div>
     <div class="form-group col-md-3">
-      <label for="inputTipo">State</label>
-      <select id="inputTipo" class="form-control" required [(ngModel)]="cliente.tipo" name="tipo">
-        <option selected>Seleccione...</option>
+      <label for="Tipo">State</label>
+      <select formControlName="Tipo" class="form-control" [(ngModel)]="cliente.tipo" name="Tipo">
         <option>Persona Natural</option>
         <option>Persona Juridica</option>
       </select>
     </div>
     <div class="form-group col-md-2">
-      <label for="inputLat">Latitud</label>
-      <input type="number" class="form-control" id="inputLat" placeholder="Latitud" [(ngModel)]="cliente.coordenadas[0]" name="latitud">
+      <label for="Lat">Latitud</label>
+      <input type="number" class="form-control" formControlName="Lat" placeholder="Latitud" [(ngModel)]="cliente.coordenadas[0]" name="Lat">
     </div>
     <div class="form-group col-md-2">
-      <label for="inputLong">Longitud</label>
-      <input type="number" class="form-control" id="inputLong" placeholder="Longitud" [(ngModel)]="cliente.coordenadas[1]" name="longitud">
+      <label for="Long">Longitud</label>
+      <input type="number" class="form-control" formControlName="Long" placeholder="Longitud" [(ngModel)]="cliente.coordenadas[1]" name="Long">
     </div>
-  </div> -->
+  </div>
 <!-- Cuarta fila -->
-  <!-- <div class="form-group">
+  <div class="form-group">
     <div class="form-check">
-      <input class="form-check-input" type="checkbox" name="accesoOstya" [(ngModel)]="cliente.acceder">
+      <input class="form-check-input" formControlName="Acceso" type="checkbox" name="Acceso" [(ngModel)]="cliente.acceder">
       <label class="form-check-label" for="accesoOstya">
         Dar acceso a Ostya.
       </label>
     </div>
-  </div> -->
+  </div>
   <div *ngIf="formGroup.status == 'VALID'">
     <button type="submit" class="btn btn-primary">Crear Cliente</button>
   </div>

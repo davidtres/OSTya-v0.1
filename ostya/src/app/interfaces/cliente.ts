@@ -2,7 +2,7 @@ import { Usuarios } from "./users";
 
 export interface Cliente extends Usuarios{
     contacto?: string;
-    coordenadas: number[];
+    coordenadas?: number[];
     tipo: string;
     lastBuy?: Date;
     activo: boolean;

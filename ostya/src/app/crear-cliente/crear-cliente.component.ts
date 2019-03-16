@@ -15,7 +15,7 @@ export class CrearClienteComponent implements OnInit {
   // varible para interactuar con campos del HTML (Interfaces)
   cliente: Cliente = {
     id: null,
-    nombre: 'prueba',
+    nombre: '',
     correo: '',
     password: '',
     direcciones: [],
@@ -23,16 +23,13 @@ export class CrearClienteComponent implements OnInit {
     celular: 0,
     fechaCreacion: new Date(),
     contacto: '',
-    coordenadas: [],
+    coordenadas: [0, 0],
     tipo: '',
     lastBuy: null,
     activo: true,
     acceder: false,
   };
-  // funcion del boton "Crear cliente"
-  guardarCliente() {
-    this.firebaseService.guardarCliente(this.cliente); // llamado al metodo "guardarCliente del servicio para comunicacion con firebase"
-  }
+
   clientesfire: any;
 
   constructor( private firebaseService: FirebaseService) {
@@ -48,18 +45,47 @@ export class CrearClienteComponent implements OnInit {
   }
   // constructor del formulario
   private buildForm() {
-    // ejemplo  Bootstrap
     this.formGroup = new FormGroup({
-      Id: new FormControl(656, [
+      Id: new FormControl(this.cliente.id, [
         Validators.required,
-        //Validators.pattern(/^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/)
       ]),
       Nombre: new FormControl(this.cliente.nombre, [
         Validators.required,
-        Validators.minLength(8),
-        Validators.maxLength(20)
+        Validators.minLength(3)
+      ]),
+      Correo: new FormControl(this.cliente.correo, [
+        Validators.required,
+        Validators.pattern(/^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/)
+      ]),
+      Dir: new FormControl(this.cliente.direcciones[0], [
+        Validators.required,
+      ]),
+      Cel: new FormControl(this.cliente.celular, [
+        Validators.required,
+        Validators.minLength(10)
+      ]),
+      Tel: new FormControl(this.cliente.celular, [
+        Validators.minLength(7)
+      ]),
+      Contact: new FormControl(this.cliente.contacto, [
+      ]),
+      Tipo: new FormControl(this.cliente.tipo, [
+        Validators.required
+      ]),
+      Lat: new FormControl(this.cliente.coordenadas[0], [
+      ]),
+      Long: new FormControl(this.cliente.coordenadas[1], [
+      ]),
+      Acceso: new FormControl(this.cliente.acceder, [
       ])
     });
+  }
+
+  // funcion del boton "Crear cliente"
+  guardarCliente() {
+    // llamado al metodo "guardarCliente del servicio para comunicacion con firebase"
+    this.firebaseService.guardarCliente(this.cliente);
+    this.onReset();
   }
 
   // Borrar el formulario
@@ -74,7 +100,6 @@ export class CrearClienteComponent implements OnInit {
     if (control.touched && control.errors != null) {
       error = JSON.stringify(control.errors);
       console.log(control.errors.required);
-
     }
     return error;
   }
