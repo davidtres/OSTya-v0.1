@@ -31,14 +31,16 @@ export class CrearClienteComponent implements OnInit {
   };
 
   clientesfire: any;
+  static creado: any;
+  static NewClietne: any;
 
   constructor( private firebaseService: FirebaseService) {
     firebaseService.getCliente()
       .valueChanges().subscribe(clientes => {
-        console.log(clientes);
         this.clientesfire = clientes;
       });
   }
+
 
   ngOnInit() {
     this.buildForm();
@@ -47,7 +49,7 @@ export class CrearClienteComponent implements OnInit {
   private buildForm() {
     this.formGroup = new FormGroup({
       Id: new FormControl(this.cliente.id, [
-        Validators.required,
+        Validators.required
       ]),
       Nombre: new FormControl(this.cliente.nombre, [
         Validators.required,
@@ -79,13 +81,20 @@ export class CrearClienteComponent implements OnInit {
       Acceso: new FormControl(this.cliente.acceder, [
       ])
     });
+
   }
 
   // funcion del boton "Crear cliente"
   guardarCliente() {
+    console.log(this.cliente);
+
     // llamado al metodo "guardarCliente del servicio para comunicacion con firebase"
     this.firebaseService.guardarCliente(this.cliente);
     this.onReset();
+    this.NewCliente = true;
+    setTimeout(()=>{
+      this.NewCliente = false;
+    }, 3000);
   }
 
   // Borrar el formulario
@@ -93,15 +102,24 @@ export class CrearClienteComponent implements OnInit {
     this.formGroup.reset();
   }
 
-  // Manejador de errores
-  public getError(controlName: string): string {
-    let error = '';
-    const control = this.formGroup.get(controlName);
-    if (control.touched && control.errors != null) {
-      error = JSON.stringify(control.errors);
-      console.log(control.errors.required);
+
+  existe = false;
+  NewCliente : boolean = false;
+
+
+  // Validacion si el cliente existe.
+  validarCliente() {
+    const resultado = this.clientesfire.find( client => client.id === this.cliente.id );
+    if (resultado == undefined) {
+      this.existe = false;
+    } else {
+      this.existe = true;
+      setTimeout(()=>{
+        this.existe = false;
+        this.cliente.id = null;
+      }, 3000);
+
     }
-    return error;
   }
 
 }

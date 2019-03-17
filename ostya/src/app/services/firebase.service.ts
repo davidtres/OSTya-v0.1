@@ -3,6 +3,7 @@ import { from } from 'rxjs';
 import { AngularFireModule } from '@angular/fire';
 import { AngularFireDatabase } from 'angularfire2/database';
 import { CrearClienteComponent } from '../crear-cliente/crear-cliente.component';
+import { createNodeAtIndex } from '@angular/core/src/render3/instructions';
 
 
 @Injectable({
@@ -15,8 +16,6 @@ export class FirebaseService {
    this.afBD.database.ref('clientes/' + cliente.id).set(cliente, function(error) {
     if (error) {
       console.log(error);
-    } else {
-      alert('Cliente creado con exito');
     }
   });
   }
