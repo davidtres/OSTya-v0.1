@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FirebaseService } from '../services/firebase.service';
 import { Cliente } from '../interfaces/cliente';
 import { AbstractControl, FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
+import { database } from 'firebase';
 
 @Component({
   selector: 'app-crear-cliente',
@@ -21,7 +22,7 @@ export class CrearClienteComponent implements OnInit {
     direcciones: [],
     telefono: null,
     celular: 0,
-    fechaCreacion: new Date(),
+    fechaCreacion: new Date(Date.now()),
     contacto: '',
     coordenadas: [0, 0],
     tipo: '',
@@ -30,10 +31,12 @@ export class CrearClienteComponent implements OnInit {
     acceder: false,
   };
 
-  clientesfire: any;
+  tPersona: any = [{tipo:'P. Natural'},{tipo: 'P. Juridica'}, {tipo: 'Cualquier otra'}];
+
+
   static creado: any;
   static NewClietne: any;
-
+  clientesfire: any;
   constructor( private firebaseService: FirebaseService) {
     firebaseService.getCliente()
       .valueChanges().subscribe(clientes => {
@@ -79,6 +82,9 @@ export class CrearClienteComponent implements OnInit {
       Long: new FormControl(this.cliente.coordenadas[1], [
       ]),
       Acceso: new FormControl(this.cliente.acceder, [
+      ]),
+      fecha: new FormControl(this.cliente.fechaCreacion, [
+        Validators.required
       ])
     });
 
@@ -86,14 +92,14 @@ export class CrearClienteComponent implements OnInit {
 
   // funcion del boton "Crear cliente"
   guardarCliente() {
-    console.log(this.cliente);
-
+    this.asignarFecha();
     // llamado al metodo "guardarCliente del servicio para comunicacion con firebase"
     this.firebaseService.guardarCliente(this.cliente);
-    this.onReset();
+    //this.onReset();
     this.NewCliente = true;
     setTimeout(()=>{
       this.NewCliente = false;
+      this.onReset();
     }, 3000);
   }
 
@@ -118,8 +124,14 @@ export class CrearClienteComponent implements OnInit {
         this.existe = false;
         this.cliente.id = null;
       }, 3000);
-
     }
+  }
+  asignarFecha(){
+    let fechaHoy: any;
+    fechaHoy = Date.now();
+    this.cliente.fechaCreacion = fechaHoy;
+    return console.log(this.cliente.fechaCreacion);
+
   }
 
 }

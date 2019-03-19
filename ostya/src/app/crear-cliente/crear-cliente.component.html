@@ -1,5 +1,6 @@
 <div class="container">
   <h1>CREAR CLIENTE</h1>
+
  <hr>
  <div class="alert alert-success" role="alert" *ngIf="NewCliente">
   Cliente se ha creado con exito!!
@@ -8,7 +9,7 @@
   <!-- Primera fila -->
   <div class="form-row">
     <div class="form-group col-md-2">
-      <label for="inputId" (click)='validarCliente()'>Identificacion</label>
+      <label for="inputId">Identificacion</label>
       <input  type="number" (blur)='validarCliente()' class="form-control" formControlName="Id" placeholder="Identificacion" [(ngModel)]="cliente.id" name="identificacion">
       <div class="alert alert-danger" role="alert"  *ngIf="existe">
         CLIENTE EXISTE!
@@ -27,7 +28,7 @@
   <!-- Segunda fila -->
   <div class="form-row">
     <div class="form-group col-md-8">
-      <label for="Dir">Direccion</label>
+      <label for="Dir">Direccion, Incluir la ciudad</label>
       <input type="text" class="form-control" formControlName="Dir" placeholder="Direccion" [(ngModel)]="cliente.direcciones[0]" name="Dir">
     </div>
     <div class="form-group col-md-2">
@@ -46,10 +47,9 @@
       <input type="text" class="form-control" formControlName="Contact" placeholder="Contacto" [(ngModel)]="cliente.contacto" name="Contact">
     </div>
     <div class="form-group col-md-3">
-      <label for="Tipo">State</label>
+      <label for="Tipo">Tipo de Cliente</label>
       <select formControlName="Tipo" class="form-control" [(ngModel)]="cliente.tipo" name="Tipo">
-        <option>Persona Natural</option>
-        <option>Persona Juridica</option>
+        <option *ngFor="let personas of tPersona">{{personas.tipo}} </option>
       </select>
     </div>
     <div class="form-group col-md-2">
@@ -73,10 +73,10 @@
   <div *ngIf="formGroup.status == 'VALID'">
     <button type="submit" class="btn btn-primary">Crear Cliente</button>
   </div>
-  <div *ngIf="formGroup.status == 'INVALID'">
-    <button type="submit" class="btn btn-danger" (click)="onReset()">Reset</button>
-  </div>
 </form>
+<div *ngIf="formGroup.status == 'INVALID'">
+  <button type="submit" class="btn btn-danger" (click)="onReset()">Reset</button>
+</div>
 <hr>
 <!-- <div class="container">
     <h3>CLIENTES ACTUALES</h3>

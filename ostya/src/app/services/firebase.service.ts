@@ -12,10 +12,11 @@ import { createNodeAtIndex } from '@angular/core/src/render3/instructions';
 export class FirebaseService {
 
   public guardarCliente(cliente){
-    console.log(cliente);
    this.afBD.database.ref('clientes/' + cliente.id).set(cliente, function(error) {
     if (error) {
       console.log(error);
+    } else {
+      console.log(cliente);
     }
   });
   }

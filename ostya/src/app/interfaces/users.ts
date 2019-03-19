@@ -6,5 +6,5 @@ export interface Usuarios {
     direcciones: string[];
     telefono: number;
     celular: number;
-    fechaCreacion: Date;
+    fechaCreacion: any;
 }

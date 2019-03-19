@@ -1,13 +1,11 @@
-import { TipoEquipo } from "./tEquipo";
-
 export interface Equipo {
     id: number;
-    tipo: TipoEquipo;
-    ubicacion?: string;
-    garantia?: Date;
-    referencia: object;
-    fechaCreacion?: Date;
+    cliente: string;
+    tipo: string;
+    garantia?: any;
+    datos: {};
+    fechaCreacion: any;
     activo: boolean;
-    proximoMantto?: Date;
-    observaciones?: object;
+    proximoMantto?: any;
+    observaciones?: string;
 }

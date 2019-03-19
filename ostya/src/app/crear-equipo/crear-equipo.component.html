@@ -1,3 +1,156 @@
-<p>
-  crear-equipo works!
-</p>
+<div class="container">
+<h1>CREAR EQUIPO DE CLIENTE</h1>
+<br><hr>
+<form [formGroup]="formEquipo" (validSubmit)="guardarEquipo()">
+  <!-- Primera fila -->
+  <div class="form-row">
+    <div class="form-group col-md-3">
+      <h3><label for="cliente">Cliente</label></h3>
+      <select formControlName="cliente" class="form-control" [(ngModel)]="newEquipo.cliente" name="cliente">
+        <option >Seleccione cliente ... </option>
+        <option *ngFor="let cliente of clientesfire">{{cliente.nombre}} </option>
+      </select>
+    </div>
+    <div class="form-group col-md-1"></div>
+    <div class="form-group col-md-3" style="padding-top: 25px">
+      <form [formGroup]="radioGroupForm">
+        <div class="btn-group btn-group-toggle" ngbRadioGroup name="radioBasic" formControlName="model">
+          <label ngbButtonLabel class="btn btn-secondary">
+            <input ngbButton type="radio" [value]="true"> Tipo PCS
+          </label>
+          <label ngbButtonLabel class="btn btn-secondary">
+            <input ngbButton type="radio" value="false"> Comunicaciones
+          </label>
+        </div>
+        {{radioGroupForm.value['model']}}
+      </form>
+    </div>
+  </div>
+  <hr>
+  <!-- Datos en comun -->
+  <div class="form-row">
+    <div class="form-group col-md-3">
+      <label for="marca">Marca</label>
+      <input type="text" class="form-control" formControlName="marca" placeholder="Marca" [(ngModel)]="newEquipo.datos['marca']" name="marca">
+    </div>
+    <div class="form-group col-md-3">
+      <label for="modelo">Modelo</label>
+      <input type="text" class="form-control" formControlName="modelo" placeholder="Modelo" [(ngModel)]="newEquipo.datos['modelo']" name="modelo">
+    </div>
+    <div class="form-group col-md-3">
+      <label for="serial">Serial</label>
+      <input type="text" class="form-control" formControlName="serial" placeholder="Serial" [(ngModel)]="newEquipo.datos['serial']" name="serial">
+    </div>
+    <div class="form-group col-md-3">
+      <label for="ubicacion">Ubicacion</label>
+      <input type="text" class="form-control" formControlName="ubicacion" placeholder="Ubicacion" [(ngModel)]="newEquipo.datos['ubicacion']" name="ubicacion">
+    </div>
+  </div>
+  <div class="form-row">
+    <div class="form-group col-md-3">
+      <label for="usuario">Usuario</label>
+      <input type="text" class="form-control" formControlName="usuario" placeholder="Usuario" [(ngModel)]="newEquipo.datos['usuario']" name="usuario">
+    </div>
+    <div class="form-group col-md-3">
+      <label for="clave">clave</label>
+      <input type="text" class="form-control" formControlName="clave" placeholder="clave" [(ngModel)]="newEquipo.datos['clave']" name="clave">
+    </div>
+    <div class="form-group col-md-3">
+      <label for="ip">Direccion IP</label>
+      <input type="text" class="form-control" formControlName="ip" placeholder="Direccion IP" [(ngModel)]="newEquipo.datos['ip']" name="ip">
+    </div>
+    <div class="form-group col-md-3">
+      <label for="mac">Mac</label>
+      <input type="text" class="form-control" formControlName="mac" placeholder="Mac" [(ngModel)]="newEquipo.datos['mac']" name="mac">
+    </div>
+  </div>
+  <div>
+      <textarea name="observaciones" style="min-width: 100%" formControlName="observaciones" placeholder="Observaciones" [(ngModel)]="newEquipo.observaciones"></textarea>
+      <!-- <input type="a" class="form-control" formControlName="observaciones" placeholder="Observaciones" [(ngModel)]="newEquipo.datos['mac']" name="observaciones"> -->
+  </div>
+  <hr>
+  <!-- Tipo PC -->
+  <div *ngIf="(radioGroupForm.value['model'] == true)">
+  <!-- Seccion Caracteristicas -->
+  <h3>Caracteristicas</h3>
+  <div class="form-row">
+      <div class="form-group col-md-2">
+        <label for="procesador">Procesador</label>
+        <input type="text" class="form-control" formControlName="procesador" placeholder="Procesador" [(ngModel)]="newEquipo.caractersiticas['procesador']" name="procesador">
+      </div>
+      <div class="form-group col-md-2">
+        <label for="modelo">Memoria</label>
+        <input type="text" class="form-control" formControlName="memoria" placeholder="Memoria" [(ngModel)]="newEquipo.caractersiticas['memoria']" name="memoria">
+      </div>
+      <div class="form-group col-md-2">
+        <label for="disco">Disco Duro</label>
+        <input type="text" class="form-control" formControlName="disco" placeholder="Disco Duro" [(ngModel)]="newEquipo.caractersiticas['disco']" name="disco">
+      </div>
+      <div class="form-group col-md-2">
+        <label for="pantalla">Pantalla</label>
+        <input type="text" class="form-control" formControlName="pantalla" placeholder="Pantalla" [(ngModel)]="newEquipo.caractersiticas['pantalla']" name="pantalla">
+      </div>
+      <div class="form-group col-md-2">
+          <label for="garantia">Garantia</label>
+          <input type="text" class="form-control" formControlName="garantia" placeholder="Garantia" [(ngModel)]="newEquipo.caractersiticas['garantia']" name="garantia">
+        </div>
+        <div class="form-group col-md-2">
+            <label for="otros">Otros</label>
+            <input type="text" class="form-control" formControlName="otros" placeholder="Otros" [(ngModel)]="newEquipo.caractersiticas['otros']" name="otros">
+          </div>
+    </div>
+    <hr><br>
+  <!-- Seccion Licencias y/o Servicios -->
+    <h3>Software</h3>
+    <div class="form-row">
+          <div class="form-group col-md-3">
+            <label for="tipoLic">Tipo Software</label>
+            <input type="text" class="form-control" formControlName="tipoLic" placeholder="tipoLic" [(ngModel)]="newEquipo.software[cero].tipo" name="tipoLic">
+          </div>
+          <div class="form-group col-md-1">
+              <label for="activaLic">legal</label>
+            <select formControlName="activaLic" class="form-control" [(ngModel)]="newEquipo.software[cero].activa" name="activaLic">
+                  <option >Si</option>
+                  <option>No</option>
+                </select>
+          </div>
+          <div class="form-group col-md-3">
+            <label for="serialLic">Licencia</label>
+            <input type="text" class="form-control" formControlName="serialLic" placeholder="Licencia" [(ngModel)]="newEquipo.software[cero].serial" name="serialLic">
+          </div>
+          <div class="form-group col-md-4">
+              <label for="notaLic">Notas</label>
+              <input type="text" class="form-control" formControlName="notaLic" placeholder="Nota" [(ngModel)]="newEquipo.software[cero].nota" name="notaLic">
+          </div>
+          <div class="form-group col-md-1" style="padding-top: 31px">
+            <button type="button" class="btn btn-success" (click)=addLicencia()><strong>+</strong></button>
+            <button type="button" class="btn btn-danger" (click)=removeLic()><strong>-</strong></button>
+          </div>
+      </div>
+    <table class="table table-striped">
+      <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">TIPO</th>
+        <th scope="col">LICENCIA?</th>
+        <th scope="col">SERIAL</th>
+        <th scope="col">NOTA</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr   *ngFor="let item of newEquipo.software; index as i">
+        <th scope="row">{{ i+1 }}</th>
+        <td>{{item.tipo}}</td>
+        <td>{{item.activa}}</td>
+        <td>{{item.serial}}</td>
+        <td>{{item.nota}}</td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+  <div *ngIf="(radioGroupForm.value['model'] == 'false')">
+      <!-- Seccion Caracteristicas Equipos de Comunicaciones -->
+      <h3>Caracteristicas Comunicaciones</h3>
+  </div>
+</form>
+

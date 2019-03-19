@@ -22,6 +22,8 @@ import {AngularFireDatabaseModule} from 'angularfire2/database';
 import { ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { NgBootstrapFormValidationModule } from 'ng-bootstrap-form-validation';
+import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
+
 const appRoutes: Routes = [
   {path: '', component: HomeComponent},
   {path: 'home', component: HomeComponent},
@@ -59,7 +61,8 @@ const appRoutes: Routes = [
     ReactiveFormsModule,
     CommonModule,
     NgBootstrapFormValidationModule.forRoot(),
-    NgBootstrapFormValidationModule
+    NgBootstrapFormValidationModule,
+    NgbModule
   ],
   providers: [],
   bootstrap: [AppComponent]
