@@ -5,7 +5,7 @@
   <!-- Primera fila -->
   <div class="form-row">
     <div class="form-group col-md-3">
-      <h3><label for="cliente">Cliente</label></h3>
+      <h3><label for="cliente" (click)="encontrarId()">Cliente</label></h3>
       <select formControlName="cliente" class="form-control" [(ngModel)]="newEquipo.cliente" name="cliente">
         <option >Seleccione cliente ... </option>
         <option *ngFor="let cliente of clientesfire">{{cliente.nombre}} </option>
@@ -16,13 +16,12 @@
       <form [formGroup]="radioGroupForm">
         <div class="btn-group btn-group-toggle" ngbRadioGroup name="radioBasic" formControlName="model">
           <label ngbButtonLabel class="btn btn-secondary">
-            <input ngbButton type="radio" [value]="true"> Tipo PCS
+            <input ngbButton type="radio" [value]="true"> Tipo PC'S
           </label>
           <label ngbButtonLabel class="btn btn-secondary">
             <input ngbButton type="radio" value="false"> Comunicaciones
           </label>
         </div>
-        {{radioGroupForm.value['model']}}
       </form>
     </div>
   </div>
@@ -66,7 +65,6 @@
   </div>
   <div>
       <textarea name="observaciones" style="min-width: 100%" formControlName="observaciones" placeholder="Observaciones" [(ngModel)]="newEquipo.observaciones"></textarea>
-      <!-- <input type="a" class="form-control" formControlName="observaciones" placeholder="Observaciones" [(ngModel)]="newEquipo.datos['mac']" name="observaciones"> -->
   </div>
   <hr>
   <!-- Tipo PC -->
@@ -151,6 +149,57 @@
   <div *ngIf="(radioGroupForm.value['model'] == 'false')">
       <!-- Seccion Caracteristicas Equipos de Comunicaciones -->
       <h3>Caracteristicas Comunicaciones</h3>
+      <div class="form-row">
+        <div class="form-group col-md-3">
+
+        </div>
+        <div class="form-group col-md-3">
+
+        </div>
+        <div class="form-group col-md-3">
+
+        </div>
+        <div class="form-group col-md-3">
+
+        </div>
+      </div>
+      <div class="form-row card-group">
+        <div class="form-group col-md-3 card">
+            <div class="col-md-12">
+              <br>
+              <h6>CONFIGURACION WAN</h6>
+              <label for="ipwan">IP WAN</label>
+              <input type="text" class="form-control" formControlName="ipwan" placeholder="IP WAN" [(ngModel)]="newEquipo.comunicaciones.confWan['ipwan']" name="ipwan">
+              <label for="mascara">Mascara</label>
+              <input type="text" class="form-control" formControlName="mascara" placeholder="Mascara" [(ngModel)]="newEquipo.comunicaciones.confWan['mascara']" name="mascara">
+              <label for="pEnlace">Puerta de Enlace</label>
+              <input type="text" class="form-control" formControlName="pEnlace" placeholder="Puerta de Enlace" [(ngModel)]="newEquipo.comunicaciones.confWan['pEnlace']" name="pEnlace">
+              <label for="dns">DNS</label>
+              <input type="text" class="form-control" formControlName="dns" placeholder="DNS" [(ngModel)]="newEquipo.comunicaciones.confWan['dns']" name="dns"><br>
+            </div>
+        </div>
+        <div class="col-md-1"></div>
+        <div class="form-group col-md-3 card">
+            <div class="col-md-12">
+            <br>
+            <h6>CONFIGURACION WIFI</h6>
+            <label for="ssid">SSID</label>
+            <input type="text" class="form-control" formControlName="ssid" placeholder="SSID" [(ngModel)]="newEquipo.comunicaciones.confWifi['ssid']" name="ssid">
+            <label for="clavew">CLAVE</label>
+            <input type="text" class="form-control" formControlName="clavew" placeholder="Clave" [(ngModel)]="newEquipo.comunicaciones.confWifi['clave']" name="clavew">
+          </div>
+        </div>
+        <div class="col-md-1"></div>
+        <div class="form-group col-md-4 card">
+            <div class="col-md-12">
+            <br>
+            <h6>CONFIGURACION PUERTOS</h6>
+            <textarea name="puertos" style="min-width: 100%" rows="10"  formControlName="puertos" placeholder="Ingrese todos los puertos configurados en el dispositivo" [(ngModel)]="newEquipo.comunicaciones.confPuertos"></textarea>
+          </div>
+        </div>
+      </div>
   </div>
+  <hr><br>
+  <button type="submit" class="btn btn-primary" (click)="verEquipo()">Crear Equipo</button>
 </form>
 

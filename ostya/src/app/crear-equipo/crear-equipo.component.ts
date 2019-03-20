@@ -5,6 +5,7 @@ import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms'
 import { NgbRadioGroup } from '@ng-bootstrap/ng-bootstrap';
 import { Licencias } from '../interfaces/licencias';
 import { PCS } from '../interfaces/ePcs';
+import { eComunicacion } from '../interfaces/eComunicacion';
 
 @Component({
   selector: 'app-crear-equipo',
@@ -48,17 +49,27 @@ export class CrearEquipoComponent implements OnInit {
       serial: null,
       nota: null
     }],
+    comunicaciones: {
+      confWan: {
+      ipwan: null,
+      mascara: null,
+      pEnlace: null,
+      dns: null
+    },
+    confPuertos: null,
+    confWifi: {
+      ssid: null,
+      clave: null
+    }
+    }
   };
-
-
-
-
   clientesfire: any;
   formGroup: FormGroup;
   constructor( private firebaseService: FirebaseService, private formBuilder: FormBuilder) {
     firebaseService.getCliente()
       .valueChanges().subscribe(clientes => {
         this.clientesfire = clientes;
+        console.log(this.clientesfire);
       });
   }
   ngOnInit() {
@@ -66,7 +77,18 @@ export class CrearEquipoComponent implements OnInit {
     this.radioGroupForm = this.formBuilder.group({
       'model': true
     });
-    console.log(this.newEquipo.software.length);
+  }
+
+
+  encontrarId(){
+    let cliente = this.newEquipo.cliente;
+    this.clientesfire.forEach(nombre => {
+      if (nombre.nombre == cliente) {
+        cliente = nombre.id;
+        console.log(cliente);
+        this.newEquipo.cliente = cliente;
+      }
+    });
   }
 
   private buildForm(){
@@ -113,6 +135,20 @@ export class CrearEquipoComponent implements OnInit {
       serialLic: new FormControl(this.newEquipo.software['serial'], [
       ]),
       notaLic: new FormControl(this.newEquipo.software['nota'], [
+      ]),
+      ipwan: new FormControl(this.newEquipo.comunicaciones.confWan['ipwan'], [
+      ]),
+      mascara: new FormControl(this.newEquipo.comunicaciones.confWan['mascara'], [
+      ]),
+      pEnlace: new FormControl(this.newEquipo.comunicaciones.confWan['pEnlace'], [
+      ]),
+      dns: new FormControl(this.newEquipo.comunicaciones.confWan['dns'], [
+      ]),
+      ssid: new FormControl(this.newEquipo.comunicaciones.confWifi['ssid'], [
+      ]),
+      clavew: new FormControl(this.newEquipo.comunicaciones.confWifi['clave'], [
+      ]),
+      puertos: new FormControl(this.newEquipo.comunicaciones.confPuertos, [
       ]),
     });
   }
@@ -169,5 +205,9 @@ export class CrearEquipoComponent implements OnInit {
       this.newEquipo.software.pop();
       console.log(this.newEquipo.software);
     }
+  }
+  verEquipo(){
+    console.log(this.newEquipo);
+
   }
 }

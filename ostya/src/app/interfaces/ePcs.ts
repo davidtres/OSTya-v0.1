@@ -1,5 +1,7 @@
 import { Equipo } from './equipo';
 import { Licencias } from './licencias';
+import { eComunicacion } from './eComunicacion';
+
 // tslint:disable-next-line: class-name
 export interface PCS extends Equipo {
   caractersiticas?: {
@@ -11,4 +13,5 @@ export interface PCS extends Equipo {
     otros?:string;
   };
   software?: Licencias [];
+  comunicaciones?: eComunicacion;
 }
