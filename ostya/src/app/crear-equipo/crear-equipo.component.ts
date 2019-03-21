@@ -90,7 +90,6 @@ export class CrearEquipoComponent implements OnInit {
       }
     });
   }
-
   private buildForm(){
     this.formEquipo = new FormGroup({
       cliente: new FormControl(this.newEquipo.cliente, [
@@ -154,7 +153,9 @@ export class CrearEquipoComponent implements OnInit {
   }
 
   guardarEquipo() {
-
+    this.encontrarId();
+    // llamado al metodo "guardarCliente del servicio para comunicacion con firebase"
+    this.firebaseService.guardarEquipo(this.newEquipo);
   }
 
 

@@ -23,5 +23,15 @@ export class FirebaseService {
   public getCliente(){
     return this.afBD.list('clientes/');
   }
+  public guardarEquipo(equipo) {
+    this.afBD.database.ref('equipos/' + equipo.cliente + '/' + equipo.id).set(equipo, function(error) {
+      if (error) {
+        console.log(error);
+      } else {
+        console.log(equipo);
+      }
+    });
+    }
+
   constructor(private afBD: AngularFireDatabase) { }
 }
