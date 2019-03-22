@@ -32,6 +32,18 @@ export class FirebaseService {
       }
     });
     }
+    public setNext(consecutivo) {
+      this.afBD.database.ref('next/' + consecutivo.doc).set(consecutivo, function(error) {
+        if (error) {
+          console.log(error);
+        } else {
+          console.log(consecutivo);
+        }
+      });
+      }
+    public getNext() {
+      return this.afBD.list('next/');
+    }
 
   constructor(private afBD: AngularFireDatabase) { }
 }

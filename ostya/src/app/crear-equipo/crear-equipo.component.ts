@@ -13,14 +13,14 @@ import { eComunicacion } from '../interfaces/eComunicacion';
   styleUrls: ['./crear-equipo.component.css']
 })
 export class CrearEquipoComponent implements OnInit {
-  formEquipo: FormGroup;
-  frmAddLicencia: FormGroup;
-  public radioGroupForm: FormGroup;
+
+// Inicializacion de variables de las interfaces
   newEquipo: PCS = {
     id: 1,
     cliente: null,
     tipo: null,
     garantia: null,
+    doc: 'equipos',
     datos: {
       marca: null,
       modelo: null,
@@ -63,33 +63,11 @@ export class CrearEquipoComponent implements OnInit {
     }
     }
   };
-  clientesfire: any;
+  // Creacion de formularios y validaciones.
   formGroup: FormGroup;
-  constructor( private firebaseService: FirebaseService, private formBuilder: FormBuilder) {
-    firebaseService.getCliente()
-      .valueChanges().subscribe(clientes => {
-        this.clientesfire = clientes;
-        console.log(this.clientesfire);
-      });
-  }
-  ngOnInit() {
-    this.buildForm();
-    this.radioGroupForm = this.formBuilder.group({
-      'model': true
-    });
-  }
-
-
-  encontrarId(){
-    let cliente = this.newEquipo.cliente;
-    this.clientesfire.forEach(nombre => {
-      if (nombre.nombre == cliente) {
-        cliente = nombre.id;
-        console.log(cliente);
-        this.newEquipo.cliente = cliente;
-      }
-    });
-  }
+  radioGroupForm: FormGroup;
+  formEquipo: FormGroup;
+  frmAddLicencia: FormGroup;
   private buildForm(){
     this.formEquipo = new FormGroup({
       cliente: new FormControl(this.newEquipo.cliente, [
@@ -152,24 +130,58 @@ export class CrearEquipoComponent implements OnInit {
     });
   }
 
-  guardarEquipo() {
-    this.encontrarId();
-    // llamado al metodo "guardarCliente del servicio para comunicacion con firebase"
-    this.firebaseService.guardarEquipo(this.newEquipo);
+// Inicializacion de servicio Firebase, instancia de formularios, obtener clientes para validacion de existencia y consecutivo.
+  clientesFire: any;
+  nextFire: any;
+
+  constructor( private firebaseService: FirebaseService, private formBuilder: FormBuilder) {
+    firebaseService.getCliente()
+      .valueChanges().subscribe(clientes => {
+        this.clientesFire = clientes;
+      });
+    firebaseService.getNext()
+    .valueChanges().subscribe(next => {
+      this.nextFire = next;
+      console.log(this.nextFire);
+
+    });
+  }
+  ngOnInit() {
+    this.buildForm();
+    this.radioGroupForm = this.formBuilder.group({
+      'model': true
+    });
+
   }
 
+  // **************** ------------------------------------********************************
+  //
+  // cambia nombre de cliente por su id, y guarda en Firebase.
+  guardarEquipo() {
+    this.encontrarId();
+    this.firebaseService.guardarEquipo(this.newEquipo);
+  }
+  nextEquipo() {
+    setTimeout(() => {
+      let Incrementar = this.nextFire[0].next + 1
+      console.log(Incrementar);
+      let newNext = {
+        doc : this.newEquipo.doc,
+        next: Incrementar
+      };
+     this.firebaseService.setNext(newNext);
+    }, 500);
 
-// tslint:disable-next-line: member-ordering
+
+  }
+// asignar o remover software a un equipo.
   newLicencia = {
     tipo: null,
     activa: null,
     serial: null,
     nota: null
-  }
-
-// tslint:disable-next-line: member-ordering
+  };
   cero: number = 0;
-
   addLicencia(){
     if (this.cero == 0) {
       this.cero++
@@ -207,8 +219,15 @@ export class CrearEquipoComponent implements OnInit {
       console.log(this.newEquipo.software);
     }
   }
-  verEquipo(){
-    console.log(this.newEquipo);
-
+  // cambia nombre de cliente por su Id, en la variable a enviar a Firebase.
+  encontrarId() {
+    let cliente = this.newEquipo.cliente;
+    this.clientesFire.forEach(nombre => {
+      if (nombre.nombre == cliente) {
+        cliente = nombre.id;
+        console.log(cliente);
+        this.newEquipo.cliente = cliente;
+      }
+    });
   }
 }

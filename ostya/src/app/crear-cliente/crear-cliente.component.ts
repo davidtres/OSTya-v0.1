@@ -37,6 +37,7 @@ export class CrearClienteComponent implements OnInit {
   static creado: any;
   static NewClietne: any;
   clientesfire: any;
+
   constructor( private firebaseService: FirebaseService) {
     firebaseService.getCliente()
       .valueChanges().subscribe(clientes => {

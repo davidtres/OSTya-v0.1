@@ -5,10 +5,10 @@
   <!-- Primera fila -->
   <div class="form-row">
     <div class="form-group col-md-3">
-      <h3><label for="cliente" (click)="encontrarId()">Cliente</label></h3>
+      <h3><label for="cliente" (click)="nextEquipo()">Cliente</label></h3>
       <select formControlName="cliente" class="form-control" [(ngModel)]="newEquipo.cliente" name="cliente">
         <option >Seleccione cliente ... </option>
-        <option *ngFor="let cliente of clientesfire">{{cliente.nombre}} </option>
+        <option *ngFor="let cliente of clientesFire">{{cliente.nombre}} </option>
       </select>
     </div>
     <div class="form-group col-md-1"></div>
