@@ -23,6 +23,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { NgBootstrapFormValidationModule } from 'ng-bootstrap-form-validation';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
+import { IcloudComponent } from './icloud/icloud.component';
 
 const appRoutes: Routes = [
   {path: '', component: HomeComponent},
@@ -33,7 +34,8 @@ const appRoutes: Routes = [
   {path: 'crear-cliente', component: CrearClienteComponent},
   {path: 'crear-equipo', component: CrearEquipoComponent},
   {path: 'crear-usuario', component: CrearUsuarioComponent},
-  {path: 'parametros', component: ParametrosComponent}
+  {path: 'parametros', component: ParametrosComponent},
+  {path: 'icloud', component: IcloudComponent}
 ];
 @NgModule({
   declarations: [
@@ -46,7 +48,8 @@ const appRoutes: Routes = [
     AgendaComponent,
     ActualizarOrdenComponent,
     ParametrosComponent,
-    MenuComponent
+    MenuComponent,
+    IcloudComponent
     ],
   imports: [
     BrowserModule,

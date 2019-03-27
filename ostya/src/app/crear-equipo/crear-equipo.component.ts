@@ -127,12 +127,19 @@ export class CrearEquipoComponent implements OnInit {
       ]),
       puertos: new FormControl(this.newEquipo.comunicaciones.confPuertos, [
       ]),
+      confirmar: new FormControl(this.newEquipo.comunicaciones.confPuertos, [
+        Validators.required
+      ]),
+      tEquipo: new FormControl(this.newEquipo.tipo, [
+        Validators.required
+      ]),
     });
   }
 
 // Inicializacion de servicio Firebase, instancia de formularios, obtener clientes para validacion de existencia y consecutivo.
   clientesFire: any;
   nextFire: any;
+  newEquipoListo: boolean = false;
 
   constructor( private firebaseService: FirebaseService, private formBuilder: FormBuilder) {
     firebaseService.getCliente()
@@ -142,8 +149,6 @@ export class CrearEquipoComponent implements OnInit {
     firebaseService.getNext()
     .valueChanges().subscribe(next => {
       this.nextFire = next;
-      console.log(this.nextFire);
-
     });
   }
   ngOnInit() {
@@ -151,6 +156,7 @@ export class CrearEquipoComponent implements OnInit {
     this.radioGroupForm = this.formBuilder.group({
       'model': true
     });
+    // console.log(this.tipoEquipos);
 
   }
 
@@ -159,20 +165,28 @@ export class CrearEquipoComponent implements OnInit {
   // cambia nombre de cliente por su id, y guarda en Firebase.
   guardarEquipo() {
     this.encontrarId();
-    this.firebaseService.guardarEquipo(this.newEquipo);
+    setTimeout(() => {
+      this.newEquipoListo = false;
+      this.onReset();
+    }, 5000);
   }
+  // Funcion para asignar consecutivo de equipo creado.
   nextEquipo() {
     setTimeout(() => {
-      let Incrementar = this.nextFire[0].next + 1
-      console.log(Incrementar);
+      this.newEquipoListo = true;
+      let Incrementar = this.nextFire[0].next + 1;
+      this.newEquipo.id = Incrementar;
       let newNext = {
         doc : this.newEquipo.doc,
         next: Incrementar
       };
+     this.firebaseService.guardarEquipo(this.newEquipo);
      this.firebaseService.setNext(newNext);
-    }, 500);
-
-
+    }, 100);
+  }
+  onReset() {
+    this.formEquipo.reset();
+    this.frmAddLicencia.reset();
   }
 // asignar o remover software a un equipo.
   newLicencia = {
@@ -185,9 +199,9 @@ export class CrearEquipoComponent implements OnInit {
   addLicencia(){
     if (this.cero == 0) {
       this.cero++
-      console.log('de primero' + this.cero);
+      // console.log('de primero' + this.cero);
       this.newEquipo.software.push(this.newLicencia)
-      console.log(this.newLicencia);
+      // console.log(this.newLicencia);
       this.newLicencia = {
         tipo: null,
         activa: null,
@@ -197,8 +211,8 @@ export class CrearEquipoComponent implements OnInit {
     } else {
       this.cero++
       this.newEquipo.software.push(this.newLicencia)
-      console.log('de segundo' + this.cero);
-      console.log(this.newLicencia);
+      // console.log('de segundo' + this.cero);
+      // console.log(this.newLicencia);
       this.newLicencia = {
         tipo: null,
         activa: null,
@@ -225,9 +239,14 @@ export class CrearEquipoComponent implements OnInit {
     this.clientesFire.forEach(nombre => {
       if (nombre.nombre == cliente) {
         cliente = nombre.id;
-        console.log(cliente);
         this.newEquipo.cliente = cliente;
       }
     });
+    this.nextEquipo();
+  }
+// tslint:disable-next-line: member-ordering
+  tipoEquipos: any = {
+    comunicaciones: ['modem', 'Router', 'AP', 'Swich'],
+    equipos: ['Pc', 'Portatil', 'Impresora', 'DVR']
   }
 }

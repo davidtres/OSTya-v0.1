@@ -24,7 +24,7 @@ export class FirebaseService {
     return this.afBD.list('clientes/');
   }
   public guardarEquipo(equipo) {
-    this.afBD.database.ref('equipos/' + equipo.cliente + '/' + equipo.id).set(equipo, function(error) {
+    this.afBD.database.ref('equipos/' + equipo.cliente + '/' + equipo.tipo + '/' + equipo.id).set(equipo, function(error) {
       if (error) {
         console.log(error);
       } else {
@@ -37,7 +37,6 @@ export class FirebaseService {
         if (error) {
           console.log(error);
         } else {
-          console.log(consecutivo);
         }
       });
       }

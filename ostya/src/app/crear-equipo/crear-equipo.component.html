@@ -5,26 +5,43 @@
   <!-- Primera fila -->
   <div class="form-row">
     <div class="form-group col-md-3">
-      <h3><label for="cliente" (click)="nextEquipo()">Cliente</label></h3>
+      <h3><label for="cliente">Cliente</label></h3>
       <select formControlName="cliente" class="form-control" [(ngModel)]="newEquipo.cliente" name="cliente">
         <option >Seleccione cliente ... </option>
         <option *ngFor="let cliente of clientesFire">{{cliente.nombre}} </option>
       </select>
     </div>
     <div class="form-group col-md-1"></div>
-    <div class="form-group col-md-3" style="padding-top: 25px">
+    <div class="form-group col-md-3" style="padding-top: 45px">
       <form [formGroup]="radioGroupForm">
         <div class="btn-group btn-group-toggle" ngbRadioGroup name="radioBasic" formControlName="model">
-          <label ngbButtonLabel class="btn btn-secondary">
-            <input ngbButton type="radio" [value]="true"> Tipo PC'S
+          <label ngbButtonLabel class="btn btn-warning">
+            <input ngbButton type="radio" [value]="true"> Equipos PCS
           </label>
-          <label ngbButtonLabel class="btn btn-secondary">
+          <label ngbButtonLabel class="btn btn-warning">
             <input ngbButton type="radio" value="false"> Comunicaciones
           </label>
         </div>
       </form>
     </div>
+    <div class="form-group col-md-1"></div>
+    <div class="form-group col-md-3">
+      <h3><label for="tEquipo">Tipo de Equipo</label></h3>
+      <div *ngIf="(radioGroupForm.value['model'] == 'false')">
+        <select formControlName="tEquipo" class="form-control" [(ngModel)]="newEquipo.tipo" name="tEquipo">
+          <option >Seleccione Equipo Comunicaciones ... </option>
+          <option *ngFor="let tipo of tipoEquipos.comunicaciones">{{tipo}} </option>
+        </select>
+      </div>
+      <div *ngIf="(radioGroupForm.value['model'] == true)">
+        <select formControlName="tEquipo" class="form-control" [(ngModel)]="newEquipo.tipo" name="tEquipo">
+          <option >Seleccione Equipo PCS ... </option>
+          <option *ngFor="let tipo of tipoEquipos.equipos">{{tipo}} </option>
+        </select>
+      </div>
+    </div>
   </div>
+
   <hr>
   <!-- Datos en comun -->
   <div class="form-row">
@@ -200,6 +217,18 @@
       </div>
   </div>
   <hr><br>
-  <button type="submit" class="btn btn-primary" (click)="guardarEquipo()">Crear Equipo</button>
+  <div class="alert alert-success" role="alert" *ngIf="newEquipoListo">
+    Equipo creado con el Id: {{newEquipo.id}}
+  </div>
+  <div class="form-group form-check">
+    <input type="checkbox" class="form-check-input" id="exampleCheck1" formControlName="confirmar">
+    <label class="form-check-label" for="exampleCheck1">Confirmar Creacion de Equipo</label>
+  </div>
+  <div *ngIf="formEquipo.status == 'VALID'">
+    <button type="submit" class="btn btn-primary">Crear Equipo</button>
+  </div>
+  <div *ngIf="formEquipo.status == 'INVALID'">
+    <button type="submit" class="btn btn-danger" (click)="onReset()">Reset</button>
+  </div>
 </form>
 

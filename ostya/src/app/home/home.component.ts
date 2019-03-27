@@ -48,9 +48,9 @@ export class HomeComponent implements OnInit {
     };
     this.friends =[usuario1, usuario2, usuario3, usuario4, usuario5]
   }
-    
-    
-    
+
+
+
   ngOnInit() {
   }
 
