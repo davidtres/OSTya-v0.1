@@ -1,12 +1,17 @@
-import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
-import { FirebaseService } from '../services/firebase.service';
-import { Iclouds } from '../interfaces/iclouds';
+import { Component, OnInit } from "@angular/core";
+import {
+  FormGroup,
+  FormControl,
+  Validators,
+  FormBuilder
+} from "@angular/forms";
+import { FirebaseService } from "../services/firebase.service";
+import { Iclouds } from "../interfaces/iclouds";
 
 @Component({
-  selector: 'app-icloud',
-  templateUrl: './icloud.component.html',
-  styleUrls: ['./icloud.component.css']
+  selector: "app-icloud",
+  templateUrl: "./icloud.component.html",
+  styleUrls: ["./icloud.component.css"]
 })
 export class IcloudComponent implements OnInit {
   formIcloud: FormGroup;
@@ -26,23 +31,24 @@ export class IcloudComponent implements OnInit {
     nota: null
   };
 
-
-  constructor( private firebaseService: FirebaseService, private formBuilder: FormBuilder) {
-    firebaseService.getCliente()
-      .valueChanges().subscribe(clientes => {
+  constructor(
+    private firebaseService: FirebaseService,
+    private formBuilder: FormBuilder
+  ) {
+    firebaseService
+      .getCliente()
+      .valueChanges()
+      .subscribe(clientes => {
         this.clienteFire = clientes;
-    });
+      });
   }
-  private buildForm(){
+  private buildForm() {
     this.formIcloud = new FormGroup({
-      cliente: new FormControl(this.newIcloud.cliente, [
-        Validators.required
-      ]),
+      cliente: new FormControl(this.newIcloud.cliente, [Validators.required])
     });
   }
 
   ngOnInit() {
     this.buildForm();
   }
-
 }
