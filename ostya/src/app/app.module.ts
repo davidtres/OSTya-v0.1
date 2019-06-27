@@ -24,8 +24,9 @@ import { CommonModule } from "@angular/common";
 import { NgBootstrapFormValidationModule } from "ng-bootstrap-form-validation";
 import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 import { IcloudComponent } from "./icloud/icloud.component";
-
+import { AgmCoreModule } from "@agm/core";
 import { ListarClienteComponent } from "./listar-cliente/listar-cliente.component";
+import { MapaComponent } from "./mapa/mapa.component";
 
 const appRoutes: Routes = [
   { path: "", component: HomeComponent },
@@ -53,7 +54,8 @@ const appRoutes: Routes = [
     ParametrosComponent,
     MenuComponent,
     IcloudComponent,
-    ListarClienteComponent
+    ListarClienteComponent,
+    MapaComponent
   ],
   imports: [
     BrowserModule,
@@ -69,7 +71,10 @@ const appRoutes: Routes = [
     CommonModule,
     NgBootstrapFormValidationModule.forRoot(),
     NgBootstrapFormValidationModule,
-    NgbModule
+    NgbModule,
+    AgmCoreModule.forRoot({
+      apiKey: "AIzaSyAorrP1RL6rUh3NI1dEHYIxUUmhjaVWbfc"
+    })
   ],
   providers: [],
   bootstrap: [AppComponent]
