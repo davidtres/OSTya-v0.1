@@ -15,7 +15,7 @@ export class ListarClienteComponent implements OnInit {
       .valueChanges()
       .subscribe(clientes => {
         this.clientesfire = clientes;
-        console.log(clientes);
+        //console.log(clientes);
       });
   }
 

@@ -27,6 +27,9 @@ import { IcloudComponent } from "./icloud/icloud.component";
 import { AgmCoreModule } from "@agm/core";
 import { ListarClienteComponent } from "./listar-cliente/listar-cliente.component";
 import { MapaComponent } from "./mapa/mapa.component";
+import { ActualizarClienteComponent } from "./actualizar-cliente/actualizar-cliente.component";
+import { FirebaseService } from "./services/firebase.service";
+import { EditarClienteComponent } from "./editar-cliente/editar-cliente.component";
 
 const appRoutes: Routes = [
   { path: "", component: HomeComponent },
@@ -34,12 +37,14 @@ const appRoutes: Routes = [
   { path: "login", component: LoginComponent },
   { path: "agenda", component: AgendaComponent },
   { path: "actualizar-orden", component: ActualizarOrdenComponent },
-  { path: "crear-cliente", component: CrearClienteComponent },
+  { path: "crear-cliente/:id", component: CrearClienteComponent },
   { path: "listar-cliente", component: ListarClienteComponent },
   { path: "crear-equipo", component: CrearEquipoComponent },
   { path: "crear-usuario", component: CrearUsuarioComponent },
   { path: "parametros", component: ParametrosComponent },
-  { path: "icloud", component: IcloudComponent }
+  { path: "icloud", component: IcloudComponent },
+  { path: "actualizar-cliente/:id", component: ActualizarClienteComponent },
+  { path: "editar-cliente", component: EditarClienteComponent }
 ];
 @NgModule({
   declarations: [
@@ -55,7 +60,9 @@ const appRoutes: Routes = [
     MenuComponent,
     IcloudComponent,
     ListarClienteComponent,
-    MapaComponent
+    MapaComponent,
+    ActualizarClienteComponent,
+    EditarClienteComponent
   ],
   imports: [
     BrowserModule,
@@ -76,7 +83,7 @@ const appRoutes: Routes = [
       apiKey: "AIzaSyAorrP1RL6rUh3NI1dEHYIxUUmhjaVWbfc"
     })
   ],
-  providers: [],
+  providers: [FirebaseService],
   bootstrap: [AppComponent]
 })
 export class AppModule {}

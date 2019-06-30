@@ -1,0 +1,33 @@
+<div class="well">
+  <a [routerLink]="['/listar-cliente']">Actualizar Cliente</a> /
+  {{ clienteActual.nombre }}
+</div>
+<div class="container">
+  <div>
+    <br />
+    <h3>{{ clienteActual.nombre }}</h3>
+    <small>NIT: {{ clienteActual.id }}</small>
+    <p>Tipo de Cliente: {{ clienteActual.tipo }}</p>
+  </div>
+  <hr />
+  <div class="row">
+    <div class="col">
+      <b>Contacto: </b>{{ clienteActual.contacto }} <br />
+      <b>Correo: </b>{{ clienteActual.correo }} <br />
+      <b>Telefono: </b>{{ clienteActual.telefono }} <br />
+      <b>Celular: </b>{{ clienteActual.celular }} <br />
+    </div>
+    <div class="col">
+      <b>Direcciones: </b>{{ clienteActual.direcciones }} <br />
+      <b>Coordenadas: </b>{{ clienteActual.coordenadas }} <br />
+    </div>
+  </div>
+  <br />
+  <a
+    type="submit"
+    class="btn btn-warning"
+    routerLink="/crear-cliente/{{ clienteActual.id }}"
+  >
+    Editar
+  </a>
+</div>

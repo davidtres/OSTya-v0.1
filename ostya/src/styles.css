@@ -3,3 +3,8 @@
   background-color: aliceblue;
   color: darkblue;
 }
+.well {
+  background-color: blanchedalmond;
+  padding: 10px;
+  padding-left: 10%;
+}

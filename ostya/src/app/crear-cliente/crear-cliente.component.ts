@@ -9,6 +9,7 @@ import {
   FormControl
 } from "@angular/forms";
 import { database } from "firebase";
+import { ActivatedRoute, Router } from "@angular/router";
 
 @Component({
   selector: "app-crear-cliente",
@@ -46,15 +47,32 @@ export class CrearClienteComponent implements OnInit {
   static creado: any;
   static NewClietne: any;
   clientesfire: any;
+  id: any = null;
+  clienteObtenido: any;
 
-  constructor(private firebaseService: FirebaseService) {
+  constructor(
+    private firebaseService: FirebaseService,
+    private route: ActivatedRoute,
+    private ruta: Router
+  ) {
     firebaseService
       .getCliente()
       .valueChanges()
       .subscribe(clientes => {
         this.clientesfire = clientes;
-        console.log(clientes);
       });
+    this.id = this.route.snapshot.params["id"];
+    if (this.id != "new") {
+      firebaseService
+        .obtenerCliente(this.id)
+        .valueChanges()
+        .subscribe(cliente => {
+          this.clienteObtenido = cliente;
+          //console.log(this.clienteObtenido);
+          //this.cliente = this.clienteObtenido
+          this.cliente = this.clienteObtenido;
+        });
+    }
   }
 
   ngOnInit() {
@@ -99,6 +117,7 @@ export class CrearClienteComponent implements OnInit {
     setTimeout(() => {
       this.NewCliente = false;
       this.onReset();
+      this.ruta.navigate(["/listar-cliente"]);
     }, 3000);
   }
 
@@ -129,6 +148,6 @@ export class CrearClienteComponent implements OnInit {
     let fechaHoy: any;
     fechaHoy = Date.now();
     this.cliente.fechaCreacion = fechaHoy;
-    return console.log(this.cliente.fechaCreacion);
+    //return console.log(this.cliente.fechaCreacion);
   }
 }

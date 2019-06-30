@@ -1,22 +1,11 @@
-<div class="well"><a [routerLink]="['/home']">Home</a> / Editar Clientes</div>
 <div class="container">
-  <ng-container *ngIf="cliente.id == new; then Crea; else Edita">
-  </ng-container>
-  <ng-template #Crea>
-    <div>
-      <h1>Crear Cliente</h1>
-    </div>
-  </ng-template>
-  <ng-template #Edita>
-    <div>
-      <h1>Editar Cliente</h1>
-    </div>
-  </ng-template>
+  <h1>EDITAR CLIENTE</h1>
 
   <hr />
-  <div class="alert alert-success" role="alert" *ngIf="NewCliente">
-    Cliente se ha guardado con exito!!
-  </div>
+  <!-- <div class="alert alert-success" role="alert" *ngIf="NewCliente">
+    Cliente se ha creado con exito!!
+  </div> -->
+
   <form [formGroup]="formGroup" (validSubmit)="guardarCliente()">
     <!-- Primera fila -->
     <div class="form-row">
@@ -24,16 +13,15 @@
         <label for="inputId">Identificacion</label>
         <input
           type="number"
-          (blur)="validarCliente()"
           class="form-control"
           formControlName="Id"
           placeholder="Identificacion"
           [(ngModel)]="cliente.id"
           name="identificacion"
         />
-        <div class="alert alert-danger" role="alert" *ngIf="existe">
+        <!-- <div class="alert alert-danger" role="alert" *ngIf="existe">
           CLIENTE EXISTE!
-        </div>
+        </div> -->
       </div>
       <div class="form-group col-md-6">
         <label for="inputNombre">Nombre</label>
@@ -163,7 +151,13 @@
     </div>
   </form>
   <div *ngIf="formGroup.status == 'INVALID'">
-    <a class="btn btn-danger" routerLink="/listar-cliente/">Cancelar</a>
+    <a
+      type="submit"
+      class="btn btn-danger"
+      routerLink="/actualizar-cliente/900533968"
+    >
+      Cancelar
+    </a>
   </div>
   <hr />
 </div>
