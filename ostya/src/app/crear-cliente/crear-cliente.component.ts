@@ -1,13 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { FirebaseService } from "../services/firebase.service";
 import { Cliente } from "../interfaces/cliente";
-import {
-  AbstractControl,
-  FormBuilder,
-  FormGroup,
-  Validators,
-  FormControl
-} from "@angular/forms";
+import { FormGroup, Validators, FormControl } from "@angular/forms";
 import { database } from "firebase";
 import { ActivatedRoute, Router } from "@angular/router";
 
@@ -92,7 +86,7 @@ export class CrearClienteComponent implements OnInit {
           /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
         )
       ]),
-      Dir: new FormControl(this.cliente.direcciones[0], [Validators.required]),
+      Dir: new FormControl(this.cliente.direcciones, [Validators.required]),
       Cel: new FormControl(this.cliente.celular, [
         Validators.required,
         Validators.minLength(10)

@@ -17,7 +17,11 @@
   <div class="alert alert-success" role="alert" *ngIf="NewCliente">
     Cliente se ha guardado con exito!!
   </div>
-  <form [formGroup]="formGroup" (validSubmit)="guardarCliente()">
+  <form
+    [formGroup]="formGroup"
+    (validSubmit)="guardarCliente()"
+    autocomplete="off"
+  >
     <!-- Primera fila -->
     <div class="form-row">
       <div class="form-group col-md-2">

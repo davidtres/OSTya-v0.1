@@ -1,5 +1,131 @@
 <div class="container">
-  <h1>Crear Usuario</h1>
-  <hr />
-  
+  <form
+    [formGroup]="formGroup"
+    (validSubmit)="guardarCliente()"
+    autocomplete="off"
+  >
+    <!-- Primera fila -->
+    <div class="form-row">
+      <div class="form-group col-md-2">
+        <label for="inputId">Identificacion</label>
+        <input
+          type="number"
+          (blur)="validarCliente()"
+          class="form-control"
+          formControlName="Id"
+          placeholder="Identificacion"
+          [(ngModel)]="empleado.id"
+          name="identificacion"
+        />
+        <div class="alert alert-danger" role="alert" *ngIf="existe">
+          CLIENTE EXISTE!
+        </div>
+      </div>
+      <div class="form-group col-md-6">
+        <label for="inputNombre">Nombre</label>
+        <input
+          type="text"
+          class="form-control"
+          formControlName="Nombre"
+          placeholder="Nombre"
+          [(ngModel)]="empleado.nombre"
+          name="Nombre"
+        />
+      </div>
+      <div class="form-group col-md-4">
+        <label for="Correo">Correo</label>
+        <input
+          type="email"
+          class="form-control"
+          formControlName="Correo"
+          placeholder="Correo"
+          [(ngModel)]="empleado.correo"
+          name="Correo"
+        />
+      </div>
+    </div>
+    <!-- Segunda fila -->
+    <div class="form-row">
+      <div class="form-group col-md-8">
+        <label for="Dir">Direccion, Incluir la ciudad</label>
+        <input
+          type="text"
+          class="form-control"
+          formControlName="Dir"
+          placeholder="Direccion"
+          [(ngModel)]="empleado.direcciones[0]"
+          name="Dir"
+        />
+      </div>
+      <div class="form-group col-md-2">
+        <label for="Lat">Latitud</label>
+        <input
+          type="number"
+          class="form-control"
+          formControlName="Lat"
+          placeholder="Latitud"
+          [(ngModel)]="empleado.coordenadas[0]"
+          name="Lat"
+        />
+      </div>
+      <div class="form-group col-md-2">
+        <label for="Long">Longitud</label>
+        <input
+          type="number"
+          class="form-control"
+          formControlName="Long"
+          placeholder="Longitud"
+          [(ngModel)]="empleado.coordenadas[1]"
+          name="Long"
+        />
+      </div>
+    </div>
+    <!-- Tercera fila-->
+    <div class="form-row">
+      <div class="form-group col-md-3">
+        <label for="Tel">Telefono</label>
+        <input
+          type="text"
+          class="form-control"
+          formControlName="Tel"
+          placeholder="Telefono"
+          [(ngModel)]="empleado.telefono"
+          name="Tel"
+        />
+      </div>
+      <div class="form-group col-md-3">
+        <label for="Cel">Celular</label>
+        <input
+          type="text"
+          class="form-control"
+          formControlName="Cel"
+          placeholder="Celular"
+          [(ngModel)]="empleado.celular"
+          name="Cel"
+        />
+      </div>
+    </div>
+    <!-- Cuarta fila -->
+    <div class="form-group">
+      <div class="form-check">
+        <input
+          class="form-check-input"
+          formControlName="Activo"
+          type="checkbox"
+          name="Activo"
+          [(ngModel)]="empleado.activo"
+        />
+        <label class="form-check-label" for="accesoOstya">
+          ACTIVO
+        </label>
+      </div>
+    </div>
+    <!-- Cuarta fila-->
+    <div *ngIf="formGroup.status == 'VALID'">
+      <button type="submit" class="btn btn-primary">Guardar Cliente</button>
+    </div>
+  </form>
+  <div *ngIf="formGroup.status == 'INVALID'">
+    <a class="btn btn-danger" routerLink="/listar-cliente/">Cancelar</a>
+  </div>
 </div>
