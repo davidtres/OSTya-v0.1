@@ -36,6 +36,8 @@ import { EstadoComponent } from "./estado/estado.component";
 import { ListarEstadosComponent } from "./listar-estados/listar-estados.component";
 import { TservicioComponent } from "./tservicio/tservicio.component";
 import { ListarOrdenesComponent } from "./listar-ordenes/listar-ordenes.component";
+import { FullCalendarModule } from "@fullcalendar/angular";
+import { AgendaPrComponent } from './agenda-pr/agenda-pr.component'; // for FullCalendar!;
 
 const appRoutes: Routes = [
   { path: "", component: HomeComponent },
@@ -80,7 +82,8 @@ const appRoutes: Routes = [
     EstadoComponent,
     ListarEstadosComponent,
     TservicioComponent,
-    ListarOrdenesComponent
+    ListarOrdenesComponent,
+    AgendaPrComponent
   ],
   imports: [
     BrowserModule,
@@ -99,7 +102,8 @@ const appRoutes: Routes = [
     NgbModule,
     AgmCoreModule.forRoot({
       apiKey: "AIzaSyAorrP1RL6rUh3NI1dEHYIxUUmhjaVWbfc"
-    })
+    }),
+    FullCalendarModule
   ],
   providers: [FirebaseService],
   bootstrap: [AppComponent]

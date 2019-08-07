@@ -1,3 +1,10 @@
-<p>
-  agenda works!
-</p>
+<div class="container">
+  <h2>AGENDA</h2>
+  <full-calendar
+    defaultView="dayGridMonth"
+    [plugins]="calendarPlugins"
+    [events]="calendarEvents"
+    deepChangeDetection="true"
+  ></full-calendar>
+  <button (click)="addEvent()">Agregar Evento</button>
+</div>
