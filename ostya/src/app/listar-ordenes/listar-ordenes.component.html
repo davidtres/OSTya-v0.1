@@ -1,0 +1,21 @@
+<!-- <div class="well"><a [routerLink]="['/home']">Home</a> / Listar Usuarios</div> -->
+<div class="container">
+  <h3>ORDENES SIN ASIGNAR</h3>
+  <!-- Lista de usuarios -->
+  <ul class="list-group">
+    <ng-container *ngFor="let User of userFire; let i = index">
+      <h2 class="list-group-item">
+        {{ User.nombre }}
+      </h2>
+      <ng-container *ngFor="let ordenes of ordenFire; let i = index">
+        <div *ngIf="ordenes.tecnicoAsignado == User.nombre">
+          <li class="list-group-item" [ngClass]="{ numero_par: (i + 1) % 2 }">
+            {{ ordenes.id }} - {{ ordenes.cliente }} -
+            {{ ordenes.tecnicoAsignado }}
+            <!-- </li><a routerLink="/crear-usuario/{{ orden.id }}"></a> -->
+          </li>
+        </div></ng-container
+      >
+    </ng-container>
+  </ul>
+</div>

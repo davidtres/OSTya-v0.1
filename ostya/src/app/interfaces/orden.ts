@@ -1,14 +1,17 @@
 import { TipoOrden } from "./tOrden";
 
-export interface Orden{
-    numero: number;
-    cliente: string;
-    fechaSolicitud: Date;
-    fechaFinal: Date;
-    tecnicoAsignado: string;
-    tipo: TipoOrden;
-    equipo: string;
-    solicitud: string;
-    nota: string;
-    estado: string
+export interface Orden {
+  id: number;
+  cliente: string;
+  fechaSolicitud: Date;
+  fechaFinal?: Date;
+  tecnicoAsignado: string;
+  tipo: string;
+  equipo?: string;
+  solicitud: string;
+  nota?: string;
+  estado: string;
+  triage: number;
+  doc: string;
+  modificador: string;
 }

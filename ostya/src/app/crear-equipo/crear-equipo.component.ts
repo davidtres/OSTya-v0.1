@@ -18,7 +18,7 @@ import { eComunicacion } from "../interfaces/eComunicacion";
   styleUrls: ["./crear-equipo.component.css"]
 })
 export class CrearEquipoComponent implements OnInit {
-  // Inicializacion de variables de las interfaces
+  // Inicializacion de variables de la interface PCS
   newEquipo: PCS = {
     id: 1,
     cliente: null,
@@ -134,7 +134,6 @@ export class CrearEquipoComponent implements OnInit {
   clientesFire: any;
   nextFire: any;
   newEquipoListo: boolean = false;
-
   constructor(
     private firebaseService: FirebaseService,
     private formBuilder: FormBuilder
@@ -144,6 +143,7 @@ export class CrearEquipoComponent implements OnInit {
       .valueChanges()
       .subscribe(clientes => {
         this.clientesFire = clientes;
+        firebaseService.ordenanzaNombre(this.clientesFire);
       });
     firebaseService
       .getNext(this.newEquipo.doc)
@@ -153,11 +153,13 @@ export class CrearEquipoComponent implements OnInit {
         console.log(this.nextFire);
         //verificar Consecutivo vacio desde el servicio y lo crea
         if (this.nextFire == 0) {
-          this.nextFire = firebaseService.verificarConsecutivo(
-            this.nextFire,
-            this.newEquipo.doc
-          );
+          this.nextFire = {
+            doc: this.newEquipo.doc,
+            next: 0
+          };
           console.log(this.nextFire);
+          console.log(this.nextFire.next);
+          this.firebaseService.setNext(this.nextFire);
         }
       });
   }
@@ -187,15 +189,17 @@ export class CrearEquipoComponent implements OnInit {
       this.newEquipoListo = true;
       let Incrementar = this.nextFire[1] + 1;
       this.newEquipo.id = Incrementar;
-      debugger;
+
       let newNext = {
         doc: this.newEquipo.doc,
         next: Incrementar
       };
+      console.log(newNext);
       this.firebaseService.guardarEquipo(this.newEquipo);
       this.firebaseService.setNext(newNext);
     }, 100);
   }
+
   onReset() {
     this.formEquipo.reset();
     //this.frmAddLicencia.reset();

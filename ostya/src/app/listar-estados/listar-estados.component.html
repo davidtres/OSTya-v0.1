@@ -1,0 +1,35 @@
+<div class="well"><a [routerLink]="['/home']">Home</a> / Listar Estados</div>
+<div class="container">
+  <h3>ESTADOS</h3>
+  <a class="dropdown-item" routerLink="/estados/new" class="btn btn-primary"
+    >Nuevo Estado</a
+  ><br />
+  <hr />
+  <ul class="list-group">
+    <ng-container>
+      <!-- <a routerLink="/crear-usuario/{{ estados.id }}"
+        ><li class="list-group-item" [ngClass]="{ numero_par: (i + 1) % 2 }">
+          {{ estados.nombre }}
+        </li></a
+      > -->
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th scope="col">ID</th>
+            <th scope="col">NOMBRE</th>
+            <th scope="col">FIN ORDEN</th>
+          </tr>
+        </thead>
+        <tbody *ngFor="let estados of estadosfire; let i = index">
+          <tr>
+            <th scope="row">{{ i + 1 }}</th>
+            <a routerLink="/estados/{{ estados.id }}"
+              ><td>{{ estados.nombre }}</td></a
+            >
+            <td>{{ estados.finOrden }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </ng-container>
+  </ul>
+</div>

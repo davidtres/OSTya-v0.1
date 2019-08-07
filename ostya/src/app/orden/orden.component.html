@@ -1,0 +1,143 @@
+<div class="well"><a [routerLink]="['/home']">Home</a> / Editar Orden</div>
+<div class="container">
+  <form
+    [formGroup]="formGroup"
+    (validSubmit)="guardarOrden()"
+    autocomplete="off"
+  >
+    <div class="form-row justify-content-md-center">
+      <ng-container *ngIf="orden.id == 'new'; then Crea; else Edita">
+      </ng-container>
+      <ng-template #Crea>
+        <div>
+          <h1>Crear Orden</h1>
+        </div>
+      </ng-template>
+      <ng-template #Edita>
+        <div>
+          <h1>Editar Orden</h1>
+        </div>
+      </ng-template>
+    </div>
+    <div class="form-row justify-content-md-center">
+      <div class="form-group col-md-6 ">
+        <label for="cliente">Cliente</label>
+        <select
+          formControlName="cliente"
+          class="form-control"
+          [(ngModel)]="orden.cliente"
+          name="cliente"
+        >
+          <option>Seleccione cliente ... </option>
+          <option *ngFor="let clienteSelect of clientesfire"
+            >{{ clienteSelect.nombre }}
+          </option>
+        </select>
+      </div>
+    </div>
+    <div class="form-row justify-content-md-center">
+      <div class="form-group col-md-6">
+        <label for="tiposerv">Tipo Servicio</label>
+        <select
+          formControlName="tiposerv"
+          class="form-control"
+          [(ngModel)]="orden.tipo"
+          name="tiposerv"
+        >
+          <option>Seleccione servicio ... </option>
+          <option *ngFor="let tipo of tipoOrden.tipo">{{ tipo }} </option>
+        </select>
+      </div>
+    </div>
+    <div class="form-row justify-content-md-center">
+      <div class="form-group col-md-6">
+        <label for="servicio">Servicio Solicitado</label>
+        <textarea
+          rows="3"
+          class="form-control"
+          formControlName="servicio"
+          placeholder="Descripcion del servicio..."
+          [(ngModel)]="orden.solicitud"
+          name="servicio"
+        ></textarea>
+      </div>
+    </div>
+    <div class="form-row justify-content-md-center">
+      <div class="form-group col-md-6">
+        <label for="comentarios">Comentarios Internos</label>
+        <textarea
+          rows="3"
+          class="form-control"
+          formControlName="comentarios"
+          placeholder="Comentarios adicionales"
+          [(ngModel)]="orden.nota"
+          name="comentarios"
+        ></textarea>
+      </div>
+    </div>
+    <div class="form-row justify-content-md-center">
+      <div class="form-group col-md-6">
+        <h4 style="text-align: center">
+          <label for="triage">Nivel de urgencia "Triage" </label>
+        </h4>
+        <h3 style="text-align: center">{{ orden.triage }}</h3>
+        <input
+          type="range"
+          class="custom-range"
+          min="0"
+          max="5"
+          name="triage"
+          formControlName="triage"
+          [(ngModel)]="orden.triage"
+        />
+        <span [ngSwitch]="orden.triage" style="width: 100px">
+          <p *ngSwitchCase="1" class="alert alert-success">
+            PRIORIDAD BAJA
+          </p>
+          <p *ngSwitchCase="2" class="alert alert-primary">
+            PARA PROGRAMAR
+          </p>
+          <p *ngSwitchCase="3" class="alert alert-secondary">
+            MAXIMO MAÑANA LA ATENCION
+          </p>
+          <p *ngSwitchCase="4" class="alert alert-warning">
+            ATENDER TRANCURSO DEL DIA
+          </p>
+          <p *ngSwitchCase="5" class="alert alert-danger">
+            URGENCIA ATENCION INMEDIATA
+          </p>
+          <p *ngSwitchDefault class="alert alert-dark">
+            SELECCIONE PRIORIDAD
+          </p>
+        </span>
+      </div>
+
+      <!-- <div ng-switch on="2">
+          <div ng-sw>Es texto y sólo está si hay una A</div>
+          <div ng-switch-when="3">Texto para el valor B</div>
+          <div ng-switch-default>Texto para cuando no es ni A ni B</div>
+        </div> -->
+    </div>
+    <div class="form-row justify-content-md-center">
+      <div *ngIf="formGroup.status == 'VALID'">
+        <button type="submit" class="btn btn-primary">CREAR ORDEN</button>
+      </div>
+      <div *ngIf="formGroup.status == 'INVALID'">
+        <a class="btn btn-danger" routerLink="/home/">CANCELAR</a>
+      </div>
+      <div
+        style="padding-left: 35px"
+        class="d-flex align-items-center"
+        *ngIf="guardando == true"
+      >
+        <strong>Guardando...</strong>
+        <div
+          class="spinner-border ml-auto text-primary"
+          role="status"
+          aria-hidden="true"
+        ></div>
+      </div>
+    </div>
+    <br />
+  </form>
+</div>

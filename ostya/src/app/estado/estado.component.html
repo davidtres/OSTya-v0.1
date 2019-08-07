@@ -1,0 +1,75 @@
+<div class="container">
+  <form
+    [formGroup]="formGroup"
+    (validSubmit)="guardarEstado()"
+    autocomplete="off"
+  >
+    <div class="form-row justify-content-md-center">
+      <ng-container *ngIf="id == 'new'; then Crea; else Edita"> </ng-container>
+      <ng-template #Crea>
+        <div>
+          <h1>Crear estado</h1>
+          <hr />
+          <br />
+        </div>
+      </ng-template>
+      <ng-template #Edita>
+        <div>
+          <h1>Editar Estado</h1>
+          <hr />
+          <br />
+        </div>
+      </ng-template>
+    </div>
+    <div class="form-row justify-content-md-center">
+      <div class="form-group col-md-6">
+        <label for="inputNombre">Nombre del estado</label>
+        <input
+          type="text"
+          class="form-control"
+          formControlName="Nombre"
+          placeholder="Nombre"
+          [(ngModel)]="estado.nombre"
+          name="Nombre"
+        />
+      </div>
+    </div>
+    <div class="form-row justify-content-md-center">
+      <div class="form-check" class="form-group col-md-3">
+        <input
+          class="form-check-input"
+          formControlName="Cierra"
+          type="checkbox"
+          name="Cierra"
+          [(ngModel)]="estado.finOrden"
+        />
+        <label class="form-check-label" for="accesoOstya">
+          CIERRA LA ORDEN
+        </label>
+      </div>
+    </div>
+    <div class="form-row justify-content-md-center">
+      <div *ngIf="formGroup.status == 'VALID'">
+        <button type="submit" class="btn btn-primary">GUARDAR ESTADO</button>
+      </div>
+      <div *ngIf="formGroup.status == 'INVALID'">
+        <a class="btn btn-danger" routerLink="/listado-estados/">CANCELAR</a>
+      </div>
+      <div
+        style="padding-left: 35px"
+        class="d-flex align-items-center"
+        *ngIf="Guardando"
+      >
+        <strong>Guardando...</strong>
+        <div
+          class="spinner-border ml-auto text-primary"
+          role="status"
+          aria-hidden="true"
+        ></div>
+      </div>
+    </div>
+  </form>
+  <br />
+  <hr />
+  <br />
+</div>

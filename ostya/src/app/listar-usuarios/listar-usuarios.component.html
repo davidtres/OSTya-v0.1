@@ -1,0 +1,13 @@
+<div class="well"><a [routerLink]="['/home']">Home</a> / Listar Usuarios</div>
+<div class="container">
+  <h3>USUARIOS ACTUALES</h3>
+  <ul class="list-group">
+    <ng-container *ngFor="let usuarios of usuariosfire; let i = index">
+      <a routerLink="/crear-usuario/{{ usuarios.id }}"
+        ><li class="list-group-item" [ngClass]="{ numero_par: (i + 1) % 2 }">
+          {{ usuarios.nombre }}
+        </li></a
+      >
+    </ng-container>
+  </ul>
+</div>

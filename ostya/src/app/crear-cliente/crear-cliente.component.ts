@@ -31,7 +31,6 @@ export class CrearClienteComponent implements OnInit {
     activo: true,
     acceder: false
   };
-
   tPersona: any = [
     { tipo: "P. Natural" },
     { tipo: "P. Juridica" },
@@ -40,22 +39,25 @@ export class CrearClienteComponent implements OnInit {
 
   static creado: any;
   static NewClietne: any;
-  clientesfire: any;
-  id: any = null;
-  clienteObtenido: any;
+  clientesfire: any; //almacena listado de clientes get_fire
+  id: any = null; //para capturar parametro
+  clienteObtenido: any; //se guarda cliente filtrado por el paramtro
 
   constructor(
     private firebaseService: FirebaseService,
     private route: ActivatedRoute,
     private ruta: Router
   ) {
+    //Se guardan los clientes obtenidos de firebase
     firebaseService
       .getCliente()
       .valueChanges()
       .subscribe(clientes => {
         this.clientesfire = clientes;
       });
+    //Se captura parametro de la URl
     this.id = this.route.snapshot.params["id"];
+    // Condicional para saber si el cliente es new o trae ID en el paramtro
     if (this.id != "new") {
       firebaseService
         .obtenerCliente(this.id)
@@ -70,9 +72,9 @@ export class CrearClienteComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.buildForm();
+    this.buildForm(); //inicializa contructor del formulario
   }
-  // constructor del formulario
+  // constructor del formulario + validaciones
   private buildForm() {
     this.formGroup = new FormGroup({
       Id: new FormControl(this.cliente.id, [Validators.required]),
@@ -103,11 +105,13 @@ export class CrearClienteComponent implements OnInit {
 
   // funcion del boton "Crear cliente"
   guardarCliente() {
+    //Asignacion de fecha de creacion del cliente
     this.asignarFecha();
     // llamado al metodo "guardarCliente del servicio para comunicacion con firebase"
     this.firebaseService.guardarCliente(this.cliente);
-    //this.onReset();
+    //NewCliente verdadero para enviar alert de creacion en html
     this.NewCliente = true;
+    //tiempo para guardado en firebase, reseteear formulario y regregar al listado de clientes.
     setTimeout(() => {
       this.NewCliente = false;
       this.onReset();

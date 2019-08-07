@@ -30,6 +30,12 @@ import { MapaComponent } from "./mapa/mapa.component";
 import { ActualizarClienteComponent } from "./actualizar-cliente/actualizar-cliente.component";
 import { FirebaseService } from "./services/firebase.service";
 import { EditarClienteComponent } from "./editar-cliente/editar-cliente.component";
+import { ListarUsuariosComponent } from "./listar-usuarios/listar-usuarios.component";
+import { OrdenComponent } from "./orden/orden.component";
+import { EstadoComponent } from "./estado/estado.component";
+import { ListarEstadosComponent } from "./listar-estados/listar-estados.component";
+import { TservicioComponent } from "./tservicio/tservicio.component";
+import { ListarOrdenesComponent } from "./listar-ordenes/listar-ordenes.component";
 
 const appRoutes: Routes = [
   { path: "", component: HomeComponent },
@@ -40,11 +46,17 @@ const appRoutes: Routes = [
   { path: "crear-cliente/:id", component: CrearClienteComponent },
   { path: "listar-cliente", component: ListarClienteComponent },
   { path: "crear-equipo", component: CrearEquipoComponent },
-  { path: "crear-usuario", component: CrearUsuarioComponent },
+  { path: "crear-usuario/:id", component: CrearUsuarioComponent },
   { path: "parametros", component: ParametrosComponent },
   { path: "icloud", component: IcloudComponent },
   { path: "actualizar-cliente/:id", component: ActualizarClienteComponent },
-  { path: "editar-cliente", component: EditarClienteComponent }
+  { path: "editar-cliente", component: EditarClienteComponent },
+  { path: "listar-usuarios", component: ListarUsuariosComponent },
+  { path: "crear-orden/:id", component: OrdenComponent },
+  { path: "estados/:id", component: EstadoComponent },
+  { path: "listado-estados", component: ListarEstadosComponent },
+  { path: "tipo-servicio", component: TservicioComponent },
+  { path: "listar-ordenes", component: ListarOrdenesComponent }
 ];
 @NgModule({
   declarations: [
@@ -62,7 +74,13 @@ const appRoutes: Routes = [
     ListarClienteComponent,
     MapaComponent,
     ActualizarClienteComponent,
-    EditarClienteComponent
+    EditarClienteComponent,
+    ListarUsuariosComponent,
+    OrdenComponent,
+    EstadoComponent,
+    ListarEstadosComponent,
+    TservicioComponent,
+    ListarOrdenesComponent
   ],
   imports: [
     BrowserModule,

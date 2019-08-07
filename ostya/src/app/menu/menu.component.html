@@ -34,8 +34,12 @@
           USUARIO
         </a>
         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-          <a class="dropdown-item" routerLink="/crear-usuario">Crear Usuario</a>
-          <a class="dropdown-item" href="#">Actualizar Usuario</a>
+          <a class="dropdown-item" routerLink="/crear-usuario/new"
+            >Crear Usuario</a
+          >
+          <a class="dropdown-item" routerLink="/listar-usuarios"
+            >Actualizar Usuario</a
+          >
           <div class="dropdown-divider"></div>
           <a class="dropdown-item" href="#">Something else here</a>
         </div>
@@ -65,6 +69,45 @@
             >Equipo de Cliente</a
           >
           <a class="dropdown-item" routerLink="/icloud">Icloud's de Cliente</a>
+        </div>
+      </li>
+      <!-- MENU ORDENES -->
+      <li class="nav-item dropdown">
+        <a
+          class="nav-link dropdown-toggle"
+          href="#"
+          id="navbarDropdown"
+          role="button"
+          data-toggle="dropdown"
+          aria-haspopup="true"
+          aria-expanded="false"
+        >
+          ORDENES
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+          <a class="dropdown-item" routerLink="/crear-orden/new">Crear Orden</a>
+        </div>
+      </li>
+      <!-- MENU CONFIGURACION -->
+      <li class="nav-item dropdown">
+        <a
+          class="nav-link dropdown-toggle"
+          href="#"
+          id="navbarDropdown"
+          role="button"
+          data-toggle="dropdown"
+          aria-haspopup="true"
+          aria-expanded="false"
+        >
+          CONFIGURACIONES
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+          <a class="dropdown-item" routerLink="/listado-estados"
+            >Listar Estados</a
+          >
+          <a class="dropdown-item" routerLink="/tipo-servicio"
+            >Tipos de Servicios</a
+          >
         </div>
       </li>
       <!-- <li class="nav-item">

@@ -1,0 +1,21 @@
+<div class="container">
+  <form
+    [formGroup]="formGroup"
+    (validSubmit)="guardarEstado()"
+    autocomplete="off"
+  >
+    <div class="form-row justify-content-md-center">
+      <div class="form-group col-md-6">
+        <label for="inputNombre">Tipo de servicio</label>
+        <input
+          type="text"
+          class="form-control"
+          formControlName="Nombre"
+          placeholder="Nombre"
+          [(ngModel)]="tServicio.nombre"
+          name="Nombre"
+        />
+      </div>
+    </div>
+  </form>
+</div>
