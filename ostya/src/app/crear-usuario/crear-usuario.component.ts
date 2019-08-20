@@ -14,19 +14,21 @@ export class CrearUsuarioComponent implements OnInit {
   usuariosfire: any; //almacena usuario obtenidos de firebase
   // varible para interactuar con campos del HTML (Interfaces)
   empleado: Empleado = {
-    id: null,
+    id: 0,
     nombre: "",
     correo: "",
     password: "",
     direcciones: [],
-    telefono: null,
+    telefono: 0,
     celular: 0,
     fechaCreacion: new Date(Date.now()),
     coordenadas: [0, 0],
     activo: true,
     permisos: [],
-    roll: "",
-    foto: ""
+    rol: "",
+    foto: "",
+    color: "",
+    iniciales: ""
   };
   id: any = null; //para capturar parametro
   usuarioObtenido: any; //se guarda cliente filtrado por el paramtro
@@ -54,6 +56,7 @@ export class CrearUsuarioComponent implements OnInit {
           //console.log(this.clienteObtenido);
           //this.cliente = this.clienteObtenido
           this.empleado = this.usuarioObtenido;
+          this.obtenerIniciales();
         });
     }
   }
@@ -84,6 +87,7 @@ export class CrearUsuarioComponent implements OnInit {
       Lat: new FormControl(this.empleado.coordenadas[0], []),
       Long: new FormControl(this.empleado.coordenadas[1], []),
       Activo: new FormControl(this.empleado.activo, []),
+      Color: new FormControl(this.empleado.color, []),
       fecha: new FormControl(this.empleado.fechaCreacion, [Validators.required])
     });
   }
@@ -130,5 +134,18 @@ export class CrearUsuarioComponent implements OnInit {
     fechaHoy = Date.now();
     this.empleado.fechaCreacion = fechaHoy;
     //return console.log(this.cliente.fechaCreacion);
+  }
+  obtenerIniciales() {
+    this.empleado.iniciales = "";
+    let separador = " ", // un espacio en blanco
+      arregloDeSubCadenas = this.empleado.nombre.split(separador); // SEPARA EL NOMBRE EN CADENAS INDIVIDUALES
+    // IMPRIME LA PRIMERA LETRA DE CADA CADENA
+    for (let i = 0; i < arregloDeSubCadenas.length; i++) {
+      if (i <= 1) {
+        this.empleado.iniciales += arregloDeSubCadenas[i].substring(0, 1);
+      } else {
+        return;
+      }
+    }
   }
 }

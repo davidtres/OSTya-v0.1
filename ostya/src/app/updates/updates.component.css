@@ -2,14 +2,14 @@ table .d {
   table-layout: fixed;
   width: 100%;
 }
-#ingreso {
+#fecha {
   width: 15%;
 }
-#cliente {
-  width: 30%;
+#usuario {
+  width: 5%;
 }
-#solicitud {
-  width: 45%;
+#update {
+  width: 70%;
 }
 #estado {
   width: 10%;

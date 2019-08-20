@@ -34,11 +34,12 @@
         <label for="inputNombre">Nombre</label>
         <input
           type="text"
-          class="form-control"
+          class="form-control text-uppercase"
           formControlName="Nombre"
           placeholder="Nombre"
           [(ngModel)]="empleado.nombre"
           name="Nombre"
+          (blur)="obtenerIniciales()"
         />
       </div>
       <div class="form-group col-md-4">
@@ -112,6 +113,34 @@
           [(ngModel)]="empleado.celular"
           name="Cel"
         />
+      </div>
+      <div class="form-group col-md-2">
+        <label for="Color">Color</label>
+        <input
+          type="color"
+          class="form-control"
+          formControlName="Color"
+          placeholder="Color"
+          [(ngModel)]="empleado.color"
+          name="Color"
+        />
+      </div>
+      <div
+        id="color"
+        class="form-group col-md-2"
+        [ngStyle]="{ 'background-color': empleado.color }"
+      >
+        <p style="margin: 0px">{{ empleado.nombre }}</p>
+      </div>
+      <div id="divInicial" class="form-group col-md-2">
+        <p
+          style="margin-top: 10%"
+          [ngStyle]="{ 'background-color': empleado.color }"
+          id="pInicial"
+          class="font-weight-bolder text-center"
+        >
+          {{ empleado.iniciales }}
+        </p>
       </div>
     </div>
     <!-- Cuarta fila -->

@@ -1,6 +1,16 @@
 export interface Agenda {
-    fecha: Date;
-    horaInicio: Date;
-    horaFin: Date;
-    orden: string
+  title: string;
+  fecha: Date;
+  start: Date;
+  end: Date;
+  duracion: string;
+  orden: number;
+  color: string;
+  estado: string;
+  url: string;
+  llegada: Date;
+  salida: Date;
+  dif: number;
+  tecnico: string;
+  editable: boolean;
 }

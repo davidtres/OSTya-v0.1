@@ -1,5 +1,6 @@
 @import "~@fullcalendar/core/main.css";
 @import "~@fullcalendar/daygrid/main.css";
+@import "~@fullcalendar/timegrid/main.css";
 /* You can add global styles to this file, and also import other style files */
 .numero_par {
   background-color: aliceblue;
@@ -9,4 +10,17 @@
   background-color: blanchedalmond;
   padding: 10px;
   padding-left: 10%;
+}
+#pInicial {
+  padding: 8px;
+  border-radius: 50%;
+  border: solid 1px darkgray;
+  width: 42px;
+  height: 42px;
+  -webkit-text-stroke-width: medium;
+}
+#divInicial {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }

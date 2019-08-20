@@ -37,13 +37,17 @@ import { ListarEstadosComponent } from "./listar-estados/listar-estados.componen
 import { TservicioComponent } from "./tservicio/tservicio.component";
 import { ListarOrdenesComponent } from "./listar-ordenes/listar-ordenes.component";
 import { FullCalendarModule } from "@fullcalendar/angular";
-import { AgendaPrComponent } from './agenda-pr/agenda-pr.component'; // for FullCalendar!;
+import { AgendaPrComponent } from "./agenda-pr/agenda-pr.component";
+import { ListaTservicioComponent } from "./lista-tservicio/lista-tservicio.component";
+import { ProgramacionComponent } from "./programacion/programacion.component";
+import { UpdatesComponent } from "./updates/updates.component"; // for FullCalendar!;
 
 const appRoutes: Routes = [
   { path: "", component: HomeComponent },
   { path: "home", component: HomeComponent },
   { path: "login", component: LoginComponent },
   { path: "agenda", component: AgendaComponent },
+  { path: "agenda-pr", component: AgendaPrComponent },
   { path: "actualizar-orden", component: ActualizarOrdenComponent },
   { path: "crear-cliente/:id", component: CrearClienteComponent },
   { path: "listar-cliente", component: ListarClienteComponent },
@@ -57,8 +61,11 @@ const appRoutes: Routes = [
   { path: "crear-orden/:id", component: OrdenComponent },
   { path: "estados/:id", component: EstadoComponent },
   { path: "listado-estados", component: ListarEstadosComponent },
-  { path: "tipo-servicio", component: TservicioComponent },
-  { path: "listar-ordenes", component: ListarOrdenesComponent }
+  { path: "tipo-servicio/:id", component: TservicioComponent },
+  { path: "listar-ordenes", component: ListarOrdenesComponent },
+  { path: "listar-tservicio", component: ListaTservicioComponent },
+  { path: "programacion/:id", component: ProgramacionComponent },
+  { path: "updates/:id", component: UpdatesComponent }
 ];
 @NgModule({
   declarations: [
@@ -83,7 +90,10 @@ const appRoutes: Routes = [
     ListarEstadosComponent,
     TservicioComponent,
     ListarOrdenesComponent,
-    AgendaPrComponent
+    AgendaPrComponent,
+    ListaTservicioComponent,
+    ProgramacionComponent,
+    UpdatesComponent
   ],
   imports: [
     BrowserModule,

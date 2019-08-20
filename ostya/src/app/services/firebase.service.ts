@@ -64,7 +64,7 @@ export class FirebaseService {
   public guardarUsuario(usuario) {
     this.afBD.database
       .ref("usuarios/" + usuario.id)
-      .set(usuario, function(error) {
+      .update(usuario, function(error) {
         if (error) {
           console.log(error);
         } else {
@@ -72,13 +72,19 @@ export class FirebaseService {
         }
       });
   }
-  //metodo obtener todos los clientes
+  //metodo obtener todos los usuarios
   public getUsuarios() {
     return this.afBD.list("usuarios/");
   }
-  //metodo obtener un solo cliente
+  //metodo obtener un solo usuario
   public obtenerUsuario(id) {
     return this.afBD.object("usuarios/" + id);
+  }
+  //Obtener usuarios activos
+  public getUusariosActivos() {
+    return this.afBD.list("usuarios/", ref =>
+      ref.orderByChild("activo").equalTo(true)
+    );
   }
   /* --------------POR ID ---------------------*/
   // guarda por ID consecutivo. Se solicitan 2 parametros, el dato a guardar y el consecutivo actual.
@@ -114,18 +120,86 @@ export class FirebaseService {
     }
   }
 
-  //obtener todos por ID
+  //obtener todos por tipo de documento
   public getPorId(data) {
     return this.afBD.list(data.doc + "/");
   }
-  public getPorTecnico(data) {
-    return this.afBD.list(data.doc + "/", ref =>
-      ref.orderByChild("tecnicoAsignado").equalTo("david")
+  /* --------------ORDENES---------------------*/
+  public getOrdenesAbiertas() {
+    return this.afBD.list("orden/", ref =>
+      ref.orderByChild("cerrada").equalTo(false)
     );
   }
   //metodo obtener un solo cliente
   public obtenerUnoId(data) {
     return this.afBD.object(data.doc + "/" + data.id);
+  }
+  public obtenerActualizaciones(data) {
+    console.log(data);
+    return this.afBD.list("orden/" + data.orden + "/updates/");
+  }
+  public guardarUpdates(data) {
+    //armar fecha para indice log y data Log
+    this.afBD.database
+      .ref("orden/" + data.orden + "/updates/" + data.fecha)
+      .set(data, function(error) {
+        if (error) {
+          console.log(error);
+        } else {
+          //console.log(cliente);
+        }
+      });
+  }
+  public ActOrdenEstado(data) {
+    console.log(data);
+    this.afBD.database.ref("orden/" + data.id).update(data, function(error) {
+      if (error) {
+        console.log(error);
+      } else {
+        //console.log(cliente);
+      }
+    });
+  }
+  /* --------------AGENDA---------------------*/
+  public guardarAgenda(data) {
+    this.afBD.database.ref("agenda/" + data.orden).set(data, function(error) {
+      if (error) {
+        console.log(error);
+      } else {
+        //console.log(cliente);
+      }
+    });
+  }
+  public guardarLogAgenda(data) {
+    //armar fecha para indice log y data Log
+    let fechahoy = Date.now();
+    this.afBD.database
+      .ref("agenda/" + data.orden + "/log/" + fechahoy)
+      .set(data, function(error) {
+        if (error) {
+          console.log(error);
+        } else {
+          //console.log(cliente);
+        }
+      });
+  }
+
+  public ActOrdenAgendada(data) {
+    this.afBD.database.ref("orden/" + data.id).update(data, function(error) {
+      if (error) {
+        console.log(error);
+      } else {
+        //console.log(cliente);
+      }
+    });
+  }
+  public getAgendaTecnico(data) {
+    return this.afBD.list("agenda/", ref =>
+      ref.orderByChild("tecnico").equalTo(data.tecnico)
+    );
+  }
+  public getAllAgendas() {
+    return this.afBD.list("agenda/");
   }
   /* --------------ORDENAR---------------------*/
   public ordenanzaNombre(items) {
@@ -142,6 +216,19 @@ export class FirebaseService {
       // names must be equal
       return 0;
     });
+  }
+  public inicialesUsuarios(usuario) {
+    let iniciales = "";
+    let separador = " ", // un espacio en blanco
+      arregloDeSubCadenas = usuario.nombre.split(separador); // SEPARA EL NOMBRE EN CADENAS INDIVIDUALES
+    // IMPRIME LA PRIMERA LETRA DE CADA CADENA
+    for (let i = 0; i < arregloDeSubCadenas.length; i++) {
+      if (i <= 1) {
+        iniciales += arregloDeSubCadenas[i].substring(0, 1);
+      } else {
+        return iniciales;
+      }
+    }
   }
   constructor(private afBD: AngularFireDatabase) {}
 }

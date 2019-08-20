@@ -1,0 +1,207 @@
+<br />
+<ng-container *ngIf="newEvent; then programar; else reprogramar">
+</ng-container>
+<ng-template #reprogramar>
+  <div class="container card">
+    <div class=" text-center">
+      <h4 class="alert alert-danger">REPROGRAMACION DE ORDEN AGENDADA</h4>
+    </div>
+    <div class="card-body">
+      <table class="table table-sm">
+        <thead class="thead-light">
+          <tr>
+            <th>Orden</th>
+            <th>Cliente</th>
+            <th>Solicitud</th>
+            <th>Tecnico</th>
+            <th>Fecha Agenda</th>
+          </tr>
+        </thead>
+        <tr>
+          <td>{{ ordenFire.id }}</td>
+          <td>{{ ordenFire.cliente }}</td>
+          <td>{{ ordenFire.solicitud }}</td>
+          <td>{{ agenda.tecnico }}</td>
+          <td>{{ agenda.start | date: "short" }}</td>
+        </tr>
+      </table>
+
+      <hr />
+    </div>
+    <div class="container">
+      <form
+        [formGroup]="formGroup"
+        (validSubmit)="guardarAgenda()"
+        autocomplete="off"
+      >
+        <div class="form-row">
+          <div class="form-group col-md-4">
+            <select
+              [hidden]="!retecnico"
+              formControlName="tecnico"
+              class="form-control"
+              name="tecnico"
+              (change)="reTecnico()"
+              [(ngModel)]="agenda.tecnico"
+            >
+              <option>Asignar un usuario ... </option>
+              <option *ngFor="let usuario of userFire"
+                >{{ usuario.nombre }}
+              </option>
+            </select>
+          </div>
+          <div class="form-group col-md-2">
+            <select
+              [hidden]="!false"
+              formControlName="duracion"
+              class="form-control"
+              name="duracion"
+              [(ngModel)]="agenda.duracion"
+            >
+              <option>Duracion ...</option>
+              <option *ngFor="let horas of duracion">{{ horas }} </option>
+            </select>
+          </div>
+          <div class="form-group col-md-3">
+            <div class="form-group col-md-2" *ngIf="btnCmbTecnico">
+              <a
+                style="width: max-content; color: white"
+                class="btn btn-danger"
+                (click)="reTecnico()"
+                >Cambiar Tecnico</a
+              >
+            </div>
+          </div>
+          <div class="form-group col-md-2">
+            <button type="submit" class="btn btn-primary" *ngIf="btnProgramar">
+              Re-Programar
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #programar>
+  <div class="container card">
+    <div class=" text-center">
+      <h4 class="alert alert-primary">AGENDAR NUEVA ORDEN</h4>
+    </div>
+    <div class="card-body">
+      <table class="table table-sm">
+        <thead>
+          <tr>
+            <th>Orden</th>
+            <th>Cliente</th>
+            <th>Solicitud</th>
+          </tr>
+        </thead>
+        <tr>
+          <td>{{ ordenFire.id }}</td>
+          <td>{{ ordenFire.cliente }}</td>
+          <td>{{ ordenFire.solicitud }}</td>
+        </tr>
+      </table>
+
+      <hr />
+    </div>
+    <div class="container">
+      <form
+        [formGroup]="formGroup"
+        (validSubmit)="guardarAgenda()"
+        autocomplete="off"
+      >
+        <div class="form-row">
+          <div class="form-group col-md-4">
+            <select
+              formControlName="tecnico"
+              class="form-control"
+              name="tecnico"
+              (change)="verTodasAgendas()"
+              [(ngModel)]="agenda.tecnico"
+            >
+              <option>Asignar un usuario ... </option>
+              <option *ngFor="let usuario of userFire"
+                >{{ usuario.nombre }}
+              </option>
+            </select>
+          </div>
+          <div class="form-group col-md-2">
+            <select
+              formControlName="duracion"
+              class="form-control"
+              name="duracion"
+              [(ngModel)]="agenda.duracion"
+            >
+              <option>Duracion ...</option>
+              <option *ngFor="let horas of duracion">{{ horas }} </option>
+            </select>
+          </div>
+          <div class="form-group col-md-2">
+            <div class="form-group col-md-2" *ngIf="btnProgramar">
+              <div class="form-check">
+                <input
+                  class="form-check-input"
+                  formControlName="todasAgendas"
+                  type="checkbox"
+                  name="todasAgendas"
+                  [(ngModel)]="verTodas"
+                  (change)="verTodasAgendas()"
+                />
+                <label class="form-check-label" for="todasAgendas">
+                  Ver Todos
+                </label>
+              </div>
+            </div>
+          </div>
+          <div class="form-group col-md-2">
+            <button type="submit" class="btn btn-primary" *ngIf="btnProgramar">
+              Programar
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</ng-template>
+
+<br />
+<div class="container card" *ngIf="calendarVisible">
+  <h2
+    style="text-align: center; 
+  border-radius: 5px"
+    [ngStyle]="{ 'background-color': agenda.color }"
+  >
+    {{ agenda.tecnico }}
+  </h2>
+  <full-calendar
+    #calendar
+    defaultView="timeGridWeek"
+    [header]="{
+      left: 'prev,next, today',
+      center: 'title',
+      right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
+    }"
+    [locale]="idioma"
+    [buttonText]="{
+      today: 'Hoy',
+      month: 'Mes',
+      week: 'Semana',
+      day: 'Dia',
+      list: 'lista'
+    }"
+    [nowIndicator]="true"
+    [plugins]="calendarPlugins"
+    [weekends]="calendarWeekends"
+    [(events)]="calendarEvents"
+    [editable]="true"
+    [droppable]="true"
+    minTime="09:00:00"
+    maxTime="24:00:00"
+    (dateClick)="handleDateClick($event)"
+    (eventDrop)="moveEvent($event)"
+    (eventResize)="resizeEvent($event)"
+    [validRange]="rangoVisible"
+  ></full-calendar>
+</div>

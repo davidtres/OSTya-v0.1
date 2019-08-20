@@ -24,12 +24,13 @@ export class OrdenComponent implements OnInit {
     id: 0,
     cliente: "",
     fechaSolicitud: new Date(Date.now()),
-    tecnicoAsignado: "",
+    tecnicoAsignado: "1. POR ASIGNAR",
     tipo: "",
     equipo: "",
     solicitud: "",
     nota: "",
     estado: "Creado",
+    cerrada: false,
     triage: 0,
     doc: "orden",
     modificador: "new"
@@ -40,6 +41,16 @@ export class OrdenComponent implements OnInit {
     private route: ActivatedRoute,
     private ruta: Router
   ) {
+    let dataTserv = {
+      doc: "tServ"
+    };
+    firebaseService
+      .getPorId(dataTserv)
+      .valueChanges()
+      .subscribe(tserv => {
+        this.tipoOrden = tserv;
+        // console.log(estados);
+      });
     //Se guardan los clientes obtenidos de firebase
     firebaseService
       .getCliente()
@@ -111,6 +122,7 @@ export class OrdenComponent implements OnInit {
       triage: new FormControl(this.orden.triage, [Validators.min(1)])
     });
   }
+  update: any;
   // funcion del boton "Crear Usuario"
   guardarOrden() {
     this.guardando = true;
@@ -125,9 +137,22 @@ export class OrdenComponent implements OnInit {
 
     //tiempo para guardado en firebase, reseteear formulario y regregar al listado de estados.
     setTimeout(() => {
+      let startAgenda = new Date(this.orden.fechaSolicitud);
+      console.log(startAgenda.toDateString());
+      this.update = {
+        update:
+          "Orden Creada el dia : " +
+          startAgenda.toUTCString() +
+          ", por el usuario: LOGUEADO",
+        estado: this.orden.estado,
+        usuario: "Logueado",
+        orden: this.orden.id,
+        fecha: Date.now()
+      };
+      this.firebaseService.guardarUpdates(this.update);
       this.guardando = false;
       this.onReset();
-      this.ruta.navigate(["/listado-estados"]);
+      this.ruta.navigate(["/programacion/" + this.orden.id]);
     }, 3000);
   }
   // Borrar el formulario
@@ -155,7 +180,5 @@ export class OrdenComponent implements OnInit {
     //return console.log(this.cliente.fechaCreacion);
   }
 
-  tipoOrden: any = {
-    tipo: ["Correctivo", "Preventivo", "Remoto", "Laboratorio"]
-  };
+  tipoOrden: any;
 }

@@ -1,9 +1,14 @@
-<div class="well"><a [routerLink]="['/home']">Home</a> / Listar Estados</div>
+<div class="well">
+  <a [routerLink]="['/home']">Home</a> / Lista Tipos de Servicios
+</div>
 <div class="container">
-  <h3>ESTADOS</h3>
+  <h3>TIPOS DE SERVICIOS</h3>
   <br />
-  <a class="dropdown-item" routerLink="/estados/new" class="btn btn-primary"
-    >Nuevo Estado</a
+  <a
+    class="dropdown-item"
+    routerLink="/tipo-servicio/new"
+    class="btn btn-primary"
+    >Nuevo Tipo Servicio</a
   >
   <hr />
   <ul class="list-group">
@@ -18,17 +23,17 @@
           <tr>
             <th scope="col">ID</th>
             <th scope="col">NOMBRE</th>
-            <th scope="col">FIN ORDEN</th>
+            <th scope="col">DOMICILIO</th>
           </tr>
         </thead>
-        <tbody *ngFor="let estados of estadosfire; let i = index">
+        <tbody *ngFor="let tServ of tServfire; let i = index">
           <tr>
             <th scope="row">{{ i + 1 }}</th>
-            <a routerLink="/estados/{{ estados.id }}"
-              ><td>{{ estados.nombre }}</td></a
+            <a routerLink="/tipo-servicio/{{ tServ.id }}"
+              ><td>{{ tServ.nombre }}</td></a
             >
-            <td *ngIf="estados.finOrden">SI</td>
-            <td *ngIf="!estados.finOrden">NO</td>
+            <td *ngIf="tServ.visita">SI</td>
+            <td *ngIf="!tServ.visita">NO</td>
           </tr>
         </tbody>
       </table>

@@ -7,25 +7,27 @@ import { FirebaseService } from "../services/firebase.service";
   styleUrls: ["./listar-ordenes.component.css"]
 })
 export class ListarOrdenesComponent implements OnInit {
-  data = {
+  dataOrden = {
     doc: "orden"
   };
-  userFire;
+  userFire: any;
   ordenFire: any;
+  listUser: any;
   constructor(private firebaseService: FirebaseService) {
     firebaseService
-      .getPorId(this.data)
+      .getOrdenesAbiertas()
       .valueChanges()
       .subscribe(orden => {
         this.ordenFire = orden;
-        console.log(this.ordenFire);
-      });
-    firebaseService
-      .getUsuarios()
-      .valueChanges()
-      .subscribe(user => {
-        this.userFire = user;
-        console.log(this.userFire);
+        setTimeout(() => {
+          this.listUser = [];
+          this.ordenFire.forEach(orden => {
+            if (!this.listUser.includes(orden.tecnicoAsignado)) {
+              this.listUser.push(orden.tecnicoAsignado);
+              this.listUser.sort();
+            }
+          });
+        }, 1000);
       });
   }
 

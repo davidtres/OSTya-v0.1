@@ -1,0 +1,177 @@
+<br />
+<div class="container card">
+  <div class=" text-center ">
+    <br />
+    <h4 class="alert alert-success">ACTUALIZACION DE LA ORDEN</h4>
+  </div>
+  <div class="card-body">
+    <table class="table table-sm">
+      <thead>
+        <tr>
+          <th class="text-center">Orden</th>
+          <th>Cliente</th>
+          <th>Solicitud</th>
+          <th>Tecnico</th>
+        </tr>
+      </thead>
+      <tr>
+        <td class="text-center">
+          <strong>{{ ordenFire.id }}</strong>
+        </td>
+        <td>
+          <strong>{{ ordenFire.cliente }}</strong>
+        </td>
+        <td>{{ ordenFire.solicitud }}</td>
+        <td>{{ ordenFire.tecnicoAsignado }}</td>
+      </tr>
+    </table>
+
+    <div *ngIf="ordenFire.nota">
+      <strong>
+        <p style="color: red">NOTA: {{ ordenFire.nota }}</p></strong
+      >
+    </div>
+    <a routerLink="/programacion/{{ ordenFire.id }}">Agendar...</a>
+  </div>
+</div>
+<br />
+<!-- --------------Historial Actualizaciones------------------------>
+<div class="container card">
+  <ng-container>
+    <h4 class="text-center">Historial</h4>
+    <table class="d table-bordered table-sm ">
+      <thead class="encabezado">
+        <tr>
+          <th scope="col">Fecha</th>
+          <th scope="col">Descripcion</th>
+          <th scope="col">Usuario</th>
+          <th scope="col">Estado</th>
+        </tr>
+      </thead>
+      <tbody *ngFor="let updated of updateFire; let i = index">
+        <tr>
+          <td id="fecha">
+            {{ updated[1].fecha | date: "short" }}
+          </td>
+          <td id="update">
+            {{ updated[1].update }}
+          </td>
+          <td id="usuario">{{ updated[1].usuario }}</td>
+          <td id="estado">{{ updated[1].estado }}</td>
+        </tr>
+      </tbody>
+    </table> </ng-container
+  ><br />
+</div>
+<br />
+<!-- --------------New Updates ------------------------->
+<div class="container card" *ngIf="update.orden != 0">
+  <br />
+  <div class="form-row  justify-content-md-center ">
+    <div class="form-group col-md-8 text-center">
+      <h4 class="alert alert-warning">NUEVA ACTUALIZACION</h4>
+    </div>
+  </div>
+
+  <form
+    [formGroup]="formGroup"
+    (validSubmit)="guardarUpdates()"
+    autocomplete="off"
+  >
+    <div class="form-row justify-content-md-center">
+      <div class="form-group col-md-8">
+        <textarea
+          name="update"
+          style="min-width: 100%"
+          formControlName="update"
+          placeholder="Ingresar Actualizacion de la orden"
+          [(ngModel)]="update.update"
+          class="form-control"
+          rows="4"
+        ></textarea>
+      </div>
+    </div>
+    <div class="form-row justify-content-md-center">
+      <div class="form-group col-md-4">
+        <select
+          formControlName="estado"
+          class="form-control"
+          name="estado"
+          [(ngModel)]="update.estado"
+        >
+          <option>Nuevo estado</option>
+          <option *ngFor="let estados of estadosFire"
+            >{{ estados.nombre }}
+          </option>
+        </select>
+      </div>
+    </div>
+    <div class="form-row justify-content-md-center">
+      <div class="form-group col-md-2">
+        <button type="submit" class="btn btn-primary">
+          Actualizar
+        </button>
+      </div>
+      <div class="spinner-border text-primary" role="status" *ngIf="spinner">
+        <span class="sr-only">Loading...</span>
+      </div>
+    </div>
+  </form>
+</div>
+
+<!-- <div class="container">
+      
+        <div class="form-row">
+          <div class="form-group col-md-4">
+            <select
+              formControlName="tecnico"
+              class="form-control"
+              name="tecnico"
+              (change)="verTodasAgendas()"
+              [(ngModel)]="agenda.tecnico"
+            >
+              <option>Asignar un usuario ... </option>
+              <option *ngFor="let usuario of userFire"
+                >{{ usuario.nombre }}
+              </option>
+            </select>
+          </div>
+          <div class="form-group col-md-2">
+            <select
+              formControlName="duracion"
+              class="form-control"
+              name="duracion"
+              [(ngModel)]="agenda.duracion"
+            >
+              <option>Duracion ...</option>
+              <option *ngFor="let horas of duracion">{{ horas }} </option>
+            </select>
+          </div>
+          <div class="form-group col-md-2">
+            <div class="form-group col-md-2" *ngIf="btnProgramar">
+              <div class="form-check">
+                <input
+                  class="form-check-input"
+                  formControlName="todasAgendas"
+                  type="checkbox"
+                  name="todasAgendas"
+                  [(ngModel)]="verTodas"
+                  (change)="verTodasAgendas()"
+                />
+                <label class="form-check-label" for="todasAgendas">
+                  Ver Todos
+                </label>
+              </div>
+            </div>
+          </div>
+          <div class="form-group col-md-2">
+            <button type="submit" class="btn btn-primary" *ngIf="btnProgramar">
+              Programar
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</ng-template> -->
+>

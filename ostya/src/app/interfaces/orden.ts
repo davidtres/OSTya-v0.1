@@ -12,6 +12,7 @@ export interface Orden {
   nota?: string;
   estado: string;
   triage: number;
+  cerrada: boolean;
   doc: string;
   modificador: string;
 }
