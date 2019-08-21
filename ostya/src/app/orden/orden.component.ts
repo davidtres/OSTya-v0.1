@@ -145,7 +145,7 @@ export class OrdenComponent implements OnInit {
           startAgenda.toUTCString() +
           ", por el usuario: LOGUEADO",
         estado: this.orden.estado,
-        usuario: "Logueado",
+        usuario: "Sistema",
         orden: this.orden.id,
         fecha: Date.now()
       };

@@ -338,10 +338,10 @@ export class ProgramacionComponent implements OnInit {
       this.firebaseService.guardarAgenda(this.agenda); //Guarda la agenda
       this.btnProgramar = false; //oculta boton programar
       setTimeout(() => {
-        if (!this.newEvent) {
+        if (this.newEvent) {
           // si es nuevo, actualiza orden con primer agendamiento
           let startAgenda = new Date(this.agenda.start);
-          console.log(startAgenda.toDateString());
+          // console.log(startAgenda.toDateString());
           this.update = {
             update:
               "Orden agendada para el dia : " +
@@ -349,7 +349,7 @@ export class ProgramacionComponent implements OnInit {
               ", asistirá el tecnico: " +
               this.agenda.tecnico,
             estado: this.agenda.estado,
-            usuario: "Logueado",
+            usuario: "Sistema",
             orden: this.agenda.orden,
             fecha: Date.now()
           };
@@ -368,7 +368,7 @@ export class ProgramacionComponent implements OnInit {
               ", asistirá el tecnico: " +
               this.agenda.tecnico,
             estado: this.agenda.estado,
-            usuario: "Logueado",
+            usuario: "Sistema",
             orden: this.agenda.orden,
             fecha: Date.now()
           };

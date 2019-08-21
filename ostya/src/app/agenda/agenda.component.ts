@@ -1,5 +1,11 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, ViewChild } from "@angular/core";
 import dayGridPlugin from "@fullcalendar/daygrid";
+import timeGrigPlugin from "@fullcalendar/timegrid";
+import interactionPlugin from "@fullcalendar/interaction"; // for dateClick
+import { FullCalendarComponent } from "@fullcalendar/angular";
+import { EventInput } from "@fullcalendar/core";
+import { FirebaseService } from "../services/firebase.service";
+import { FormGroup, FormControl, Validators } from "@angular/forms";
 
 @Component({
   selector: "app-agenda",
@@ -7,33 +13,80 @@ import dayGridPlugin from "@fullcalendar/daygrid";
   styleUrls: ["./agenda.component.css"]
 })
 export class AgendaComponent implements OnInit {
-  calendarPlugins = [dayGridPlugin]; // important!
-  eventos: any = [
-    { title: "event 1", date: "2019-08-01" },
-    { title: "event 2", date: "2019-08-01", color: "red", editable: "true" }
-  ];
-
-  calendarEvents = [
-    { title: "event 1", date: "2019-08-01", url: "https://google.com" }
-  ];
-
-  addEvent() {
-    this.calendarEvents.push({
-      title: "event 2",
-      date: "2019-08-02",
-      url: "https://google.com"
+  @ViewChild("calendar") calendarComponent: FullCalendarComponent; // the #calendar in the template
+  /*Variables para el calendario*/
+  calendarVisible = true; //ocultar mostrar calendario
+  calendarPlugins = [dayGridPlugin, timeGrigPlugin, interactionPlugin]; //inyeccion de pluginis
+  calendarWeekends = true; //tipo de vista semanal predeterminada.
+  calendarEvents: EventInput[] = []; //array de eventos a mostrar en el calendario
+  idioma = "es";
+  agendaFire: any;
+  listUser: any;
+  public formGroup: FormGroup; //variable para formulario
+  constructor(private firebaseService: FirebaseService) {
+    firebaseService //obtener agenda del tecnico seleccionado
+      .getAllAgendas()
+      .valueChanges()
+      .subscribe(agendas => {
+        this.agendaFire = agendas;
+        this.verAgendas();
+      });
+  }
+  verAgendas() {
+    for (let i = 0; i < this.agendaFire.length; i++) {
+      this.calendarEvents = this.calendarEvents.concat({
+        // adiciona el resto de agendas a la vista.
+        title: this.agendaFire[i].title,
+        start: this.agendaFire[i].start,
+        end: this.agendaFire[i].end,
+        allDay: false,
+        color: this.agendaFire[i].color,
+        editable: this.agendaFire[i].editable,
+        orden: this.agendaFire[i].orden,
+        tecnico: this.agendaFire[i].tecnico
+      });
+    }
+    this.filtrarTecnico();
+  }
+  filtrarTecnico() {
+    this.listUser = [];
+    this.agendaFire.forEach(agenda => {
+      if (!this.listUser.includes(agenda.tecnico)) {
+        this.listUser.push(agenda.tecnico);
+        this.listUser.sort();
+      }
     });
   }
-
-  modifyTitle(eventIndex, newTitle) {
-    this.calendarEvents[eventIndex].title = newTitle;
-    // handler method
+  contador = 0;
+  agendaTecnico() {
+    if (this.contador == 0) {
+      let filtroUsuario = this.calendarEvents.filter(
+        eventos => eventos.tecnico == this.tecnicoSeleccionado
+      );
+      this.calendarEvents = [];
+      this.calendarEvents = this.calendarEvents.concat(filtroUsuario);
+      this.contador = 1;
+    } else {
+      if (this.tecnicoSeleccionado == "TODOS") {
+        this.calendarEvents = [];
+        this.verAgendas();
+      } else {
+        this.verAgendas();
+        let filtroUsuario = this.calendarEvents.filter(
+          eventos => eventos.tecnico == this.tecnicoSeleccionado
+        );
+        this.calendarEvents = [];
+        this.calendarEvents = this.calendarEvents.concat(filtroUsuario);
+      }
+    }
   }
-  handleDateClick(arg) {
-    alert(arg.dateStr);
-    debugger;
+  tecnicoSeleccionado = "";
+  ngOnInit() {
+    this.buildForm();
   }
-  constructor() {}
-
-  ngOnInit() {}
+  private buildForm() {
+    this.formGroup = new FormGroup({
+      tecnico: new FormControl(this.tecnicoSeleccionado, [Validators.required])
+    });
+  }
 }

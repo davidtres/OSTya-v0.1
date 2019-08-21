@@ -11,7 +11,9 @@
           <th class="text-center">Orden</th>
           <th>Cliente</th>
           <th>Solicitud</th>
-          <th>Tecnico</th>
+          <th>
+            Tecnico
+          </th>
         </tr>
       </thead>
       <tr>
@@ -37,31 +39,90 @@
 <br />
 <!-- --------------Historial Actualizaciones------------------------>
 <div class="container card">
-  <ng-container>
-    <h4 class="text-center">Historial</h4>
-    <table class="d table-bordered table-sm ">
-      <thead class="encabezado">
-        <tr>
-          <th scope="col">Fecha</th>
-          <th scope="col">Descripcion</th>
-          <th scope="col">Usuario</th>
-          <th scope="col">Estado</th>
-        </tr>
-      </thead>
-      <tbody *ngFor="let updated of updateFire; let i = index">
-        <tr>
-          <td id="fecha">
-            {{ updated[1].fecha | date: "short" }}
-          </td>
-          <td id="update">
-            {{ updated[1].update }}
-          </td>
-          <td id="usuario">{{ updated[1].usuario }}</td>
-          <td id="estado">{{ updated[1].estado }}</td>
-        </tr>
-      </tbody>
-    </table> </ng-container
-  ><br />
+  <ng-container *ngIf="userSistema; then todos; else noSistema"></ng-container>
+  <ng-template #todos>
+    <ng-container>
+      <h4 class="text-center">Historial</h4>
+      <table class="d table-bordered table-sm ">
+        <thead class="encabezado">
+          <tr>
+            <th scope="col">Fecha</th>
+            <th scope="col">Descripcion</th>
+            <th scope="col" class="text-center">
+              Con Usuario
+              <div class="custom-control custom-switch">
+                <input
+                  type="checkbox"
+                  class="custom-control-input"
+                  id="customSwitch1"
+                  [(ngModel)]="userSistema"
+                />
+                <label class="custom-control-label" for="customSwitch1"
+                  >Sistema</label
+                >
+              </div>
+            </th>
+            <th scope="col">Estado</th>
+          </tr>
+        </thead>
+        <tbody *ngFor="let updated of updateFire; let i = index">
+          <tr>
+            <td id="fecha">
+              {{ updated[1].fecha | date: "short" }}
+            </td>
+            <td id="update">
+              {{ updated[1].update }}
+            </td>
+            <td id="usuario">{{ updated[1].usuario }}</td>
+            <td id="estado">{{ updated[1].estado }}</td>
+          </tr>
+        </tbody>
+      </table> </ng-container
+    ><br
+  /></ng-template>
+
+  <!-- -------------Sin Sistema------------------- -->
+  <ng-template #noSistema>
+    <ng-container>
+      <h4 class="text-center">Historial</h4>
+      <table class="d table-bordered table-sm ">
+        <thead class="encabezado">
+          <tr>
+            <th scope="col">Fecha</th>
+            <th scope="col">Descripcion</th>
+            <th scope="col" class="text-center">
+              Sin Usuario
+              <div class="custom-control custom-switch">
+                <input
+                  type="checkbox"
+                  class="custom-control-input"
+                  id="customSwitch1"
+                  [(ngModel)]="userSistema"
+                />
+                <label class="custom-control-label" for="customSwitch1"
+                  >Sistema</label
+                >
+              </div>
+            </th>
+            <th scope="col">Estado</th>
+          </tr>
+        </thead>
+        <tbody *ngFor="let updated of noSistem; let i = index">
+          <tr>
+            <td id="fecha">
+              {{ updated[1].fecha | date: "short" }}
+            </td>
+            <td id="update">
+              {{ updated[1].update }}
+            </td>
+            <td id="usuario">{{ updated[1].usuario }}</td>
+            <td id="estado">{{ updated[1].estado }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </ng-container>
+    <br />
+  </ng-template>
 </div>
 <br />
 <!-- --------------New Updates ------------------------->

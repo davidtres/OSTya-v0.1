@@ -10,6 +10,7 @@ import { ActivatedRoute, Router } from "@angular/router";
 })
 export class UpdatesComponent implements OnInit {
   public formGroup: FormGroup; //variable para formulario
+  userSistema: boolean = true;
   ordenGet = {
     //guarda parametro id: de la orden, para luego recuperar desde Firebase
     id: "0",
@@ -55,10 +56,14 @@ export class UpdatesComponent implements OnInit {
         this.estadosFire = estados;
         let actualiza = Object.entries(this.ordenFire.updates);
         this.updateFire = actualiza;
-        console.log(this.updateFire);
+        let sinSistema = this.updateFire.filter(
+          sistema => sistema[1].usuario != "Sistema"
+        );
+        this.noSistem = sinSistema;
       });
   }
   spinner = false;
+  noSistem = [];
   guardarUpdates() {
     this.spinner = true;
     this.ordenFire.estado = this.update.estado;
