@@ -121,13 +121,24 @@ export class FirebaseService {
   }
 
   //obtener todos por tipo de documento
-  public getPorId(data) {
+  public getPorDoc(data) {
     return this.afBD.list(data.doc + "/");
+  }
+  public getEstadosCierre() {
+    return this.afBD.list("estados/", ref =>
+      ref.orderByChild("cerrada").equalTo(true)
+    );
   }
   /* --------------ORDENES---------------------*/
   public getOrdenesAbiertas() {
     return this.afBD.list("orden/", ref =>
       ref.orderByChild("cerrada").equalTo(false)
+    );
+  }
+
+  public getOrdenesEnTriage() {
+    return this.afBD.list("orden/", ref =>
+      ref.orderByChild("enTriage").equalTo(true)
     );
   }
   //metodo obtener un solo cliente

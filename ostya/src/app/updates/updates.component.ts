@@ -10,6 +10,7 @@ import { ActivatedRoute, Router } from "@angular/router";
 })
 export class UpdatesComponent implements OnInit {
   public formGroup: FormGroup; //variable para formulario
+  public formGroupNota: FormGroup; //variable para formulario Nota
   userSistema: boolean = true;
   ordenGet = {
     //guarda parametro id: de la orden, para luego recuperar desde Firebase
@@ -34,6 +35,7 @@ export class UpdatesComponent implements OnInit {
   };
   estadosFire: any;
   updateFire: any;
+  cOp: boolean = false; //para saber si la orden tiene estados "Creado" o "Programado"
   constructor(
     private firebaseService: FirebaseService,
     private route: ActivatedRoute,
@@ -46,28 +48,47 @@ export class UpdatesComponent implements OnInit {
       .valueChanges()
       .subscribe(orden => {
         this.ordenFire = orden;
+        //actualiza variable a guardar con los datos de la orden actual
         this.update.orden = this.ordenFire.id;
         this.update.usuario = this.ordenFire.tecnicoAsignado;
-      });
-    firebaseService
-      .getPorId(this.data)
-      .valueChanges()
-      .subscribe(estados => {
-        this.estadosFire = estados;
+        //crea array de actualizaciones de la orden actual
         let actualiza = Object.entries(this.ordenFire.updates);
         this.updateFire = actualiza;
+        //filtro actualizaciones sin usuario "Sistemas"
         let sinSistema = this.updateFire.filter(
           sistema => sistema[1].usuario != "Sistema"
         );
         this.noSistem = sinSistema;
+        //determina si la orden tiene estado "Creado" o "Programado"
+        if (this.ordenFire.estado == "Creado") {
+          this.cOp = true;
+        }
+        if (this.ordenFire.estado == "Programado") {
+          this.cOp = true;
+        }
+        if (this.ordenFire.estado == "Reprogramado") {
+          this.cOp = true;
+        }
+        console.log(this.ordenFire);
+      });
+    firebaseService //obtener Estados
+      .getPorDoc(this.data)
+      .valueChanges()
+      .subscribe(estados => {
+        this.estadosFire = estados;
+        this.estadoQueCierran = this.estadosFire.filter(
+          cierra => cierra.finOrden == true
+        );
       });
   }
+  estadoQueCierran: any;
   spinner = false;
   noSistem = [];
   guardarUpdates() {
     this.spinner = true;
     this.ordenFire.estado = this.update.estado;
     if (confirm("¿Desea actualizar la orden ?")) {
+      this.cerrarOrden();
       this.firebaseService.ActOrdenEstado(this.ordenFire);
       this.firebaseService.guardarUpdates(this.update);
 
@@ -75,6 +96,47 @@ export class UpdatesComponent implements OnInit {
         this.spinner = false;
         this.ruta.navigate(["/listar-ordenes"]);
       }, 1500);
+    }
+  }
+  enSitio() {
+    let fechaHoy = new Date(Date.now());
+    this.update = {
+      update:
+        "Reporte en sitio : " +
+        fechaHoy.toUTCString() +
+        ", tecnico: " +
+        this.ordenFire.tecnicoAsignado,
+      estado: "En sitio",
+      usuario: "Sistema",
+      orden: this.update.orden,
+      fecha: Date.now()
+    };
+    this.ordenFire.estado = this.update.estado;
+    this.ordenFire.enTriage = false;
+    this.firebaseService.ActOrdenAgendada(this.ordenFire);
+    this.firebaseService.guardarUpdates(this.update);
+    this.ruta.navigate(["/home"]);
+  }
+  Nota: string;
+  addNota() {
+    let hoy = new Date(Date.now());
+    let fechaHoy =
+      hoy.getDate() + "-" + (hoy.getMonth() + 1) + "-" + hoy.getFullYear();
+
+    let horaHoy = hoy.getHours() + ":" + hoy.getMinutes();
+    console.log(this.Nota);
+    this.ordenFire.nota +=
+      "  <+> " + this.Nota + " ( " + fechaHoy + " - " + horaHoy + "). ";
+    this.firebaseService.ActOrdenEstado(this.ordenFire);
+    this.Nota = "";
+    location.reload();
+  }
+  cerrarOrden() {
+    let estados = this.estadoQueCierran;
+    for (let i = 0; i < estados.length; i++) {
+      if (estados[i].nombre == this.update.estado) {
+        this.ordenFire.cerrada = true;
+      }
     }
   }
 
@@ -88,6 +150,9 @@ export class UpdatesComponent implements OnInit {
         Validators.minLength(20)
       ]),
       estado: new FormControl(this.update.estado, [Validators.required])
+    });
+    this.formGroupNota = new FormGroup({
+      nota: new FormControl(this.update.estado, [Validators.required])
     });
   }
 }

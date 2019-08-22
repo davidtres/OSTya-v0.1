@@ -1,0 +1,35 @@
+<br />
+<div class="container card">
+  <div class=" text-center ">
+    <br />
+    <h4 class="alert alert-primary">ORDENES EN ESPERA</h4>
+  </div>
+  <ng-container>
+    <table class="table">
+      <thead class="thead-dark">
+        <tr>
+          <th scope="col">Orden</th>
+          <th scope="col">Cliente</th>
+          <th scope="col">Servicio</th>
+          <th scope="col">Solicitud</th>
+          <th scope="col">Vence</th>
+        </tr>
+      </thead>
+      <tbody *ngFor="let orden of ordenFire">
+        <tr [ngStyle]="{ 'background-color': orden.color }">
+          <th scope="row">
+            <a
+              style="color: rgb(8, 8, 8)"
+              routerLink="/updates/{{ orden.id }}"
+              >{{ orden.id }}</a
+            >
+          </th>
+          <td>{{ orden.cliente }}</td>
+          <td>{{ orden.solicitud }}</td>
+          <td>{{ orden.fechaSolicitud | date: "dd/MM/yyyy , hh:mm a" }}</td>
+          <td>{{ orden.tr }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </ng-container>
+</div>

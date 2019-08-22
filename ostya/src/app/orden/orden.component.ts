@@ -32,6 +32,7 @@ export class OrdenComponent implements OnInit {
     estado: "Creado",
     cerrada: false,
     triage: 0,
+    enTriage: true,
     doc: "orden",
     modificador: "new"
   };
@@ -45,7 +46,7 @@ export class OrdenComponent implements OnInit {
       doc: "tServ"
     };
     firebaseService
-      .getPorId(dataTserv)
+      .getPorDoc(dataTserv)
       .valueChanges()
       .subscribe(tserv => {
         this.tipoOrden = tserv;

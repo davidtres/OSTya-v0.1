@@ -53,7 +53,7 @@ export class ProgramacionComponent implements OnInit {
     end: null,
     orden: 0,
     color: "",
-    estado: "Asignado",
+    estado: "Programado",
     url: "",
     llegada: null,
     salida: null,
@@ -207,7 +207,6 @@ export class ProgramacionComponent implements OnInit {
   moveEvent(info) {
     this.btnProgramar = true;
     this.btnCmbTecnico = true;
-    this.newEvent = false;
     let logInicialStart = this.agenda.start;
     let logInicialEnd = this.agenda.end;
     //Actualiza agenda a guardar start, end : al mover el evento.
@@ -248,7 +247,6 @@ export class ProgramacionComponent implements OnInit {
     let logInicialEnd = this.agenda.end;
     this.btnProgramar = true;
     this.btnCmbTecnico = true;
-    this.newEvent = false;
     //Actualiza agenda a guardar start, end : al cambiar tamaño del evento.
     let startMili: any = info.event.start.getTime();
     let endMili: any = info.event.end.getTime();
@@ -327,7 +325,7 @@ export class ProgramacionComponent implements OnInit {
       this.agenda.editable = false; //bloquea evento para editar en la vista
       if (this.newEvent) {
         //verificar si el evento es nuevo
-        this.ordenFire.estado = this.agenda.estado; // asigna estado a la orden "Creado"
+        this.ordenFire.estado = this.agenda.estado; // asigna estado a la orden "Programado"
       } else {
         //si es viejo "Reprogramado"
         this.ordenFire.estado = "Reprogramado";
@@ -444,7 +442,7 @@ export class ProgramacionComponent implements OnInit {
             end: fechaMili,
             orden: this.agenda.orden,
             color: this.agenda.color,
-            estado: "Asignado",
+            estado: "Programado",
             url: "",
             llegada: null,
             salida: null,
