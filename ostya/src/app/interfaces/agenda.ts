@@ -13,4 +13,7 @@ export interface Agenda {
   dif: number;
   tecnico: string;
   editable: boolean;
+  startOk: Date;
+  endOk: Date;
+  userId: number;
 }

@@ -1,26 +1,30 @@
 <br />
 <div style="text-align: center">
-  <h3 class="alert alert-primary">AGENDA POR USUARIO</h3>
+  <h3 class="alert alert-primary">AGENDA POR ORDEN</h3>
 </div>
 <div class="container card">
   <form
     [formGroup]="formGroup"
-    (validSubmit)="guardarAgenda()"
+    (validSubmit)="buscarOrden()"
     autocomplete="off"
   >
     <div class="form-row">
-      <div class="form-group col-md-4">
-        <label for="tecnico"><strong>Selecciona Usuario</strong> </label>
-        <select
-          formControlName="tecnico"
+      <div class="form-group col-md-2">
+        <label for="Long">N° Orden</label>
+        <input
+          type="number"
           class="form-control"
-          name="tecnico"
-          (change)="agendaTecnico()"
-          [(ngModel)]="tecnicoSeleccionado"
-        >
-          <option>TODOS</option>
-          <option *ngFor="let usuario of listUser">{{ usuario }} </option>
-        </select>
+          formControlName="orden"
+          placeholder="Ingresar orden"
+          [(ngModel)]="agendaGet.id"
+          name="orden"
+          (blur)="buscarOrden()"
+        />
+      </div>
+      <div class="form-group col-md-2" style="margin-top: 32px">
+        <button type="submit" class="btn btn-primary">
+          Buscar
+        </button>
       </div>
     </div>
   </form>
@@ -48,7 +52,7 @@
     [plugins]="calendarPlugins"
     [weekends]="calendarWeekends"
     [(events)]="calendarEvents"
-    minTime="07:00:00"
-    maxTime="19:00:00"
+    minTime="00:00:00"
+    maxTime="24:00:00"
   ></full-calendar>
 </div>

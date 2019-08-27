@@ -1,6 +1,8 @@
 <br />
+<!-- --------condicional new agenda o reprogramacion ------ -->
 <ng-container *ngIf="newEvent; then programar; else reprogramar">
-</ng-container>
+</ng-container>  
+<!-- ---------Si, es reprogramacion --------------- -->
 <ng-template #reprogramar>
   <div class="container card">
     <div class=" text-center">
@@ -15,7 +17,7 @@
             <th>Solicitud</th>
             <th>Tecnico</th>
             <th>Fecha Agenda</th>
-          </tr>
+          </tr>a
         </thead>
         <tr>
           <td>{{ ordenFire.id }}</td>
@@ -78,7 +80,7 @@
     </div>
   </div>
 </ng-template>
-
+<!-- ----------- Agenda nueva, Programar -------------- -->
 <ng-template #programar>
   <div class="container card">
     <div class=" text-center">
@@ -161,7 +163,7 @@
     </div>
   </div>
 </ng-template>
-
+<!-- ------------------Calendario ------------------------ -->
 <br />
 <div class="container card" *ngIf="calendarVisible">
   <h2

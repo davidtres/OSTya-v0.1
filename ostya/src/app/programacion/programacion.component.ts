@@ -59,12 +59,20 @@ export class ProgramacionComponent implements OnInit {
     salida: null,
     dif: 0,
     tecnico: "",
-    editable: true
+    editable: true,
+    startOk: null,
+    endOk: null,
+    userId: 0
   };
   ordenGet = {
     //guarda parametro id: de la orden, para luego recuperar desde Firebase
     id: "0",
     doc: "orden"
+  };
+  agendaGet = {
+    //guarda parametro id: de la orden, para luego recuperar desde Firebase
+    id: "0",
+    doc: "agenda"
   };
   update: any = {
     update: "",
@@ -73,12 +81,14 @@ export class ProgramacionComponent implements OnInit {
     orden: 0,
     fecha: Date.now()
   };
+  agendaExiste: any;
   constructor(
     private firebaseService: FirebaseService,
     private route: ActivatedRoute,
     private ruta: Router
   ) {
     this.ordenGet.id = this.route.snapshot.params["id"]; //Recupera parametro id de url
+    this.agendaGet.id = this.route.snapshot.params["id"]; //Recupera parametro id de url
 
     firebaseService //obtener orden por ID
       .obtenerUnoId(this.ordenGet)
@@ -97,7 +107,15 @@ export class ProgramacionComponent implements OnInit {
         } else {
           this.newEvent = true;
         }
-        console.log(this.newEvent);
+      });
+    firebaseService //obtener orden por ID
+      .obtenerUnoId(this.agendaGet)
+      .valueChanges()
+      .subscribe(agenda => {
+        this.agendaExiste = agenda;
+        if (!this.agendaExiste) {
+          this.newEvent = true;
+        }
       });
 
     firebaseService //obtener usuarios activos
@@ -108,6 +126,7 @@ export class ProgramacionComponent implements OnInit {
       });
   }
   verTodasAgendas() {
+    this.calendarEvents = [{}]; //limpia eventos
     this.btnProgramar = false;
     if (this.verTodas) {
       this.activarCalendario();
@@ -117,7 +136,6 @@ export class ProgramacionComponent implements OnInit {
         .valueChanges()
         .subscribe(agendas => {
           this.agendaFire = agendas;
-          console.log(this.agendaFire);
         });
       setTimeout(() => {
         //Espera carga de datos agendas,recorrer agendas obtenidas para crear vista en calendario.
@@ -166,7 +184,6 @@ export class ProgramacionComponent implements OnInit {
             });
           }
         }
-        console.log(this.calendarEvents);
       }, 500);
     } else {
       this.btnProgramar = false;
@@ -299,10 +316,11 @@ export class ProgramacionComponent implements OnInit {
       this.ordenFire.id,
       "orden"
     );
-    //actualizar color en la agenda segun tecnico seleccionado
+    //actualizar color y id en la agenda segun tecnico seleccionado
     for (let i = 0; i < this.userFire.length; i++) {
       if (this.userFire[i].nombre == this.agenda.tecnico) {
         this.agenda.color = this.userFire[i].color;
+        this.agenda.userId = this.userFire[i].id;
       }
     }
     let eventUpdate: any = {
@@ -394,6 +412,7 @@ export class ProgramacionComponent implements OnInit {
       this.calendarVisible = true;
       if (this.userFire[index].nombre == this.agenda.tecnico) {
         this.agenda.color = this.userFire[index].color;
+        this.agenda.userId = this.userFire[index].id;
         this.agenda.title = this.ordenFire.id + " - " + this.ordenFire.cliente;
         this.agenda.orden = this.ordenFire.id;
       }
@@ -448,7 +467,10 @@ export class ProgramacionComponent implements OnInit {
             salida: null,
             dif: 0,
             tecnico: this.agenda.tecnico,
-            editable: true
+            editable: true,
+            startOk: null,
+            endOk: null,
+            userId: this.agenda.userId
           };
           this.agenda = agendando;
           console.log(this.agenda);

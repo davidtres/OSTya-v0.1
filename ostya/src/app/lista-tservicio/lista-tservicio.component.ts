@@ -13,7 +13,7 @@ export class ListaTservicioComponent implements OnInit {
   tServfire: any;
   constructor(private firebaseService: FirebaseService) {
     firebaseService
-      .getPorId(this.data)
+      .getPorDoc(this.data)
       .valueChanges()
       .subscribe(tserv => {
         this.tServfire = tserv;

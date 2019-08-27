@@ -17,6 +17,11 @@ export class UpdatesComponent implements OnInit {
     id: "0",
     doc: "orden"
   };
+  agendaGet = {
+    //guarda parametro id: de la orden, para luego recuperar desde Firebase
+    id: "0",
+    doc: "agenda"
+  };
   ordenFire: any = {
     //guarda ordenes desde Firebase
     id: 0,
@@ -35,6 +40,7 @@ export class UpdatesComponent implements OnInit {
   };
   estadosFire: any;
   updateFire: any;
+  agendaFire: any;
   cOp: boolean = false; //para saber si la orden tiene estados "Creado" o "Programado"
   constructor(
     private firebaseService: FirebaseService,
@@ -42,6 +48,14 @@ export class UpdatesComponent implements OnInit {
     private ruta: Router
   ) {
     this.ordenGet.id = this.route.snapshot.params["id"]; //Recupera parametro id de url
+    this.agendaGet.id = this.route.snapshot.params["id"]; //Recupera parametro id de url
+    firebaseService //obtener agenda por ID
+      .obtenerUnoId(this.agendaGet)
+      .valueChanges()
+      .subscribe(agenda => {
+        this.agendaFire = agenda;
+        console.log(this.agendaFire);
+      });
 
     firebaseService //obtener orden por ID
       .obtenerUnoId(this.ordenGet)
@@ -76,6 +90,8 @@ export class UpdatesComponent implements OnInit {
       .valueChanges()
       .subscribe(estados => {
         this.estadosFire = estados;
+        console.log(this.estadosFire);
+
         this.estadoQueCierran = this.estadosFire.filter(
           cierra => cierra.finOrden == true
         );
@@ -86,19 +102,35 @@ export class UpdatesComponent implements OnInit {
   noSistem = [];
   guardarUpdates() {
     this.spinner = true;
-    this.ordenFire.estado = this.update.estado;
     if (confirm("¿Desea actualizar la orden ?")) {
+      this.ordenFire.estado = this.update.estado;
+      console.log(this.agendaFire);
+      if (!this.agendaFire === null) {
+        this.agendaFire.estado = this.update.estado;
+      }
       this.cerrarOrden();
       this.firebaseService.ActOrdenEstado(this.ordenFire);
       this.firebaseService.guardarUpdates(this.update);
-
       setTimeout(() => {
+        this.salirSitio();
         this.spinner = false;
         this.ruta.navigate(["/listar-ordenes"]);
-      }, 1500);
+      }, 2000);
+    }
+  }
+  saliendoSitio: boolean = false;
+  salirSitio() {
+    if (this.saliendoSitio) {
+      this.agendaFire.endOk = Date.now();
+      this.firebaseService.guardarAgendaHTecnico(this.agendaFire);
+      this.firebaseService.guardarAgendaHOrden(this.agendaFire);
+      this.firebaseService.guardarAgendaHfecha(this.agendaFire);
+      this.firebaseService.EliminarAgenda(this.agendaFire);
     }
   }
   enSitio() {
+    this.agendaFire.estado = "En sitio";
+    this.agendaFire.startOk = Date.now();
     let fechaHoy = new Date(Date.now());
     this.update = {
       update:
@@ -115,6 +147,8 @@ export class UpdatesComponent implements OnInit {
     this.ordenFire.enTriage = false;
     this.firebaseService.ActOrdenAgendada(this.ordenFire);
     this.firebaseService.guardarUpdates(this.update);
+    this.firebaseService.guardarAgenda(this.agendaFire);
+    console.log(this.agendaFire);
     this.ruta.navigate(["/home"]);
   }
   Nota: string;
@@ -149,8 +183,10 @@ export class UpdatesComponent implements OnInit {
         Validators.required,
         Validators.minLength(20)
       ]),
-      estado: new FormControl(this.update.estado, [Validators.required])
+      estado: new FormControl(this.update.estado, [Validators.required]),
+      salirsitio: new FormControl(this.saliendoSitio, [])
     });
+    // -------formulario nota --------
     this.formGroupNota = new FormGroup({
       nota: new FormControl(this.update.estado, [Validators.required])
     });

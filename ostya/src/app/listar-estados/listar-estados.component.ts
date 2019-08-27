@@ -13,7 +13,7 @@ export class ListarEstadosComponent implements OnInit {
   estadosfire: any;
   constructor(private firebaseService: FirebaseService) {
     firebaseService
-      .getPorId(this.data)
+      .getPorDoc(this.data)
       .valueChanges()
       .subscribe(estados => {
         this.estadosfire = estados;

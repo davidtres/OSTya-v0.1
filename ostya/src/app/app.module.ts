@@ -41,7 +41,9 @@ import { AgendaPrComponent } from "./agenda-pr/agenda-pr.component";
 import { ListaTservicioComponent } from "./lista-tservicio/lista-tservicio.component";
 import { ProgramacionComponent } from "./programacion/programacion.component";
 import { UpdatesComponent } from "./updates/updates.component";
-import { TriageComponent } from "./triage/triage.component"; // for FullCalendar!;
+import { TriageComponent } from "./triage/triage.component";
+import { AgendaxtecnicoComponent } from "./agendaxtecnico/agendaxtecnico.component";
+import { AgendaxordenComponent } from "./agendaxorden/agendaxorden.component"; // for FullCalendar!;
 
 const appRoutes: Routes = [
   { path: "", component: HomeComponent },
@@ -67,7 +69,9 @@ const appRoutes: Routes = [
   { path: "listar-tservicio", component: ListaTservicioComponent },
   { path: "programacion/:id", component: ProgramacionComponent },
   { path: "updates/:id", component: UpdatesComponent },
-  { path: "triage", component: TriageComponent }
+  { path: "triage", component: TriageComponent },
+  { path: "agenda-tecnico", component: AgendaxtecnicoComponent },
+  { path: "agenda-orden", component: AgendaxordenComponent }
 ];
 @NgModule({
   declarations: [
@@ -96,7 +100,9 @@ const appRoutes: Routes = [
     ListaTservicioComponent,
     ProgramacionComponent,
     UpdatesComponent,
-    TriageComponent
+    TriageComponent,
+    AgendaxtecnicoComponent,
+    AgendaxordenComponent
   ],
   imports: [
     BrowserModule,

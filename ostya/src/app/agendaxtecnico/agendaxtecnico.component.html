@@ -1,0 +1,96 @@
+<br />
+<div style="text-align: center">
+  <h3 class="alert alert-primary">AGENDA HISTORICA POR TECNICO</h3>
+</div>
+<div class="container card">
+  <!-- --------------------Formulario -------------------- -->
+  <form
+    [formGroup]="formGroup"
+    (validSubmit)="buscarOrden()"
+    autocomplete="off"
+  >
+    <div class="form-row">
+      <!-- --------desde --------- -->
+      <div class="form-group col-md-3">
+        <label for="Long">Desde</label>
+        <input
+          type="date"
+          class="form-control"
+          formControlName="desde"
+          [(ngModel)]="agendaGet.desde"
+        />
+      </div>
+      <!-- ----------hasta----------- -->
+      <div class="form-group col-md-3">
+        <label for="Long">Hasta</label>
+        <input
+          type="date"
+          (change)="validarDesde()"
+          class="form-control"
+          formControlName="hasta"
+          [(ngModel)]="agendaGet.hasta"
+        />
+      </div>
+      <!-- ---------Seleccion tecnico --- -->
+      <div class="form-group col-md-4">
+        <label for="Long">Seleccionar tecnico</label>
+        <select
+          formControlName="tecnico"
+          class="form-control"
+          [(ngModel)]="agendaGet.tecnico"
+          (change)="escojerTecnico()"
+        >
+          <option></option>
+          <option>TODOS</option>
+          <option *ngFor="let usuario of usuariosFire"
+            >{{ usuario.nombre }}
+          </option>
+        </select>
+      </div>
+      <!-- -------boton buscar ---------- -->
+      <div
+        *ngIf="botonBuscar"
+        class="form-group col-md-1"
+        style="margin-top: 32px"
+      >
+        <button type="submit" class="btn btn-primary">
+          Buscar
+        </button>
+      </div>
+
+      <div class="form-row">
+        <!-- --------Messaje error ------- -->
+        <div class="form-group col-md-12" *ngIf="error">
+          <p class=" alert alert-danger">{{ error }}</p>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+<br />
+<!-- -------------------Calendario------------------ -->
+<div class="container card">
+  <br /><full-calendar
+    #calendar
+    defaultView="timeGridWeek"
+    [header]="{
+      left: 'prev,next, today',
+      center: 'title',
+      right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
+    }"
+    [locale]="idioma"
+    [buttonText]="{
+      today: 'Hoy',
+      month: 'Mes',
+      week: 'Semana',
+      day: 'Dia',
+      list: 'lista'
+    }"
+    [nowIndicator]="true"
+    [plugins]="calendarPlugins"
+    [weekends]="calendarWeekends"
+    [(events)]="calendarEvents"
+    minTime="01:00:00"
+    maxTime="23:00:00"
+  ></full-calendar>
+</div>

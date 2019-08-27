@@ -18,7 +18,6 @@ export class FirebaseService {
         if (error) {
           console.log(error);
         } else {
-          //console.log(cliente);
         }
       });
   }
@@ -39,7 +38,6 @@ export class FirebaseService {
         if (error) {
           console.log(error);
         } else {
-          // console.log(equipo);
         }
       });
   }
@@ -68,7 +66,6 @@ export class FirebaseService {
         if (error) {
           console.log(error);
         } else {
-          //console.log(usuario);
         }
       });
   }
@@ -157,7 +154,6 @@ export class FirebaseService {
         if (error) {
           console.log(error);
         } else {
-          //console.log(cliente);
         }
       });
   }
@@ -167,7 +163,6 @@ export class FirebaseService {
       if (error) {
         console.log(error);
       } else {
-        //console.log(cliente);
       }
     });
   }
@@ -177,9 +172,43 @@ export class FirebaseService {
       if (error) {
         console.log(error);
       } else {
-        //console.log(cliente);
       }
     });
+  }
+  public guardarAgendaHTecnico(data) {
+    // Guarda la agenda definitiva para historico por tecnico
+    this.afBD.database
+      .ref("agendaHT/" + data.userId + "/" + data.endOk)
+      .set(data, function(error) {
+        if (error) {
+          console.log(error);
+        } else {
+        }
+      });
+  }
+  public guardarAgendaHOrden(data) {
+    // Guarda la agenda definitiva para historico por orden
+    this.afBD.database
+      .ref("agendaHO/" + data.orden + "/" + data.endOk)
+      .set(data, function(error) {
+        if (error) {
+          console.log(error);
+        } else {
+        }
+      });
+  }
+  public guardarAgendaHfecha(data) {
+    // Guarda la agenda definitiva para historico por orden
+    this.afBD.database.ref("agendaHF/" + data.endOk).set(data, function(error) {
+      if (error) {
+        console.log(error);
+      } else {
+      }
+    });
+  }
+  public EliminarAgenda(data) {
+    // Guarda la agenda definitiva para historico por orden
+    this.afBD.database.ref("agenda/" + data.orden).remove();
   }
   public guardarLogAgenda(data) {
     //armar fecha para indice log y data Log
@@ -190,7 +219,6 @@ export class FirebaseService {
         if (error) {
           console.log(error);
         } else {
-          //console.log(cliente);
         }
       });
   }
@@ -200,7 +228,6 @@ export class FirebaseService {
       if (error) {
         console.log(error);
       } else {
-        //console.log(cliente);
       }
     });
   }
@@ -212,6 +239,32 @@ export class FirebaseService {
   public getAllAgendas() {
     return this.afBD.list("agenda/");
   }
+  public getAgendaHO(data) {
+    return this.afBD.list("agendaHO/" + data.id);
+  }
+  public getAgendaHT(data) {
+    return this.afBD.list("agendaHT/" + data.id);
+  }
+  public getAgendaHTxfecha(data) {
+    return this.afBD.list("agendaHT/" + data.id, ref =>
+      ref
+        .orderByChild("endOk")
+        .startAt(data.desdeM)
+        .endAt(data.hastaM)
+    );
+  }
+  public getAgendaHF(data) {
+    return this.afBD.list("agendaHF/", ref =>
+      ref
+        .orderByChild("endOk")
+        .startAt(data.desdeM)
+        .endAt(data.hastaM)
+    );
+  }
+  public getAgendaHTall() {
+    return this.afBD.list("agendaHT/", ref => ref.orderByKey().limitToLast(10));
+  }
+
   /* --------------ORDENAR---------------------*/
   public ordenanzaNombre(items) {
     // sort by name

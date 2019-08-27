@@ -90,7 +90,7 @@ export class AgendaPrComponent implements OnInit {
   };
   constructor(private firebaseService: FirebaseService) {
     firebaseService
-      .getPorId(this.data)
+      .getPorDoc(this.data)
       .valueChanges()
       .subscribe(orden => {
         this.ordenFire = orden;

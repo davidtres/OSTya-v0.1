@@ -1,8 +1,8 @@
 <!-- <div class="well"><a [routerLink]="['/home']">Home</a> / Ordenes Abiertas</div> -->
 <div class="container">
+  <br />
   <div style="text-align: center">
-    <h3>ORDENES ABIERTAS</h3>
-    <hr />
+    <h3 class="alert alert-primary">ORDENES ABIERTAS POR USUARIO</h3>
   </div>
   <ng-container *ngFor="let User of listUser">
     <br />
@@ -16,7 +16,6 @@
           <th scope="col">Ingreso</th>
           <th scope="col">Cliente</th>
           <th scope="col">Solicitud</th>
-          <th scope="col">Estado</th>
         </tr>
       </thead>
       <tbody *ngFor="let ordenes of ordenFire; let i = index">
@@ -27,9 +26,40 @@
           <td id="ingreso">
             {{ ordenes.fechaSolicitud | date: "short" }}
           </td>
-          <td id="cliente">{{ ordenes.cliente }}</td>
-          <td id="solicitud">{{ ordenes.solicitud }}</td>
-          <td id="estado">{{ ordenes.estado }}</td>
+          <td id="cliente">
+            {{ ordenes.cliente }}.
+            <span
+              [ngClass]="{
+                'badge-success badge-pill badge': ordenes.bgNew == 'Nuevo'
+              }"
+              >{{ ordenes.bgNew }}</span
+            >
+            <span
+              [ngClass]="{
+                'badge-warning badge-pill badge': ordenes.bgUpd == 'Actualizado'
+              }"
+              >{{ ordenes.bgUpd }}</span
+            >
+            <span
+              [ngClass]="{
+                'badge-danger badge-pill badge':
+                  ordenes.bgDes == 'Desactualizado'
+              }"
+              >{{ ordenes.bgDes }}</span
+            >
+            <span
+              [ngClass]="{
+                'badge-dark badge-pill badge': ordenes.bgOld == 'Antiguo'
+              }"
+              >{{ ordenes.bgOld }}</span
+            >
+          </td>
+          <td id="solicitud">
+            {{ ordenes.solicitud }}
+            <span class="badge badge-pill badge-secondary">{{
+              ordenes.estado
+            }}</span>
+          </td>
         </tr>
       </tbody>
     </table> </ng-container
