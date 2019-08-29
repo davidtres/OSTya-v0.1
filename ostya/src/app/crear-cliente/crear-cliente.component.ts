@@ -2,8 +2,10 @@ import { Component, OnInit } from "@angular/core";
 import { FirebaseService } from "../services/firebase.service";
 import { Cliente } from "../interfaces/cliente";
 import { FormGroup, Validators, FormControl } from "@angular/forms";
-import { database } from "firebase";
 import { ActivatedRoute, Router } from "@angular/router";
+import { Observable } from "rxjs";
+import { switchMap, map, debounceTime, filter } from "rxjs/operators";
+import { HttpClient } from "@angular/common/http";
 
 @Component({
   selector: "app-crear-cliente",
@@ -13,7 +15,8 @@ import { ActivatedRoute, Router } from "@angular/router";
 export class CrearClienteComponent implements OnInit {
   // Variable contiene formulario HTML
   public formGroup: FormGroup;
-
+  private searchField: FormControl;
+  results$: Observable<any>;
   // varible para interactuar con campos del HTML (Interfaces)
   cliente: Cliente = {
     id: null,
@@ -42,12 +45,24 @@ export class CrearClienteComponent implements OnInit {
   clientesfire: any; //almacena listado de clientes get_fire
   id: any = null; //para capturar parametro
   clienteObtenido: any; //se guarda cliente filtrado por el paramtro
+  results: Observable<any>;
 
   constructor(
     private firebaseService: FirebaseService,
     private route: ActivatedRoute,
-    private ruta: Router
+    private ruta: Router,
+    private http: HttpClient
   ) {
+    //Buscar direccion en Google
+    const URL = "https://maps.googleapis.com/maps/api/geocode/json?address=";
+    const apiKey = "key=AIzaSyAorrP1RL6rUh3NI1dEHYIxUUmhjaVWbfc";
+    this.searchField = new FormControl();
+    this.results = this.searchField.valueChanges.pipe(
+      filter(text => text.length > 2),
+      debounceTime(500),
+      switchMap(q => this.http.get<any>(`${URL}${q}&${apiKey}`)),
+      map(res => res.results)
+    );
     //Se guardan los clientes obtenidos de firebase
     firebaseService
       .getCliente()
@@ -70,6 +85,19 @@ export class CrearClienteComponent implements OnInit {
         });
     }
   }
+  buscarDir: string;
+
+  selectAdress(result) {
+    console.log(result);
+
+    this.cliente.direcciones[0] = result.formatted_address;
+    this.cliente.coordenadas[0] = result.geometry.location.lat;
+    this.cliente.coordenadas[1] = result.geometry.location.lng;
+    this.buscarDir = "";
+  }
+  pasarAgoogle() {
+    this.buscarDir = this.cliente.nombre;
+  }
 
   ngOnInit() {
     this.buildForm(); //inicializa contructor del formulario
@@ -89,6 +117,7 @@ export class CrearClienteComponent implements OnInit {
         )
       ]),
       Dir: new FormControl(this.cliente.direcciones, [Validators.required]),
+      Dir1: new FormControl(this.cliente.direcciones, []),
       Cel: new FormControl(this.cliente.celular, [
         Validators.required,
         Validators.minLength(10)

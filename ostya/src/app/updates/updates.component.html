@@ -40,7 +40,10 @@
   <!-- ----------------botones de opciones -------------- -->
   <div class="container">
     <div class="form-row">
-      <div class="form-group col-md-2">
+      <div
+        class="form-group col-md-2"
+        *ngIf="!(ordenFire.estado == 'En sitio')"
+      >
         <a class="btn btn-primary" routerLink="/programacion/{{ ordenFire.id }}"
           >Agendar</a
         >

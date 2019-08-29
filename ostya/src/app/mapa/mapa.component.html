@@ -2,6 +2,14 @@
 
 <!-- this creates a google map on the page with the given lat/lng from -->
 <!-- the component as the initial center of the map: -->
-<agm-map [latitude]="lat" [longitude]="lng">
-  <agm-marker [latitude]="lat" [longitude]="lng"></agm-marker>
-</agm-map>
+<div class="container card">
+  <agm-map [latitude]="lat" [longitude]="lng" [zoom]="10">
+    <agm-marker [latitude]="lat" [longitude]="lng"></agm-marker>
+    <agm-marker
+      *ngIf="latPerlado"
+      [latitude]="ubicacion"
+      [longitude]="ubicacion2"
+    ></agm-marker>
+  </agm-map>
+  <button (click)="verUbica()">Ubicame</button>
+</div>

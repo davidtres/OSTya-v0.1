@@ -44,6 +44,7 @@ import { UpdatesComponent } from "./updates/updates.component";
 import { TriageComponent } from "./triage/triage.component";
 import { AgendaxtecnicoComponent } from "./agendaxtecnico/agendaxtecnico.component";
 import { AgendaxordenComponent } from "./agendaxorden/agendaxorden.component"; // for FullCalendar!;
+import { HttpClientModule } from "@angular/common/http";
 
 const appRoutes: Routes = [
   { path: "", component: HomeComponent },
@@ -71,7 +72,8 @@ const appRoutes: Routes = [
   { path: "updates/:id", component: UpdatesComponent },
   { path: "triage", component: TriageComponent },
   { path: "agenda-tecnico", component: AgendaxtecnicoComponent },
-  { path: "agenda-orden", component: AgendaxordenComponent }
+  { path: "agenda-orden", component: AgendaxordenComponent },
+  { path: "mapa", component: MapaComponent }
 ];
 @NgModule({
   declarations: [
@@ -122,7 +124,8 @@ const appRoutes: Routes = [
     AgmCoreModule.forRoot({
       apiKey: "AIzaSyAorrP1RL6rUh3NI1dEHYIxUUmhjaVWbfc"
     }),
-    FullCalendarModule
+    FullCalendarModule,
+    HttpClientModule
   ],
   providers: [FirebaseService],
   bootstrap: [AppComponent]

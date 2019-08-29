@@ -22,6 +22,7 @@ export class AgendaComponent implements OnInit {
   idioma = "es";
   agendaFire: any;
   listUser: any;
+  listUserColor: any;
   public formGroup: FormGroup; //variable para formulario
   constructor(private firebaseService: FirebaseService) {
     firebaseService //obtener agenda del tecnico seleccionado
@@ -30,6 +31,7 @@ export class AgendaComponent implements OnInit {
       .subscribe(agendas => {
         this.agendaFire = agendas;
         this.verAgendas();
+        console.log(this.agendaFire);
       });
   }
   verAgendas() {
@@ -50,14 +52,35 @@ export class AgendaComponent implements OnInit {
   }
   filtrarTecnico() {
     this.listUser = [];
-    this.agendaFire.forEach(agenda => {
+    this.listUserColor = [];
+    this.agendaFire.forEach((agenda, i) => {
+      console.log(agenda);
       if (!this.listUser.includes(agenda.tecnico)) {
+        this.listUserColor.push({
+          tecnico: agenda.tecnico,
+          color: agenda.color
+        });
+        this.listUserColor.sort(function(a, b) {
+          //funcion de ordenacion.
+          if (a.tecnico > b.tecnico) {
+            return 1;
+          }
+          if (a.tecnico < b.tecnico) {
+            return -1;
+          }
+          // a must be equal to b
+          return 0;
+        });
         this.listUser.push(agenda.tecnico);
         this.listUser.sort();
       }
     });
+    console.log(this.listUser);
   }
   contador = 0;
+  eventInfo(event) {
+    console.log(event);
+  }
   agendaTecnico() {
     if (this.contador == 0) {
       let filtroUsuario = this.calendarEvents.filter(

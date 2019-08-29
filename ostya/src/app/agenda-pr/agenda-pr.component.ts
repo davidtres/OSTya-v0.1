@@ -1,10 +1,8 @@
-import { Component, OnInit, ViewChild } from "@angular/core";
-import { FullCalendarComponent } from "@fullcalendar/angular";
-import { EventInput } from "@fullcalendar/core";
-import dayGridPlugin from "@fullcalendar/daygrid";
-import timeGrigPlugin from "@fullcalendar/timegrid";
-import interactionPlugin from "@fullcalendar/interaction"; // for dateClick
-import { FirebaseService } from "../services/firebase.service";
+import { Component, OnInit } from "@angular/core";
+import { FormControl, Validators, FormGroup } from "@angular/forms";
+import { Observable } from "rxjs";
+import { switchMap, map, debounceTime, filter } from "rxjs/operators";
+import { HttpClient } from "@angular/common/http";
 
 @Component({
   selector: "app-agenda-pr",
@@ -12,90 +10,32 @@ import { FirebaseService } from "../services/firebase.service";
   styleUrls: ["./agenda-pr.component.css"]
 })
 export class AgendaPrComponent implements OnInit {
-  @ViewChild("calendar") calendarComponent: FullCalendarComponent; // the #calendar in the template
-  ahora = new Date();
-  fin = new Date(this.ahora);
-  calendarVisible = true;
-  calendarPlugins = [dayGridPlugin, timeGrigPlugin, interactionPlugin];
-  calendarWeekends = true;
-  calendarEvents: EventInput[] = [
-    {
-      title: "Event Now",
-      start: this.ahora,
-      end: this.fin.setHours(this.fin.getHours() + 2.1),
-      color: "#00ff80",
-      overlap: false,
-      id: "a"
-    }
-  ];
-
-  toggleVisible() {
-    this.calendarVisible = !this.calendarVisible;
-  }
-
-  datoCambio(info) {
-    alert(
-      info.event.title + " Fue movido a: " + info.event.start.toISOString()
+  results: Observable<any>;
+  private searchField: FormControl;
+  formGroup: FormGroup;
+  direccion: any;
+  constructor(private http: HttpClient) {
+    const URL = "https://maps.googleapis.com/maps/api/geocode/json?address=";
+    const apiKey = "key=AIzaSyAorrP1RL6rUh3NI1dEHYIxUUmhjaVWbfc";
+    this.searchField = new FormControl();
+    this.results = this.searchField.valueChanges.pipe(
+      filter(text => text.length > 2),
+      debounceTime(500),
+      switchMap(q => this.http.get<any>(`${URL}${q}&${apiKey}`)),
+      map(res => res.results)
     );
-    console.log(info);
-
-    if (!confirm("Are you sure about this change?")) {
-      info.revert();
-    }
-  }
-  resizeEvento(info) {
-    alert(info.event.title + " end is now " + info.event.end.toISOString());
-    console.log(info);
-    //._instance.range.start
-    if (!confirm("is this okay?")) {
-      info.revert();
-    }
   }
 
-  toggleWeekends() {
-    this.calendarWeekends = !this.calendarWeekends;
+  ngOnInit() {
+    this.buildForm(); //inicializa contructor del formulario
   }
-
-  gotoPast() {
-    let calendarApi = this.calendarComponent.getApi();
-    calendarApi.gotoDate("2018-10-01"); // call a method on the Calendar object
+  // constructor del formulario + validaciones
+  private buildForm() {
+    this.formGroup = new FormGroup({
+      Direccion: new FormControl(this.direccion, [
+        Validators.required,
+        Validators.minLength(7)
+      ])
+    });
   }
-
-  handleDateClick(arg) {
-    let hora = "01:30";
-    let dura = new Date("March 13, 08 " + hora);
-    console.log(dura.getHours());
-    console.log(dura.getMinutes());
-    if (confirm("¿Desea agregar un evento a  " + arg.dateStr + "  ?")) {
-      let start = new Date(arg.date);
-      let fecha = new Date(arg.date);
-      fecha.setHours(fecha.getHours() + 3);
-      this.calendarEvents = this.calendarEvents.concat({
-        // add new event data. must create new array
-        title: "New Event",
-        start: start,
-        end: fecha,
-        allDay: arg.allDay
-      });
-
-      console.log(arg);
-
-      console.log(this.calendarEvents);
-    }
-  }
-  title = "El titulo del evento";
-  ordenFire: any;
-  data = {
-    doc: "orden"
-  };
-  constructor(private firebaseService: FirebaseService) {
-    firebaseService
-      .getPorDoc(this.data)
-      .valueChanges()
-      .subscribe(orden => {
-        this.ordenFire = orden;
-        console.log(this.ordenFire);
-      });
-  }
-  ngOnInit() {}
 }

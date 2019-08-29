@@ -33,7 +33,6 @@ export class ListarOrdenesComponent implements OnInit {
               let hace24h = Date.now() - 86400000;
               let hace3d = Date.now() - 259200000;
               let hace7d = Date.now() - 604800000;
-              console.log(keysReverse);
               if (keysReverse[0] > hace24h) {
                 this.ordenFire[i].bgUpd = "Actualizado";
               } else {
@@ -53,10 +52,14 @@ export class ListarOrdenesComponent implements OnInit {
             }
           });
         }, 1000);
-
-        console.log(this.ordenFire);
       });
   }
+  // ----- CRITERIO DE NOTIFICACIONES  ------
+  // - NUEVO: Servicios ingresados las ultimas 24 horas.
+  // - ACTUALIZADO: Ultima actualizacion hace menos de 24h.
+  // - DESACTUALIZADO: Ultima actualizacion tiene mas de 3 dias y menos de 7 dias.
+  // - ANTIGUO: Ultima actualizacion tiene mas de 7 dias.
+  // - SIN NOTIFICACION: Está en periodo de ejecucion ultima actualizacion tiene menos de 3 dias y mas de 24h
 
   ngOnInit() {}
 }

@@ -26,6 +26,19 @@
           Buscar
         </button>
       </div>
+      <div *ngIf="noAgenda" role="alert">
+        <label for="error"></label>
+        <p name="error" class="alert alert-danger">{{ noAgenda }}</p>
+      </div>
+      <div
+        class="form-group col-md-6"
+        style="margin-top: 39px"
+        *ngIf="!noAgenda"
+      >
+        <p>
+          <strong>{{ agendaFire[0].title }}</strong>
+        </p>
+      </div>
     </div>
   </form>
 </div>
@@ -34,7 +47,7 @@
 <div class="container card">
   <br /><full-calendar
     #calendar
-    defaultView="timeGridWeek"
+    defaultView="dayGridMonth"
     [header]="{
       left: 'prev,next, today',
       center: 'title',
@@ -54,5 +67,6 @@
     [(events)]="calendarEvents"
     minTime="00:00:00"
     maxTime="24:00:00"
+    businessHours="true"
   ></full-calendar>
 </div>

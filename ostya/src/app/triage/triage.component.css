@@ -1,0 +1,22 @@
+table .d {
+    table-layout: fixed;
+    width: 100%;
+  }
+  #ingreso {
+    width: 15%;
+  }
+  #cliente {
+    width: 30%;
+  }
+  #solicitud {
+    width: 55%;
+  }
+  
+  .encabezado {
+    background-color: #343a40;
+    color: white;
+  }
+  #orden {
+    text-align: center;
+  }
+  

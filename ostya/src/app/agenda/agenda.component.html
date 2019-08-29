@@ -8,6 +8,7 @@
     (validSubmit)="guardarAgenda()"
     autocomplete="off"
   >
+    <!-- ----------Seleccionar usuario ----------------- -->
     <div class="form-row">
       <div class="form-group col-md-4">
         <label for="tecnico"><strong>Selecciona Usuario</strong> </label>
@@ -21,6 +22,15 @@
           <option>TODOS</option>
           <option *ngFor="let usuario of listUser">{{ usuario }} </option>
         </select>
+      </div>
+      <div class="form-group col-md-8 text-center" style="margin-top: 10px;">
+        <div class="bg" *ngFor="let list of listUserColor">
+          <span
+            [ngStyle]="{ 'background-color': list.color, color: black }"
+            class="badge"
+            >{{ list.tecnico }}</span
+          >
+        </div>
       </div>
     </div>
   </form>
@@ -48,7 +58,8 @@
     [plugins]="calendarPlugins"
     [weekends]="calendarWeekends"
     [(events)]="calendarEvents"
-    minTime="07:00:00"
+    minTime="10:00:00"
     maxTime="19:00:00"
+    (eventClick)="eventInfo($event)"
   ></full-calendar>
 </div>

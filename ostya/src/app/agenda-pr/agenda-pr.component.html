@@ -1,36 +1,19 @@
-<div class="container">
-  <div class="app">
-    <div class="app-top">
-      <button (click)="toggleVisible()">toggle visible</button>
-      <button (click)="toggleWeekends()">toggle weekends</button>
-      <button (click)="gotoPast()">go to a date in the past</button>
-      (also, click a date/time to add an event)
+<h3>Datos de direccion</h3>
+<form [formGroup]="formGroup" autocomplete="off">
+  <div class="form-group">
+    <div class="card card-body bg-light">
+      <label>Buscar dirección en Google Maps</label>
+      <input
+        formControlName="Direccion"
+        type="text"
+        class="form-control"
+        [formControl]="searchField"
+      />
     </div>
-    <!-- [validRange]="{
-          start: '2019-08-10',
-          end: '2019-08-15'
-        }" -->
-    <div class="app-calendar" *ngIf="calendarVisible">
-      <full-calendar
-        #calendar
-        defaultView="timeGridWeek"
-        [header]="{
-          left: 'prev,next today',
-          center: 'title',
-          right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
-        }"
-        [plugins]="calendarPlugins"
-        [weekends]="calendarWeekends"
-        [(events)]="calendarEvents"
-        [editable]="true"
-        [nowIndicator]="true"
-        [droppable]="true"
-        minTime="06:00:00"
-        maxTime="23:00:00"
-        (dateClick)="handleDateClick($event)"
-        (eventDrop)="datoCambio($event)"
-        (eventResize)="resizeEvento($event)"
-      ></full-calendar>
-    </div>
+    <ul class="list-group">
+      <li class="list-group-item" *ngFor="let result of results | async">
+        {{ result.formatted_address }}
+      </li>
+    </ul>
   </div>
-</div>
+</form>

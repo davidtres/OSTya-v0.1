@@ -48,6 +48,7 @@
           placeholder="Nombre"
           [(ngModel)]="cliente.nombre"
           name="Nombre"
+          (blur)="pasarAgoogle()"
         />
       </div>
       <div class="form-group col-md-4">
@@ -119,6 +120,7 @@
           [(ngModel)]="cliente.tipo"
           name="Tipo"
         >
+          <option value="">Seleccionar...</option>
           <option *ngFor="let personas of tPersona"
             >{{ personas.tipo }}
           </option>
@@ -133,6 +135,7 @@
           placeholder="Latitud"
           [(ngModel)]="cliente.coordenadas[0]"
           name="Lat"
+          readonly="readonly"
         />
       </div>
       <div class="form-group col-md-2">
@@ -144,6 +147,7 @@
           placeholder="Longitud"
           [(ngModel)]="cliente.coordenadas[1]"
           name="Long"
+          readonly="readonly"
         />
       </div>
     </div>
@@ -162,6 +166,31 @@
         </label>
       </div>
     </div>
+    <!-- ----------Buscar direccion en Google ---------- -->
+    <div class="form-group">
+      <div class="card card-body  badge-light">
+        <label
+          >Buscar dirección en Google <strong>(Empresa, Ciudad, Calle)</strong>
+        </label>
+        <input
+          formControlName="Dir1"
+          type="text"
+          class="form-control"
+          [formControl]="searchField"
+          [(ngModel)]="buscarDir"
+        />
+      </div>
+      <ul *ngIf="buscarDir != ''" class="list-group">
+        <li
+          (click)="selectAdress(result)"
+          class="list-group-item"
+          *ngFor="let result of results | async"
+        >
+          {{ result.formatted_address }}
+        </li>
+      </ul>
+    </div>
+    <!-- ------------- Botones de guardar o Cancelar ---------- -->
     <div *ngIf="formGroup.status == 'VALID'">
       <button type="submit" class="btn btn-primary">Guardar Cliente</button>
     </div>
