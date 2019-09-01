@@ -294,5 +294,16 @@ export class FirebaseService {
       }
     }
   }
+  public setUbicacion(data) {
+    this.afBD.database
+      .ref("ubicacion/" + data.id)
+      .update(data, function(error) {
+        if (error) {
+          console.log(error);
+        } else {
+        }
+      });
+  }
+
   constructor(private afBD: AngularFireDatabase) {}
 }

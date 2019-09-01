@@ -1,15 +1,36 @@
 import { Component, OnInit } from "@angular/core";
+import { FirebaseService } from "../services/firebase.service";
+import { ActivatedRoute, Router } from "@angular/router";
 
 @Component({
-  selector: "app-mapa",
-  templateUrl: "./mapa.component.html",
-  styleUrls: ["./mapa.component.css"]
+  selector: "app-set-coordenadas",
+  templateUrl: "./set-coordenadas.component.html",
+  styleUrls: ["./set-coordenadas.component.css"]
 })
-export class MapaComponent implements OnInit {
+export class SetCoordenadasComponent implements OnInit {
   lat: number = 0;
   lng: number = 0;
-  constructor() {
+  clienteGet: any = {
+    id: 0,
+    doc: "clientes"
+  };
+  clienteFire: any = {};
+
+  constructor(
+    private firebaseService: FirebaseService,
+    private route: ActivatedRoute,
+    private ruta: Router
+  ) {
     this.obtenetUbicacion();
+    this.clienteGet.id = this.route.snapshot.params["id"]; //Recupera parametro id de url
+
+    firebaseService
+      .obtenerUnoId(this.clienteGet)
+      .valueChanges()
+      .subscribe(cliente => {
+        this.clienteFire = cliente;
+        console.log(this.clienteFire);
+      });
   }
   obtenetUbicacion() {
     var startPos;
@@ -40,6 +61,16 @@ export class MapaComponent implements OnInit {
       //   3: timed out
     };
     navigator.geolocation.getCurrentPosition(geoSuccess, geoError, geoOptions);
+  }
+  addCoordenadas() {
+    this.clienteFire.coordenadas[0] = this.lat;
+    this.clienteFire.coordenadas[1] = this.lng;
+    console.log(this.clienteFire.coordenadas);
+    this.firebaseService.guardarCliente(this.clienteFire);
+    this.ruta.navigate(["/home"]);
+  }
+  cancelar() {
+    this.ruta.navigate(["/home"]);
   }
 
   ngOnInit() {}

@@ -1,8 +1,9 @@
 <br />
-<div style="text-align: center">
-  <h3 class="alert alert-primary">AGENDA POR USUARIO</h3>
-</div>
-<div class="container card">
+
+<div id="agenda" class="container card">
+  <div style="text-align: center">
+    <h3 class="alert alert-primary">AGENDA POR USUARIO</h3>
+  </div>
   <form
     [formGroup]="formGroup"
     (validSubmit)="guardarAgenda()"
@@ -34,32 +35,33 @@
       </div>
     </div>
   </form>
+
+  <!-- -------------------Calendario------------------ -->
+  <div class="container card">
+    <br /><full-calendar
+      #calendar
+      defaultView="timeGridWeek"
+      [header]="{
+        left: 'prev,next, today',
+        center: 'title',
+        right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
+      }"
+      [locale]="idioma"
+      [buttonText]="{
+        today: 'Hoy',
+        month: 'Mes',
+        week: 'Semana',
+        day: 'Dia',
+        list: 'lista'
+      }"
+      [nowIndicator]="true"
+      [plugins]="calendarPlugins"
+      [weekends]="calendarWeekends"
+      [(events)]="calendarEvents"
+      minTime="10:00:00"
+      maxTime="19:00:00"
+      (eventClick)="eventInfo($event)"
+    ></full-calendar>
+  </div>
 </div>
 <br />
-<!-- -------------------Calendario------------------ -->
-<div class="container card">
-  <br /><full-calendar
-    #calendar
-    defaultView="timeGridWeek"
-    [header]="{
-      left: 'prev,next, today',
-      center: 'title',
-      right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
-    }"
-    [locale]="idioma"
-    [buttonText]="{
-      today: 'Hoy',
-      month: 'Mes',
-      week: 'Semana',
-      day: 'Dia',
-      list: 'lista'
-    }"
-    [nowIndicator]="true"
-    [plugins]="calendarPlugins"
-    [weekends]="calendarWeekends"
-    [(events)]="calendarEvents"
-    minTime="10:00:00"
-    maxTime="19:00:00"
-    (eventClick)="eventInfo($event)"
-  ></full-calendar>
-</div>

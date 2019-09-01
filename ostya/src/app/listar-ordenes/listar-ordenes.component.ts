@@ -33,20 +33,24 @@ export class ListarOrdenesComponent implements OnInit {
               let hace24h = Date.now() - 86400000;
               let hace3d = Date.now() - 259200000;
               let hace7d = Date.now() - 604800000;
-              if (keysReverse[0] > hace24h) {
-                this.ordenFire[i].bgUpd = "Actualizado";
-              } else {
-                if (keysReverse[0] < hace7d) {
-                  this.ordenFire[i].bgOld = "Antiguo";
-                } else {
-                }
-                if (keysReverse[0] < hace3d && keysReverse[0] > hace7d) {
-                  this.ordenFire[i].bgDes = "Desactualizado";
-                }
-              }
 
               if (this.ordenFire[i].fechaSolicitud > hace24h) {
                 this.ordenFire[i].bgNew = "Nuevo";
+              } else {
+                if (
+                  keysReverse[0] > hace24h &&
+                  this.ordenFire[i].bgNew != "Nuevo"
+                ) {
+                  this.ordenFire[i].bgUpd = "Actualizado";
+                } else {
+                  if (keysReverse[0] < hace7d) {
+                    this.ordenFire[i].bgOld = "Antiguo";
+                  } else {
+                    if (keysReverse[0] < hace3d && keysReverse[0] > hace7d) {
+                      this.ordenFire[i].bgDes = "Desactualizado";
+                    }
+                  }
+                }
               }
               keys = [];
             }

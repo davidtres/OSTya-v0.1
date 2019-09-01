@@ -1,25 +1,24 @@
 <div class="well"><a [routerLink]="['/home']">Home</a> / Listar Usuarios</div>
-<div class="container">
+<div class="container col-md-6 offset-md-3 card">
   <h3>USUARIOS ACTUALES</h3>
   <br />
   <ul class="list-group">
     <ng-container *ngFor="let usuarios of usuariosfire; let i = index">
       <div class="form-row">
-        <div id="divInicial">
-          <p id="pInicial" [ngStyle]="{ 'background-color': usuarios.color }">
+        <div class="col-md-2" id="divInicial">
+          <p
+            class="text-center"
+            id="pInicial"
+            [ngStyle]="{ 'background-color': usuarios.color }"
+          >
             {{ usuarios.iniciales }}
           </p>
         </div>
-        <div class="col-md-5">
-          <p class="list-group-item ">
-            {{ usuarios.nombre }}
-          </p>
-        </div>
-        <div class="col-md-2 btnAct">
-          <a
-            class="btn btn-primary"
-            routerLink="/crear-usuario/{{ usuarios.id }}"
-            >Actualizar</a
+        <div class="col-md-8">
+          <a routerLink="/crear-usuario/{{ usuarios.id }}">
+            <p class="list-group-item ">
+              {{ usuarios.nombre }}
+            </p></a
           >
         </div>
       </div>

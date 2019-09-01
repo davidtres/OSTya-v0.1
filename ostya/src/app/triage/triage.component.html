@@ -22,33 +22,35 @@
     >
   </div>
   <ng-container>
-    <table class="table">
-      <thead class="thead-dark">
+    <table class="d table">
+      <thead class="thead-dark encabezado">
         <tr>
-          <th scope="col">#</th>
-          <th scope="col">Cliente - Triage</th>
-          <th scope="col">Servicio</th>
-          <th scope="col">Solicitud</th>
+          <th id="orden" scope="col">#</th>
+          <th id="cliente" scope="col">Cliente - Triage</th>
+          <th id="solicitud" scope="col">Servicio</th>
+          <th id="ingreso" scope="col">Solicitud</th>
         </tr>
       </thead>
       <tbody *ngFor="let orden of ordenFire">
         <tr>
-          <th scope="row">
+          <th id="orden" scope="row">
             <a
               style="color: rgb(8, 8, 8)"
               routerLink="/updates/{{ orden.id }}"
               >{{ orden.id }}</a
             >
           </th>
-          <td>{{ orden.cliente }}-{{ orden.triage }}</td>
-          <td>
+          <td id="cliente">{{ orden.cliente }}-{{ orden.triage }}</td>
+          <td id="solicitud">
             {{ orden.solicitud }}.<span
               [ngStyle]="{ 'background-color': orden.color }"
               class="badge"
               >{{ orden.tr }}</span
             >
           </td>
-          <td>{{ orden.fechaSolicitud | date: "dd/MM/yyyy , hh:mm a" }}</td>
+          <td id="ingreso">
+            {{ orden.fechaSolicitud | date: "dd/MM/yyyy , hh:mm a" }}
+          </td>
         </tr>
       </tbody>
     </table>

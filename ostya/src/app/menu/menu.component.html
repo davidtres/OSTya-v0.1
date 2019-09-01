@@ -1,5 +1,10 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-primary">
-  <a class="navbar-brand" routerLink="/home">OSTya 1.0</a>
+<nav
+  class="navbar navbar-expand-lg navbar-light bg-light border border-secondary"
+  style="padding: 0px"
+>
+  <a class="navbar-brand" routerLink="/home">
+    <img src="assets/img/LogoOstya.PNG" height="50px" alt="" />
+  </a>
   <button
     class="navbar-toggler"
     type="button"
@@ -13,47 +18,17 @@
   </button>
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav mr-auto">
-      <!-- CODIGO PARA UN ITEM INDIVIDUAL DEL MENÚ
-            <li class="nav-item active">
-              <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">Link</a>
-            </li> -->
-      <!-- MENU USUARIO -->
       <li class="nav-item dropdown">
         <a
-          class="nav-link dropdown-toggle"
+          #a
+          class="nav-link dropdown-toggle badge-light"
           href="#"
           id="navbarDropdown"
           role="button"
           data-toggle="dropdown"
           aria-haspopup="true"
           aria-expanded="false"
-        >
-          USUARIO
-        </a>
-        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-          <a class="dropdown-item" routerLink="/crear-usuario/new"
-            >Crear Usuario</a
-          >
-          <a class="dropdown-item" routerLink="/listar-usuarios"
-            >Actualizar Usuario</a
-          >
-          <div class="dropdown-divider"></div>
-          <a class="dropdown-item" href="#">Something else here</a>
-        </div>
-      </li>
-      <!-- MENU CLIENTE -->
-      <li class="nav-item dropdown">
-        <a
-          class="nav-link dropdown-toggle"
-          href="#"
-          id="navbarDropdown"
-          role="button"
-          data-toggle="dropdown"
-          aria-haspopup="true"
-          aria-expanded="false"
+          (click)="tg()"
         >
           CLIENTE
         </a>
@@ -72,9 +47,9 @@
         </div>
       </li>
       <!-- MENU ORDENES -->
-      <li class="nav-item dropdown">
+      <li class="nav-item dropdown ">
         <a
-          class="nav-link dropdown-toggle"
+          class="nav-link dropdown-toggle badge-light"
           href="#"
           id="navbarDropdown"
           role="button"
@@ -88,10 +63,33 @@
           <a class="dropdown-item" routerLink="/crear-orden/new">Crear Orden</a>
         </div>
       </li>
+      <!-- -----------Menu agenda--------------- -->
+      <li class="nav-item dropdown">
+        <a
+          class="nav-link dropdown-toggle badge-light"
+          href="#"
+          id="navbarDropdown"
+          role="button"
+          data-toggle="dropdown"
+          aria-haspopup="true"
+          aria-expanded="false"
+        >
+          AGENDA
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+          <a class="dropdown-item" routerLink="/agenda">Agenda actual</a>
+          <div class="dropdown-divider"></div>
+          <h6 class="dropdown-header">Agendas Historicas</h6>
+          <a class="dropdown-item" routerLink="/agenda-tecnico"
+            >Agenda x tecnico
+          </a>
+          <a class="dropdown-item" routerLink="/agenda-orden">Agenda x orden</a>
+        </div>
+      </li>
       <!-- MENU CONFIGURACION -->
       <li class="nav-item dropdown">
         <a
-          class="nav-link dropdown-toggle"
+          class="nav-link dropdown-toggle badge-light"
           href="#"
           id="navbarDropdown"
           role="button"
@@ -105,25 +103,37 @@
           <a class="dropdown-item" routerLink="/listado-estados"
             >Listar Estados</a
           >
-          <a class="dropdown-item" routerLink="/tipo-servicio"
+          <a class="dropdown-item" routerLink="/listar-tservicio"
             >Tipos de Servicios</a
+          >
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" routerLink="/crear-usuario/new"
+            >Crear Usuario</a
+          >
+          <a class="dropdown-item" routerLink="/listar-usuarios"
+            >Actualizar Usuario</a
           >
         </div>
       </li>
-      <!-- <li class="nav-item">
-              <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
-            </li> -->
     </ul>
-    <form class="form-inline my-2 my-lg-0">
+    <button
+      routerLink="/crear-orden/new"
+      class="btn btn-dark my-2 my-sm-0"
+      style="margin-right: 10px"
+    >
+      Nueva Orden
+    </button>
+    <!-- ---------Buscar ------- -->
+    <!-- <form class="form-inline my-2 my-lg-0">
       <input
         class="form-control mr-sm-2"
         type="search"
         placeholder="Search"
         aria-label="Search"
       />
-      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">
-        Search
+      <button class="btn btn-dark my-2 my-sm-0" type="submit">
+        Nueva Orden
       </button>
-    </form>
+    </form> -->
   </div>
 </nav>

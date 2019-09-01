@@ -11,16 +11,55 @@
   padding: 10px;
   padding-left: 10%;
 }
+/* ccs para icono iniciales */
 #pInicial {
   padding: 8px;
   border-radius: 50%;
   border: solid 1px darkgray;
-  width: 42px;
-  height: 42px;
+  width: 45px;
+  height: 45px;
   -webkit-text-stroke-width: medium;
 }
 #divInicial {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+/* Vista movil pequeños home */
+table .d {
+  table-layout: fixed;
+  width: 100%;
+}
+#ingreso {
+  width: 15%;
+}
+#cliente {
+  width: 30%;
+}
+#solicitud {
+  width: 55%;
+}
+#orden {
+  text-align: center;
+}
+@media (max-width: 575.98px) {
+  #ingreso {
+    display: none;
+  }
+  .container {
+    padding-left: 2px;
+    padding-right: 2px;
+  }
+  #orden {
+    width: 10%;
+  }
+  #cliente {
+    width: 30%;
+  }
+  #solicitud {
+    width: 60%;
+  }
+  #agenda {
+    display: none;
+  }
 }

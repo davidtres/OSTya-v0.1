@@ -34,7 +34,8 @@ export class OrdenComponent implements OnInit {
     triage: 0,
     enTriage: true,
     doc: "orden",
-    modificador: "new"
+    modificador: "new",
+    idCliente: 0
   };
 
   constructor(
@@ -45,6 +46,7 @@ export class OrdenComponent implements OnInit {
     let dataTserv = {
       doc: "tServ"
     };
+    //obtener tipos de servicios
     firebaseService
       .getPorDoc(dataTserv)
       .valueChanges()
@@ -159,6 +161,14 @@ export class OrdenComponent implements OnInit {
   // Borrar el formulario
   onReset() {
     this.formGroup.reset();
+  }
+  setIdCliente() {
+    for (let i = 0; i < this.clientesfire.length; i++) {
+      if (this.clientesfire[i].nombre == this.orden.cliente) {
+        this.orden.idCliente = this.clientesfire[i].id;
+      }
+    }
+    console.log(this.orden.idCliente);
   }
 
   // Validacion si el cliente existe.

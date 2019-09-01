@@ -8,4 +8,6 @@ export interface Empleado extends Usuarios {
   permisos: string[];
   color: string;
   iniciales: string;
+  uid: string;
+  clave: string;
 }

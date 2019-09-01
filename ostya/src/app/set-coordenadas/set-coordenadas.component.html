@@ -1,0 +1,92 @@
+<div class="text-center">
+  <h2>ASIGNACION DE COORDENAS A CLIENTE</h2>
+  <h3 *ngIf="clienteFire.nombre">{{ clienteFire.nombre }}</h3>
+</div>
+<!-- --------Mapa --------------- -->
+<div class="container card">
+  <br />
+  <!-- Coordenadas y precision -->
+  <h4 class="btn-light text-center" id="accuracy"></h4>
+  <br />
+  <agm-map [latitude]="lat" [longitude]="lng" [zoom]="18">
+    <agm-marker [latitude]="lat" [longitude]="lng"></agm-marker>
+  </agm-map>
+  <br />
+  <!-- -----------Botones ------------- -->
+  <div class="container">
+    <div class="form-row">
+      <!-- Volver a calcular -->
+      <div class="form-group col-md-2">
+        <button
+          type="button"
+          class="btn btn-warning"
+          (click)="obtenetUbicacion()"
+        >
+          Volver a calcular
+        </button>
+      </div>
+      <!-- Aceptar -->
+      <div class="form-group col-md-2"></div>
+      <div class="form-group col-md-2">
+        <button
+          type="button"
+          class="btn btn-primary"
+          data-toggle="modal"
+          data-target="#exampleModal"
+        >
+          Aceptar
+        </button>
+      </div>
+      <!-- Cancelar -->
+      <div class="form-group col-md-2">
+        <button type="button" class="btn btn-danger" (click)="cancelar()">
+          Cancelar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Modal -->
+<div
+  class="modal fade"
+  id="exampleModal"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">
+          Seguro de aceptar las coordenadas?
+        </h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        Latitud: {{ lat }} y Longitud: {{ lng }} para el cliente
+        {{ clienteFire.nombre }}
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-dismiss="modal">
+          Cancelar
+        </button>
+        <button
+          type="button"
+          class="btn btn-primary"
+          data-dismiss="modal"
+          (click)="addCoordenadas()"
+        >
+          Aceptar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

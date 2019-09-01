@@ -1,10 +1,12 @@
 <div class="well"><a [routerLink]="['/home']">Home</a> / Editar Orden</div>
-<div class="container">
+<br />
+<div class="col-md-6 offset-md-3 card">
   <form
     [formGroup]="formGroup"
     (validSubmit)="guardarOrden()"
     autocomplete="off"
   >
+    <!-- -----------seleccion de encabezado a mostrar new o editar ------------  -->
     <div class="form-row justify-content-md-center">
       <ng-container *ngIf="orden.id == 'new'; then Crea; else Edita">
       </ng-container>
@@ -19,14 +21,16 @@
         </div>
       </ng-template>
     </div>
-    <div class="form-row justify-content-md-center">
-      <div class="form-group col-md-6 ">
+    <!-- ------------inicio del formulario --------------------- -->
+    <div class="form-row justify-content-md-center ">
+      <div class="form-group col-md-10 ">
         <label for="cliente">Cliente</label>
         <select
           formControlName="cliente"
           class="form-control"
           [(ngModel)]="orden.cliente"
           name="cliente"
+          (change)="setIdCliente()"
         >
           <option>Seleccione cliente ... </option>
           <option *ngFor="let clienteSelect of clientesfire"
@@ -36,7 +40,7 @@
       </div>
     </div>
     <div class="form-row justify-content-md-center">
-      <div class="form-group col-md-6">
+      <div class="form-group col-md-10">
         <label for="tiposerv">Tipo Servicio</label>
         <select
           formControlName="tiposerv"
@@ -50,7 +54,7 @@
       </div>
     </div>
     <div class="form-row justify-content-md-center">
-      <div class="form-group col-md-6">
+      <div class="form-group col-md-10">
         <label for="servicio">Servicio Solicitado</label>
         <textarea
           rows="3"
@@ -63,7 +67,7 @@
       </div>
     </div>
     <div class="form-row justify-content-md-center">
-      <div class="form-group col-md-6">
+      <div class="form-group col-md-10">
         <label for="comentarios">Comentarios Internos</label>
         <textarea
           rows="3"
@@ -76,7 +80,7 @@
       </div>
     </div>
     <div class="form-row justify-content-md-center">
-      <div class="form-group col-md-6">
+      <div class="form-group col-md-10">
         <h4 style="text-align: center">
           <label for="triage">Nivel de urgencia "Triage" </label>
         </h4>
@@ -135,3 +139,4 @@
     <br />
   </form>
 </div>
+<br />

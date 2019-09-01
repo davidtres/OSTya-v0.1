@@ -3,6 +3,7 @@ import { FormGroup, FormControl, Validators } from "@angular/forms";
 import { Empleado } from "../interfaces/empleado";
 import { Router, ActivatedRoute } from "@angular/router";
 import { FirebaseService } from "../services/firebase.service";
+import { AuthenticationService } from "../services/authentication.service";
 
 @Component({
   selector: "app-crear-usuario",
@@ -28,14 +29,18 @@ export class CrearUsuarioComponent implements OnInit {
     rol: "",
     foto: "",
     color: "",
-    iniciales: ""
+    iniciales: "",
+    uid: "",
+    clave: ""
   };
   id: any = null; //para capturar parametro
   usuarioObtenido: any; //se guarda cliente filtrado por el paramtro
+  registrado: boolean = false;
   constructor(
     private firebaseService: FirebaseService,
     private route: ActivatedRoute,
-    private ruta: Router
+    private ruta: Router,
+    private authenticationService: AuthenticationService
   ) {
     //Se guardan los clientes obtenidos de firebase
     firebaseService
@@ -48,6 +53,7 @@ export class CrearUsuarioComponent implements OnInit {
     this.id = this.route.snapshot.params["id"];
     // Condicional para saber si el cliente es new o trae ID en el paramtro
     if (this.id != "new") {
+      this.registrado = true;
       firebaseService
         .obtenerUsuario(this.id)
         .valueChanges()
@@ -58,10 +64,20 @@ export class CrearUsuarioComponent implements OnInit {
           this.empleado = this.usuarioObtenido;
           this.obtenerIniciales();
         });
+      this.registradoUsuario();
     }
   }
   ngOnInit() {
     this.buildForm();
+  }
+  registradoUsuario() {
+    setTimeout(() => {
+      if (this.registrado) {
+        this.formGroup.controls["Correo"].disable();
+        this.formGroup.controls["Clave"].disable();
+        this.formGroup.controls["Id"].disable();
+      }
+    }, 1000);
   }
 
   // constructor del formulario
@@ -84,8 +100,7 @@ export class CrearUsuarioComponent implements OnInit {
         Validators.minLength(10)
       ]),
       Tel: new FormControl(this.empleado.celular, [Validators.minLength(7)]),
-      Lat: new FormControl(this.empleado.coordenadas[0], []),
-      Long: new FormControl(this.empleado.coordenadas[1], []),
+      Clave: new FormControl(this.empleado.clave, []),
       Activo: new FormControl(this.empleado.activo, []),
       Color: new FormControl(this.empleado.color, []),
       fecha: new FormControl(this.empleado.fechaCreacion, [Validators.required])
@@ -109,6 +124,24 @@ export class CrearUsuarioComponent implements OnInit {
   // Borrar el formulario
   onReset() {
     this.formGroup.reset();
+  }
+
+  register() {
+    this.authenticationService
+      .registerWithEmail(this.empleado.correo, this.empleado.clave)
+      .then(data => {
+        this.empleado.uid = data.user.uid;
+        this.guardarUsuario();
+        alert("Registrado correctamente");
+        console.log(data);
+      })
+      .catch(error => {
+        if (error.code == "auth/email-already-in-use") {
+          this.guardarUsuario();
+        }
+        alert("Ha ocurrido un error:.\n" + error.message);
+        console.log(error);
+      });
   }
 
   existe = false;

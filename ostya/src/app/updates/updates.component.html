@@ -44,6 +44,7 @@
         class="form-group col-md-2"
         *ngIf="!(ordenFire.estado == 'En sitio')"
       >
+        <!-- ----------Boton Agendar ------------ -->
         <a class="btn btn-primary" routerLink="/programacion/{{ ordenFire.id }}"
           >Agendar</a
         >
@@ -55,15 +56,46 @@
           </p></strong
         >
       </div>
-      <div
-        class="form-group col-md-2"
-        *ngIf="
-          ordenFire.estado == 'Programado' || ordenFire.estado == 'Reprogramado'
-        "
-      >
-        <a class="btn btn-danger" style="color: white" (click)="enSitio()"
-          >En sitio</a
+
+      <!-- -----Boton En sitio ----- -->
+      <div *ngIf="!sinCoordenadas" class="form-group col-md-2">
+        <div
+          *ngIf="
+            ordenFire.estado == 'Programado' ||
+            ordenFire.estado == 'Reprogramado'
+          "
         >
+          <a
+            data-toggle="modal"
+            data-target="#exampleModal"
+            class="btn btn-danger"
+            style="color: white"
+            >En sitio</a
+          >
+        </div>
+      </div>
+      <!-- ---------Aviso de Distancia ------------ -->
+      <div *ngIf="distance > 500" class="form-group col-md-4">
+        <div
+          *ngIf="
+            ordenFire.estado == 'Programado' ||
+            ordenFire.estado == 'Reprogramado'
+          "
+        >
+          <p class="alert alert-danger">
+            Estas fuera de sitio : {{ distance }} mts
+          </p>
+        </div>
+      </div>
+      <!-- Button asignar coordenadas -->
+      <div class="form-group col-md-4" *ngIf="sinCoordenadas">
+        <button
+          type="button"
+          class="btn btn-warning"
+          (click)="setCoordenadas()"
+        >
+          Asignar Coordenadas la cliente
+        </button>
       </div>
     </div>
   </div>
@@ -273,4 +305,87 @@
     </form>
   </div>
   <br />
+</div>
+<!-- Modal -->
+<div
+  class="modal fade"
+  id="exampleModal"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div *ngIf="distance < 500">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">
+            Reporte en sitio
+          </h5>
+          <button
+            type="button"
+            class="close"
+            data-dismiss="modal"
+            aria-label="Close"
+          >
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          Estas seguro?
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-dismiss="modal">
+            Cancelar
+          </button>
+          <button
+            type="button"
+            class="btn btn-primary"
+            data-dismiss="modal"
+            (click)="enSitio()"
+          >
+            Aceptar
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="distance > 500">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">
+            Reporte en sitio
+          </h5>
+          <button
+            type="button"
+            class="close"
+            data-dismiss="modal"
+            aria-label="Close"
+          >
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p>Estas fuera de sitio por : {{ distance }}mts</p>
+          <p class="alert alert-danger">
+            Estas seguro?, tendras mala calificacion
+          </p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-dismiss="modal">
+            Cancelar
+          </button>
+          <button
+            type="button"
+            class="btn btn-primary"
+            data-dismiss="modal"
+            (click)="enSitio()"
+          >
+            Aceptar
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

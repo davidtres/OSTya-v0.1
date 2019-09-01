@@ -12,10 +12,16 @@ export class UpdatesComponent implements OnInit {
   public formGroup: FormGroup; //variable para formulario
   public formGroupNota: FormGroup; //variable para formulario Nota
   userSistema: boolean = true;
+  sinCoordenadas: boolean = false;
   ordenGet = {
     //guarda parametro id: de la orden, para luego recuperar desde Firebase
     id: "0",
     doc: "orden"
+  };
+  clienteGet = {
+    //guarda parametro id: de la orden, para luego recuperar desde Firebase
+    id: "0",
+    doc: "clientes"
   };
   agendaGet = {
     //guarda parametro id: de la orden, para luego recuperar desde Firebase
@@ -42,6 +48,10 @@ export class UpdatesComponent implements OnInit {
   updateFire: any;
   agendaFire: any;
   cOp: boolean = false; //para saber si la orden tiene estados "Creado" o "Programado"
+  clienteFire: any;
+  lat: number;
+  lng: number;
+  distance: any = 0;
   constructor(
     private firebaseService: FirebaseService,
     private route: ActivatedRoute,
@@ -49,15 +59,15 @@ export class UpdatesComponent implements OnInit {
   ) {
     this.ordenGet.id = this.route.snapshot.params["id"]; //Recupera parametro id de url
     this.agendaGet.id = this.route.snapshot.params["id"]; //Recupera parametro id de url
-    firebaseService //obtener agenda por ID
+    //obtener agenda por ID
+    firebaseService
       .obtenerUnoId(this.agendaGet)
       .valueChanges()
       .subscribe(agenda => {
         this.agendaFire = agenda;
-        console.log(this.agendaFire);
       });
-
-    firebaseService //obtener orden por ID
+    //obtener orden por ID
+    firebaseService
       .obtenerUnoId(this.ordenGet)
       .valueChanges()
       .subscribe(orden => {
@@ -65,6 +75,7 @@ export class UpdatesComponent implements OnInit {
         //actualiza variable a guardar con los datos de la orden actual
         this.update.orden = this.ordenFire.id;
         this.update.usuario = this.ordenFire.tecnicoAsignado;
+        this.clienteGet.id = this.ordenFire.idCliente;
         //crea array de actualizaciones de la orden actual
         let actualiza = Object.entries(this.ordenFire.updates);
         this.updateFire = actualiza;
@@ -83,18 +94,33 @@ export class UpdatesComponent implements OnInit {
         if (this.ordenFire.estado == "Reprogramado") {
           this.cOp = true;
         }
-        console.log(this.ordenFire);
+        this.getCoordCliente();
       });
-    firebaseService //obtener Estados
+    //obtener Estados
+    firebaseService
       .getPorDoc(this.data)
       .valueChanges()
       .subscribe(estados => {
         this.estadosFire = estados;
-        console.log(this.estadosFire);
-
         this.estadoQueCierran = this.estadosFire.filter(
           cierra => cierra.finOrden == true
         );
+      });
+  }
+  getCoordCliente() {
+    //obtener cliente por ID
+    this.firebaseService
+      .obtenerUnoId(this.clienteGet)
+      .valueChanges()
+      .subscribe(cliente => {
+        this.clienteFire = cliente;
+        console.log(this.clienteFire);
+        if (this.clienteFire.coordenadas[0] == 0) {
+          this.sinCoordenadas = true;
+          console.log("no tiene coordenadas ");
+        } else {
+          this.obtenetUbicacion();
+        }
       });
   }
   estadoQueCierran: any;
@@ -128,28 +154,83 @@ export class UpdatesComponent implements OnInit {
       this.firebaseService.EliminarAgenda(this.agendaFire);
     }
   }
-  enSitio() {
-    this.agendaFire.estado = "En sitio";
-    this.agendaFire.startOk = Date.now();
-    let fechaHoy = new Date(Date.now());
-    this.update = {
-      update:
-        "Reporte en sitio : " +
-        fechaHoy.toUTCString() +
-        ", tecnico: " +
-        this.ordenFire.tecnicoAsignado,
-      estado: "En sitio",
-      usuario: "Sistema",
-      orden: this.update.orden,
-      fecha: Date.now()
+  setCoordenadas() {
+    this.ruta.navigate(["/set-coordenadas/" + this.ordenFire.idCliente]);
+  }
+  obtenetUbicacion() {
+    let startPos;
+    let geoOptions = {
+      enableHighAccuracy: true
     };
-    this.ordenFire.estado = this.update.estado;
-    this.ordenFire.enTriage = false;
-    this.firebaseService.ActOrdenAgendada(this.ordenFire);
-    this.firebaseService.guardarUpdates(this.update);
-    this.firebaseService.guardarAgenda(this.agendaFire);
-    console.log(this.agendaFire);
-    this.ruta.navigate(["/home"]);
+    let geoSuccess = position => {
+      startPos = position;
+      let startLat = parseFloat(startPos.coords.latitude);
+      let startLon = parseFloat(startPos.coords.longitude);
+      this.lat = startLat;
+      this.lng = startLon;
+    };
+
+    let geoError = function(error) {
+      console.log("Error occurred. Error code: " + error.code);
+    };
+    navigator.geolocation.getCurrentPosition(geoSuccess, geoError, geoOptions);
+    setTimeout(() => {
+      console.log(this.lat + " - " + this.lng);
+      this.distance = this.getKilometros(
+        this.lat,
+        this.lng,
+        this.clienteFire.coordenadas[0],
+        this.clienteFire.coordenadas[1]
+      );
+      console.log(this.distance);
+    }, 500);
+  }
+  // -----Calcular distancia del cliente -----
+  getKilometros(lat1, lon1, lat2, lon2) {
+    let rad = function(x) {
+      return (x * Math.PI) / 180;
+    };
+    const R = 6378137; //Radio de la tierra en metros
+    let dLat = rad(lat2 - lat1);
+    let dLong = rad(lon2 - lon1);
+    let a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(rad(lat1)) *
+        Math.cos(rad(lat2)) *
+        Math.sin(dLong / 2) *
+        Math.sin(dLong / 2);
+    let c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    let d = R * c;
+    return d.toFixed(0); //Retorna tres decimales
+  }
+  enSitio() {
+    if (this.clienteFire.coordenadas[0] == 0) {
+      this.sinCoordenadas = true;
+      console.log("no tiene coordenadas ");
+    } else {
+      this.agendaFire.coordenadas = [this.lat, this.lng];
+      this.agendaFire.estado = "En sitio";
+      this.agendaFire.startOk = Date.now();
+      let fechaHoy = new Date(Date.now());
+      this.update = {
+        update:
+          "Reporte en sitio : " +
+          fechaHoy.toUTCString() +
+          ", tecnico: " +
+          this.ordenFire.tecnicoAsignado,
+        estado: "En sitio",
+        usuario: "Sistema",
+        orden: this.update.orden,
+        fecha: Date.now()
+      };
+      this.ordenFire.estado = this.update.estado;
+      this.ordenFire.enTriage = false;
+      this.firebaseService.ActOrdenAgendada(this.ordenFire);
+      this.firebaseService.guardarUpdates(this.update);
+      this.firebaseService.guardarAgenda(this.agendaFire);
+      console.log(this.agendaFire);
+      this.ruta.navigate(["/home"]);
+    }
   }
   Nota: string;
   addNota() {

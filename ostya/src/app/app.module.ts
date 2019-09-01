@@ -45,6 +45,7 @@ import { TriageComponent } from "./triage/triage.component";
 import { AgendaxtecnicoComponent } from "./agendaxtecnico/agendaxtecnico.component";
 import { AgendaxordenComponent } from "./agendaxorden/agendaxorden.component"; // for FullCalendar!;
 import { HttpClientModule } from "@angular/common/http";
+import { SetCoordenadasComponent } from "./set-coordenadas/set-coordenadas.component";
 
 const appRoutes: Routes = [
   { path: "", component: HomeComponent },
@@ -73,7 +74,8 @@ const appRoutes: Routes = [
   { path: "triage", component: TriageComponent },
   { path: "agenda-tecnico", component: AgendaxtecnicoComponent },
   { path: "agenda-orden", component: AgendaxordenComponent },
-  { path: "mapa", component: MapaComponent }
+  { path: "mapa", component: MapaComponent },
+  { path: "set-coordenadas/:id", component: SetCoordenadasComponent }
 ];
 @NgModule({
   declarations: [
@@ -104,7 +106,8 @@ const appRoutes: Routes = [
     UpdatesComponent,
     TriageComponent,
     AgendaxtecnicoComponent,
-    AgendaxordenComponent
+    AgendaxordenComponent,
+    SetCoordenadasComponent
   ],
   imports: [
     BrowserModule,

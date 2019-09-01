@@ -1,1 +1,35 @@
-<h1>Login</h1>
+<br />
+<div class="container">
+  <div class="row">
+    <div class=" col-md-5 offset-md-3 card">
+      <br />
+      <div class="text-center">
+        <img src="assets/img/LogoOstya.PNG" height="50" alt="" />
+      </div>
+      <div class="row justify-content-center">
+        <div style="width: 90%">
+          <div class="form-group">
+            <label for="Email">Email</label>
+            <input type="email" class="form-control" [(ngModel)]="email" />
+          </div>
+          <div class="form-group">
+            <label for="Contraseña">Contraseña</label>
+            <input
+              type="password"
+              class="form-control"
+              [(ngModel)]="password"
+            />
+          </div>
+          <hr />
+          <a (click)="login()" class="btn btn-warning btn-block">Login</a>
+          <!-- <a (click)="register()" class="btn btn-warning btn-block"
+            >Registrar</a
+          > -->
+
+          <a href="#" class="btn btn-secondary btn-block">Cancelar</a>
+          <br />
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

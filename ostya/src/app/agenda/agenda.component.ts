@@ -31,7 +31,6 @@ export class AgendaComponent implements OnInit {
       .subscribe(agendas => {
         this.agendaFire = agendas;
         this.verAgendas();
-        console.log(this.agendaFire);
       });
   }
   verAgendas() {
@@ -54,7 +53,6 @@ export class AgendaComponent implements OnInit {
     this.listUser = [];
     this.listUserColor = [];
     this.agendaFire.forEach((agenda, i) => {
-      console.log(agenda);
       if (!this.listUser.includes(agenda.tecnico)) {
         this.listUserColor.push({
           tecnico: agenda.tecnico,
@@ -75,7 +73,6 @@ export class AgendaComponent implements OnInit {
         this.listUser.sort();
       }
     });
-    console.log(this.listUser);
   }
   contador = 0;
   eventInfo(event) {

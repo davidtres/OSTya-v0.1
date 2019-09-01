@@ -16,4 +16,5 @@ export interface Orden {
   cerrada: boolean;
   doc: string;
   modificador: string;
+  idCliente: number;
 }

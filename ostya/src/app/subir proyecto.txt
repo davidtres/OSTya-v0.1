@@ -1,0 +1,10 @@
+Pasos para subir al Hosting
+
+1. Desde la teminal >ng build
+2. firebase login
+3. firebase init
+    3.1 Seleccionar Hosting
+    3.2 Ruta del proyecto dist/ostya
+    3.3 Configurar como single_page app (Y)
+    3.4 Reescribir index (N)
+4. firebase deploy 
