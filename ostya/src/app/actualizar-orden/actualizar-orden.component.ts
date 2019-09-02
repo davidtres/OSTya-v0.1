@@ -1,6 +1,7 @@
 import { Component, OnInit } from "@angular/core";
-
-import { NgbModal, ModalDismissReasons } from "@ng-bootstrap/ng-bootstrap";
+import { FirebaseService } from "../services/firebase.service";
+import { AuthenticationService } from "../services/authentication.service";
+import { map } from "rxjs/operators";
 
 @Component({
   selector: "app-actualizar-orden",
@@ -8,35 +9,31 @@ import { NgbModal, ModalDismissReasons } from "@ng-bootstrap/ng-bootstrap";
   styleUrls: ["./actualizar-orden.component.css"]
 })
 export class ActualizarOrdenComponent implements OnInit {
-  closeResult: string;
+  constructor(
+    private firebaseService: FirebaseService,
+    private authenticationServices: AuthenticationService
+  ) {
+    this.burcarUsuario();
 
-  constructor(private modalService: NgbModal) {}
-
-  open(content) {
-    console.log(content);
-
-    this.modalService
-      .open(content, { ariaLabelledBy: "modal-basic-title" })
-      .result.then(
-        result => {
-          this.closeResult = `Closed with: ${result}`;
-        },
-        reason => {
-          this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+    authenticationServices.getStatus().pipe(
+      map(estado => {
+        if (estado) {
+          alert("estadoooo");
+        } else {
+          alert("naranjas");
         }
-      );
+        console.log(estado);
+      })
+    );
   }
 
-  private getDismissReason(reason: any): string {
-    if (reason === ModalDismissReasons.ESC) {
-      return "by pressing ESC";
-    } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
-      return "by clicking on a backdrop";
-    } else {
-      return `with: ${reason}`;
-    }
+  burcarUsuario() {
+    this.firebaseService
+      .getUserUid("s4gfjNUZMahpsHkf9UxHEobbynA2")
+      .valueChanges()
+      .subscribe(user => {
+        console.log(user);
+      });
   }
-  ngOnInit(): void {
-    throw new Error("Method not implemented.");
-  }
+  ngOnInit() {}
 }

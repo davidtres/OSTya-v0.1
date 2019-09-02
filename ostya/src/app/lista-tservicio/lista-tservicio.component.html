@@ -1,15 +1,19 @@
 <div class="well">
   <a [routerLink]="['/home']">Home</a> / Lista Tipos de Servicios
 </div>
-<div class="container">
+<br />
+<div class="container card">
   <h3>TIPOS DE SERVICIOS</h3>
   <br />
-  <a
-    class="dropdown-item"
-    routerLink="/tipo-servicio/new"
-    class="btn btn-primary"
-    >Nuevo Tipo Servicio</a
-  >
+  <div class="col-sm-4">
+    <a
+      class="dropdown-item"
+      routerLink="/tipo-servicio/new"
+      class="btn btn-primary"
+      >Nuevo Tipo Servicio</a
+    >
+  </div>
+
   <hr />
   <ul class="list-group">
     <ng-container>
@@ -40,3 +44,4 @@
     </ng-container>
   </ul>
 </div>
+<br />

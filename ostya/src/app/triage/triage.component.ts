@@ -16,11 +16,11 @@ export class TriageComponent implements OnInit {
       .valueChanges()
       .subscribe(orden => {
         this.ordenFire = orden;
-        console.log(orden);
+        // console.log(orden);
         this.tiempoRestante(this.ordenFire);
         this.ordenarVencimiento(this.ordenFire);
       });
-    console.log(this.ordenFire);
+    // console.log(this.ordenFire);
   }
   ordenOrdenada: any;
 
@@ -77,7 +77,7 @@ export class TriageComponent implements OnInit {
       }
     }
 
-    console.log(this.ordenFire);
+    // console.log(this.ordenFire);
   }
   asignarColor(tiempo) {
     if (tiempo < 0) {

@@ -1,0 +1,11 @@
+.j {
+  padding-top: 80px;
+}
+@media (max-width: 575.98px) {
+  .m {
+    margin: 20px;
+  }
+  .j {
+    padding-top: 20px;
+  }
+}

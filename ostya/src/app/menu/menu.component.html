@@ -28,7 +28,6 @@
           data-toggle="dropdown"
           aria-haspopup="true"
           aria-expanded="false"
-          (click)="tg()"
         >
           CLIENTE
         </a>
@@ -116,6 +115,7 @@
         </div>
       </li>
     </ul>
+    <!-- ---------Boton nueva orden---------- -->
     <button
       routerLink="/crear-orden/new"
       class="btn btn-dark my-2 my-sm-0"
@@ -123,6 +123,28 @@
     >
       Nueva Orden
     </button>
+    <!-- ---------Boton de Usuario --------- -->
+    <div class="btn-group" *ngIf="userFireAuth">
+      <button type="button" class="btn btn-warning">
+        {{ userFireAuth.email }}
+      </button>
+      <button
+        type="button"
+        class="btn btn-warning dropdown-toggle dropdown-toggle-split"
+        id="dropdownMenuReference"
+        data-toggle="dropdown"
+        aria-haspopup="true"
+        aria-expanded="false"
+        data-reference="parent"
+        style="margin-right: 10px"
+      >
+        <span class="sr-only">Toggle Dropdown</span>
+      </button>
+      <div class="dropdown-menu" aria-labelledby="dropdownMenuReference">
+        <a class="dropdown-item" (click)="logout()">Logout</a>
+      </div>
+    </div>
+
     <!-- ---------Buscar ------- -->
     <!-- <form class="form-inline my-2 my-lg-0">
       <input

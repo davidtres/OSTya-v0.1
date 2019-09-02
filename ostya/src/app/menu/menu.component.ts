@@ -1,4 +1,6 @@
 import { Component, OnInit, ViewChild, ElementRef } from "@angular/core";
+import { AuthenticationService } from "../services/authentication.service";
+import { Router } from "@angular/router";
 
 @Component({
   selector: "app-menu",
@@ -6,12 +8,24 @@ import { Component, OnInit, ViewChild, ElementRef } from "@angular/core";
   styleUrls: ["./menu.component.css"]
 })
 export class MenuComponent implements OnInit {
-  @ViewChild("a") imgElement: ElementRef;
-
-  tg() {
-    console.log(this.imgElement.nativeElement);
+  userFireAuth: any;
+  constructor(
+    private router: Router,
+    private authenticationService: AuthenticationService
+  ) {
+    authenticationService.getStatus().subscribe(user => {
+      this.userFireAuth = user;
+    });
   }
-  constructor() {}
-
+  logout() {
+    this.authenticationService
+      .logOut()
+      .then(() => {
+        this.router.navigate(["login"]);
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  }
   ngOnInit() {}
 }

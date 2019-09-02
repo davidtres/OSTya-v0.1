@@ -83,6 +83,11 @@ export class FirebaseService {
       ref.orderByChild("activo").equalTo(true)
     );
   }
+  public getUserUid(uid) {
+    return this.afBD.list("usuarios/", ref =>
+      ref.orderByChild("uid").equalTo(uid)
+    );
+  }
   /* --------------POR ID ---------------------*/
   // guarda por ID consecutivo. Se solicitan 2 parametros, el dato a guardar y el consecutivo actual.
   public guardarPorId(data, next) {

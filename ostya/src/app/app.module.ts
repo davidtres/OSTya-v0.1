@@ -46,36 +46,144 @@ import { AgendaxtecnicoComponent } from "./agendaxtecnico/agendaxtecnico.compone
 import { AgendaxordenComponent } from "./agendaxorden/agendaxorden.component"; // for FullCalendar!;
 import { HttpClientModule } from "@angular/common/http";
 import { SetCoordenadasComponent } from "./set-coordenadas/set-coordenadas.component";
+import { AuthenticationGuard } from "./services/authentication.guard";
 
 const appRoutes: Routes = [
   { path: "", component: HomeComponent },
-  { path: "home", component: HomeComponent },
-  { path: "login", component: LoginComponent },
-  { path: "agenda", component: AgendaComponent },
-  { path: "agenda-pr", component: AgendaPrComponent },
-  { path: "actualizar-orden", component: ActualizarOrdenComponent },
-  { path: "crear-cliente/:id", component: CrearClienteComponent },
-  { path: "listar-cliente", component: ListarClienteComponent },
-  { path: "crear-equipo", component: CrearEquipoComponent },
-  { path: "crear-usuario/:id", component: CrearUsuarioComponent },
-  { path: "parametros", component: ParametrosComponent },
-  { path: "icloud", component: IcloudComponent },
-  { path: "actualizar-cliente/:id", component: ActualizarClienteComponent },
-  { path: "editar-cliente", component: EditarClienteComponent },
-  { path: "listar-usuarios", component: ListarUsuariosComponent },
-  { path: "crear-orden/:id", component: OrdenComponent },
-  { path: "estados/:id", component: EstadoComponent },
-  { path: "listado-estados", component: ListarEstadosComponent },
-  { path: "tipo-servicio/:id", component: TservicioComponent },
-  { path: "listar-ordenes", component: ListarOrdenesComponent },
-  { path: "listar-tservicio", component: ListaTservicioComponent },
-  { path: "programacion/:id", component: ProgramacionComponent },
-  { path: "updates/:id", component: UpdatesComponent },
-  { path: "triage", component: TriageComponent },
-  { path: "agenda-tecnico", component: AgendaxtecnicoComponent },
-  { path: "agenda-orden", component: AgendaxordenComponent },
-  { path: "mapa", component: MapaComponent },
-  { path: "set-coordenadas/:id", component: SetCoordenadasComponent }
+  {
+    path: "home",
+    component: HomeComponent,
+    canActivate: [AuthenticationGuard]
+  },
+  {
+    path: "login",
+    component: LoginComponent
+  },
+  {
+    path: "agenda",
+    component: AgendaComponent,
+    canActivate: [AuthenticationGuard]
+  },
+  {
+    path: "agenda-pr",
+    component: AgendaPrComponent,
+    canActivate: [AuthenticationGuard]
+  },
+  {
+    path: "actualizar-orden",
+    component: ActualizarOrdenComponent,
+    canActivate: [AuthenticationGuard]
+  },
+  {
+    path: "crear-cliente/:id",
+    component: CrearClienteComponent,
+    canActivate: [AuthenticationGuard]
+  },
+  {
+    path: "listar-cliente",
+    component: ListarClienteComponent,
+    canActivate: [AuthenticationGuard]
+  },
+  {
+    path: "crear-equipo",
+    component: CrearEquipoComponent,
+    canActivate: [AuthenticationGuard]
+  },
+  {
+    path: "crear-usuario/:id",
+    component: CrearUsuarioComponent,
+    canActivate: [AuthenticationGuard]
+  },
+  {
+    path: "parametros",
+    component: ParametrosComponent,
+    canActivate: [AuthenticationGuard]
+  },
+  {
+    path: "icloud",
+    component: IcloudComponent,
+    canActivate: [AuthenticationGuard]
+  },
+  {
+    path: "actualizar-cliente/:id",
+    component: ActualizarClienteComponent,
+    canActivate: [AuthenticationGuard]
+  },
+  {
+    path: "editar-cliente",
+    component: EditarClienteComponent,
+    canActivate: [AuthenticationGuard]
+  },
+  {
+    path: "listar-usuarios",
+    component: ListarUsuariosComponent,
+    canActivate: [AuthenticationGuard]
+  },
+  {
+    path: "crear-orden/:id",
+    component: OrdenComponent,
+    canActivate: [AuthenticationGuard]
+  },
+  {
+    path: "estados/:id",
+    component: EstadoComponent,
+    canActivate: [AuthenticationGuard]
+  },
+  {
+    path: "listado-estados",
+    component: ListarEstadosComponent,
+    canActivate: [AuthenticationGuard]
+  },
+  {
+    path: "tipo-servicio/:id",
+    component: TservicioComponent,
+    canActivate: [AuthenticationGuard]
+  },
+  {
+    path: "listar-ordenes",
+    component: ListarOrdenesComponent,
+    canActivate: [AuthenticationGuard]
+  },
+  {
+    path: "listar-tservicio",
+    component: ListaTservicioComponent,
+    canActivate: [AuthenticationGuard]
+  },
+  {
+    path: "programacion/:id",
+    component: ProgramacionComponent,
+    canActivate: [AuthenticationGuard]
+  },
+  {
+    path: "updates/:id",
+    component: UpdatesComponent,
+    canActivate: [AuthenticationGuard]
+  },
+  {
+    path: "triage",
+    component: TriageComponent,
+    canActivate: [AuthenticationGuard]
+  },
+  {
+    path: "agenda-tecnico",
+    component: AgendaxtecnicoComponent,
+    canActivate: [AuthenticationGuard]
+  },
+  {
+    path: "agenda-orden",
+    component: AgendaxordenComponent,
+    canActivate: [AuthenticationGuard]
+  },
+  {
+    path: "mapa",
+    component: MapaComponent,
+    canActivate: [AuthenticationGuard]
+  },
+  {
+    path: "set-coordenadas/:id",
+    component: SetCoordenadasComponent,
+    canActivate: [AuthenticationGuard]
+  }
 ];
 @NgModule({
   declarations: [
@@ -119,7 +227,7 @@ const appRoutes: Routes = [
     AngularFireAuthModule, // imports firebase/auth, only needed for auth features,
     AngularFireStorageModule,
     AngularFireDatabaseModule,
-    ReactiveFormsModule,
+    ReactiveFormsModule.withConfig({ warnOnNgModelWithFormControl: "never" }),
     CommonModule,
     NgBootstrapFormValidationModule.forRoot(),
     NgBootstrapFormValidationModule,

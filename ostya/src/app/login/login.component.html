@@ -1,35 +1,51 @@
 <br />
-<div class="container">
-  <div class="row">
-    <div class=" col-md-5 offset-md-3 card">
-      <br />
-      <div class="text-center">
-        <img src="assets/img/LogoOstya.PNG" height="50" alt="" />
-      </div>
-      <div class="row justify-content-center">
-        <div style="width: 90%">
-          <div class="form-group">
-            <label for="Email">Email</label>
-            <input type="email" class="form-control" [(ngModel)]="email" />
-          </div>
-          <div class="form-group">
-            <label for="Contraseña">Contraseña</label>
-            <input
-              type="password"
-              class="form-control"
-              [(ngModel)]="password"
-            />
-          </div>
-          <hr />
-          <a (click)="login()" class="btn btn-warning btn-block">Login</a>
-          <!-- <a (click)="register()" class="btn btn-warning btn-block"
+<div class="container j">
+  <form [formGroup]="formGroup" (validSubmit)="login()">
+    <div class="row">
+      <div class=" col-md-5 offset-md-3 card m">
+        <br />
+        <div class="alert-warning text-center">
+          <h4>INICIAR SESION</h4>
+        </div>
+        <br />
+
+        <div class="text-center">
+          <img src="assets/img/LogoOstya.PNG" alt="" />
+        </div>
+        <div class="row justify-content-center">
+          <div style="width: 90%">
+            <div class="form-group">
+              <label for="Email">Email</label>
+              <input
+                formControlName="email"
+                type="email"
+                class="form-control"
+                [(ngModel)]="email"
+              />
+            </div>
+            <div class="form-group">
+              <label for="Contraseña">Contraseña</label>
+              <input
+                formControlName="clave"
+                type="password"
+                class="form-control"
+                [(ngModel)]="password"
+              />
+            </div>
+            <hr />
+            <button type="submit" class="btn btn-warning btn-block">
+              Login
+            </button>
+            <!-- <a type="submit" >Login</a> -->
+            <!-- <a (click)="register()" class="btn btn-warning btn-block"
             >Registrar</a
           > -->
 
-          <a href="#" class="btn btn-secondary btn-block">Cancelar</a>
-          <br />
+            <a href="#" class="btn btn-secondary btn-block">Cancelar</a>
+            <br />
+          </div>
         </div>
       </div>
     </div>
-  </div>
+  </form>
 </div>

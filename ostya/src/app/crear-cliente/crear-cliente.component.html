@@ -1,5 +1,5 @@
-<div class="well"><a [routerLink]="['/home']">Home</a> / Editar Clientes</div>
-<div class="container">
+<br />
+<div class="container card">
   <ng-container *ngIf="cliente.id == new; then Crea; else Edita">
   </ng-container>
   <ng-template #Crea>
@@ -196,7 +196,8 @@
     </div>
   </form>
   <div *ngIf="formGroup.status == 'INVALID'">
-    <a class="btn btn-danger" routerLink="/listar-cliente/">Cancelar</a>
+    <a class="btn btn-danger" routerLink="/home/">Cancelar</a>
   </div>
-  <hr />
+  <br />
 </div>
+<br />

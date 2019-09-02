@@ -1,10 +1,14 @@
 <div class="well"><a [routerLink]="['/home']">Home</a> / Listar Estados</div>
-<div class="container">
+<br />
+<div class="container card">
   <h3>ESTADOS</h3>
   <br />
-  <a class="dropdown-item" routerLink="/estados/new" class="btn btn-primary"
-    >Nuevo Estado</a
-  >
+  <div class="col-sm-2">
+    <a class="dropdown-item" routerLink="/estados/new" class="btn btn-primary"
+      >Nuevo Estado</a
+    >
+  </div>
+
   <hr />
   <ul class="list-group">
     <ng-container>
@@ -35,3 +39,4 @@
     </ng-container>
   </ul>
 </div>
+<br />
