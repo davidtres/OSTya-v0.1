@@ -17,4 +17,5 @@ export interface Orden {
   doc: string;
   modificador: string;
   idCliente: number;
+  uid: string;
 }

@@ -1,9 +1,48 @@
-<h1 class="text-center">HOME</h1>
+<br />
+<div class="container card">
+  <br />
+  <div class="form-row row">
+    <!-- ---------Boton nueva orden---------- -->
+    <div class="form-group col-md-2 col-5">
+      <button
+        routerLink="/crear-orden/new"
+        class="btn btn-success"
+        style="margin-right: 10px"
+      >
+        Nueva Orden
+      </button>
+    </div>
+    <!-- ---------Buscar ------- -->
+    <div class="form-group col-md-4 offset-md-6 col-7">
+      <form
+        [formGroup]="formGroup"
+        (validSubmit)="buscarOrden()"
+        autocomplete="off"
+        class="form-inline"
+      >
+        <input
+          formControlName="buscar"
+          [(ngModel)]="orden"
+          class="form-control col-5 offset-1"
+          type="number"
+        />
+        <button class="btn btn-info col-5 offset-1" type="submit">
+          Buscar
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- -----inicio Home-------  -->
+</div>
 <div class="container card">
   <app-triage></app-triage>
 </div>
 <br />
-<div class="container card">
+<div class="container card" *ngIf="tipoUser == 'Tecnico'">
+  <app-cola-tecnico></app-cola-tecnico>
+</div>
+<div class="container card" *ngIf="tipoUser == 'admin'">
   <app-listar-ordenes></app-listar-ordenes>
 </div>
 <br />

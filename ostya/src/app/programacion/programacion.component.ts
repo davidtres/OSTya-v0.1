@@ -390,7 +390,7 @@ export class ProgramacionComponent implements OnInit {
           };
           this.firebaseService.guardarUpdates(this.update);
         }
-        this.ruta.navigate(["/listar-ordenes"]);
+        this.ruta.navigate(["/updates/" + this.agenda.orden]);
       }, 1500);
     }
   }

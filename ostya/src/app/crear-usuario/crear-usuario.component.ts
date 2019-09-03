@@ -14,6 +14,7 @@ export class CrearUsuarioComponent implements OnInit {
   public formGroup: FormGroup; //variable para formulario
   usuariosfire: any; //almacena usuario obtenidos de firebase
   // varible para interactuar con campos del HTML (Interfaces)
+  roles = ["admin", "Tecnico"];
   empleado: Empleado = {
     id: 0,
     nombre: "",
@@ -86,7 +87,7 @@ export class CrearUsuarioComponent implements OnInit {
       Id: new FormControl(this.empleado.id, [Validators.required]),
       Nombre: new FormControl(this.empleado.nombre, [
         Validators.required,
-        Validators.minLength(3)
+        Validators.minLength(8)
       ]),
       Correo: new FormControl(this.empleado.correo, [
         Validators.required,
@@ -100,9 +101,15 @@ export class CrearUsuarioComponent implements OnInit {
         Validators.minLength(10)
       ]),
       Tel: new FormControl(this.empleado.celular, [Validators.minLength(7)]),
-      Clave: new FormControl(this.empleado.clave, []),
+      Clave: new FormControl(this.empleado.clave, [
+        Validators.required,
+        Validators.pattern(
+          "(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[$@$!%*?&])[A-Za-zd$@$!%*?&].{8,}"
+        )
+      ]),
+      Rol: new FormControl(this.empleado.rol, [Validators.required]),
       Activo: new FormControl(this.empleado.activo, []),
-      Color: new FormControl(this.empleado.color, []),
+      Color: new FormControl(this.empleado.color, [Validators.required]),
       fecha: new FormControl(this.empleado.fechaCreacion, [Validators.required])
     });
   }

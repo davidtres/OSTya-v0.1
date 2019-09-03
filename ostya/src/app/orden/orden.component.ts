@@ -35,7 +35,8 @@ export class OrdenComponent implements OnInit {
     enTriage: true,
     doc: "orden",
     modificador: "new",
-    idCliente: 0
+    idCliente: 0,
+    uid: ""
   };
 
   constructor(
@@ -138,7 +139,7 @@ export class OrdenComponent implements OnInit {
     //llamado funcion de guardar en firebase, con dos parametros (dato y consecutivo)
     this.firebaseService.guardarPorId(this.orden, this.consecutivofire);
 
-    //tiempo para guardado en firebase, reseteear formulario y regregar al listado de estados.
+    //tiempo para guardado en firebase, reseteear formulario e ir a "Programacion".
     setTimeout(() => {
       let startAgenda = new Date(this.orden.fechaSolicitud);
       console.log(startAgenda.toDateString());

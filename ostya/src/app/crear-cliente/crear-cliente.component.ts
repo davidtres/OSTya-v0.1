@@ -89,7 +89,6 @@ export class CrearClienteComponent implements OnInit {
 
   selectAdress(result) {
     console.log(result);
-
     this.cliente.direcciones[0] = result.formatted_address;
     this.cliente.coordenadas[0] = result.geometry.location.lat;
     this.cliente.coordenadas[1] = result.geometry.location.lng;

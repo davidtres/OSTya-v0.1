@@ -48,16 +48,15 @@ export class AuthenticationGuard implements CanActivate {
       { path: "agenda-tecnico", rol: "all" },
       { path: "agenda-orden", rol: "all" },
       { path: "mapa", rol: "admin" },
-      { path: "set-coordenadas/:id", rol: "all" }
+      { path: "set-coordenadas/:id", rol: "all" },
+      { path: "cola-tecnico", rol: "all" }
     ];
     this.rutas = appRoutes;
-  }
-  userFirebase(uid) {
-    this.firebaseService
-      .getUserUid(uid)
+    firebaseService
+      .getUusariosActivos()
       .valueChanges()
-      .subscribe(usuario => {
-        this.usuarioFire = usuario;
+      .subscribe(user => {
+        this.usuarioFire = user;
       });
   }
   permiso: boolean;
@@ -68,11 +67,17 @@ export class AuthenticationGuard implements CanActivate {
   ): Observable<boolean> | Promise<boolean> | boolean {
     return this.authenticationServices.getStatus().pipe(
       map(status => {
+        let usuario;
+        for (let i = 0; i < this.usuarioFire.length; i++) {
+          if (this.usuarioFire[i].uid == status.uid) {
+            usuario = this.usuarioFire[i].rol;
+          }
+        }
+        console.log(usuario);
         if (!status) {
           this.router.navigate(["/login"]);
           console.log("NO hay usuario");
         } else {
-          this.userFirebase(status.uid);
           for (let i = 0; i < this.rutas.length; i++) {
             if (this.rutas[i].path == next.routeConfig.path) {
               console.log("Encontre la ruta : " + this.rutas[i].path);
@@ -80,7 +85,7 @@ export class AuthenticationGuard implements CanActivate {
                 console.log("Ruta con acceso para todos");
                 return true;
               } else {
-                if (this.usuarioFire.rol == "admin") {
+                if (usuario == "admin") {
                   console.log("Es un usuario Admin");
                   return true;
                 } else {

@@ -13,6 +13,7 @@
   <form [formGroup]="formGroup" (validSubmit)="register()" autocomplete="off">
     <!-- Primera fila -->
     <div class="form-row">
+      <!-- ------Identificacion------ -->
       <div class="form-group col-md-2">
         <label for="inputId">Identificacion</label>
         <input
@@ -28,11 +29,12 @@
           USUARIO EXISTE!
         </div>
       </div>
-      <div class="form-group col-md-6">
+      <!-- ----------Nombre----------- -->
+      <div class="form-group col-md-4">
         <label for="inputNombre">Nombre</label>
         <input
           type="text"
-          class="form-control text-uppercase"
+          class="form-control"
           formControlName="Nombre"
           placeholder="Nombre"
           [(ngModel)]="empleado.nombre"
@@ -40,7 +42,23 @@
           (blur)="obtenerIniciales()"
         />
       </div>
-      <div class="form-group col-md-4">
+      <!-- --------Direccion-------- -->
+      <div class="form-group col-md-6">
+        <label for="Dir">Direccion, Incluir la ciudad</label>
+        <input
+          type="text"
+          class="form-control"
+          formControlName="Dir"
+          placeholder="Direccion"
+          [(ngModel)]="empleado.direcciones[0]"
+          name="Dir"
+        />
+      </div>
+    </div>
+    <!-- Segunda fila -->
+    <div class="form-row">
+      <!-- ---------Correo-------- -->
+      <div class="form-group col-md-5">
         <label for="Correo">Correo</label>
         <input
           id="email"
@@ -52,21 +70,8 @@
           name="Correo"
         />
       </div>
-    </div>
-    <!-- Segunda fila -->
-    <div class="form-row">
-      <div class="form-group col-md-8">
-        <label for="Dir">Direccion, Incluir la ciudad</label>
-        <input
-          type="text"
-          class="form-control"
-          formControlName="Dir"
-          placeholder="Direccion"
-          [(ngModel)]="empleado.direcciones[0]"
-          name="Dir"
-        />
-      </div>
-      <div class="form-group col-md-4">
+      <!-- ----------Password--------- -->
+      <div class="form-group col-md-5">
         <label for="Lat">Password</label>
         <input
           id="password"
@@ -78,9 +83,23 @@
           name="Clave"
         />
       </div>
+      <!-- ----------Rol------------- -->
+      <div class="form-group col-md-2">
+        <label for="Tipo">Rol Usuario</label>
+        <select
+          formControlName="Rol"
+          class="form-control"
+          [(ngModel)]="empleado.rol"
+          name="Tipo"
+        >
+          <option value="">Seleccionar...</option>
+          <option *ngFor="let Rol of roles">{{ Rol }} </option>
+        </select>
+      </div>
     </div>
     <!-- Tercera fila-->
     <div class="form-row">
+      <!-- ----------Telefono--------- -->
       <div class="form-group col-md-3">
         <label for="Tel">Telefono</label>
         <input
@@ -92,6 +111,7 @@
           name="Tel"
         />
       </div>
+      <!-- ----------Celular ------------- -->
       <div class="form-group col-md-3">
         <label for="Cel">Celular</label>
         <input
@@ -103,6 +123,7 @@
           name="Cel"
         />
       </div>
+      <!-- -------Color--------- -->
       <div class="form-group col-md-2">
         <label for="Color">Color</label>
         <input
@@ -134,6 +155,7 @@
     </div>
     <!-- Cuarta fila -->
     <div class="form-group">
+      <!-- --------Check Activo------ -->
       <div class="form-check">
         <input
           class="form-check-input"
@@ -147,7 +169,7 @@
         </label>
       </div>
     </div>
-    <!-- Cuarta fila-->
+    <!-- Botones -->
     <div *ngIf="formGroup.status == 'VALID'">
       <button type="submit" class="btn btn-primary">Guardar Usuario</button>
     </div>

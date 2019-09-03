@@ -47,6 +47,7 @@ import { AgendaxordenComponent } from "./agendaxorden/agendaxorden.component"; /
 import { HttpClientModule } from "@angular/common/http";
 import { SetCoordenadasComponent } from "./set-coordenadas/set-coordenadas.component";
 import { AuthenticationGuard } from "./services/authentication.guard";
+import { ColaTecnicoComponent } from "./cola-tecnico/cola-tecnico.component";
 
 const appRoutes: Routes = [
   { path: "", component: HomeComponent },
@@ -183,6 +184,11 @@ const appRoutes: Routes = [
     path: "set-coordenadas/:id",
     component: SetCoordenadasComponent,
     canActivate: [AuthenticationGuard]
+  },
+  {
+    path: "cola-tecnico",
+    component: ColaTecnicoComponent,
+    canActivate: [AuthenticationGuard]
   }
 ];
 @NgModule({
@@ -215,7 +221,8 @@ const appRoutes: Routes = [
     TriageComponent,
     AgendaxtecnicoComponent,
     AgendaxordenComponent,
-    SetCoordenadasComponent
+    SetCoordenadasComponent,
+    ColaTecnicoComponent
   ],
   imports: [
     BrowserModule,
