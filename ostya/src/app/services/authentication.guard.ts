@@ -1,4 +1,4 @@
-import { Injectable } from "@angular/core";
+import { Injectable, OnInit } from "@angular/core";
 import {
   CanActivate,
   ActivatedRouteSnapshot,
@@ -13,7 +13,7 @@ import { FirebaseService } from "./firebase.service";
 @Injectable({
   providedIn: "root"
 })
-export class AuthenticationGuard implements CanActivate {
+export class AuthenticationGuard implements CanActivate, OnInit {
   rutas: any;
   constructor(
     private authenticationServices: AuthenticationService,
@@ -47,7 +47,7 @@ export class AuthenticationGuard implements CanActivate {
       { path: "triage", rol: "all" },
       { path: "agenda-tecnico", rol: "all" },
       { path: "agenda-orden", rol: "all" },
-      { path: "mapa", rol: "admin" },
+      { path: "mapa", rol: "all" },
       { path: "set-coordenadas/:id", rol: "all" },
       { path: "cola-tecnico", rol: "all" }
     ];
@@ -59,8 +59,8 @@ export class AuthenticationGuard implements CanActivate {
         this.usuarioFire = user;
       });
   }
-  permiso: boolean;
   usuarioFire: any;
+  permiso: boolean;
   canActivate(
     next: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
@@ -73,23 +73,23 @@ export class AuthenticationGuard implements CanActivate {
             usuario = this.usuarioFire[i].rol;
           }
         }
-        console.log(usuario);
+        // console.log(usuario);
         if (!status) {
           this.router.navigate(["/login"]);
-          console.log("NO hay usuario");
+          // console.log("NO hay usuario");
         } else {
           for (let i = 0; i < this.rutas.length; i++) {
             if (this.rutas[i].path == next.routeConfig.path) {
-              console.log("Encontre la ruta : " + this.rutas[i].path);
+              // console.log("Encontre la ruta : " + this.rutas[i].path);
               if (this.rutas[i].rol == "all") {
-                console.log("Ruta con acceso para todos");
+                // console.log("Ruta con acceso para todos");
                 return true;
               } else {
                 if (usuario == "admin") {
-                  console.log("Es un usuario Admin");
+                  // console.log("Es un usuario Admin");
                   return true;
                 } else {
-                  console.log("Es un usuario restringido");
+                  // console.log("Es un usuario restringido");
                   alert(
                     "No tiene permisos para entrar a: " + next.routeConfig.path
                   );
@@ -102,4 +102,5 @@ export class AuthenticationGuard implements CanActivate {
       })
     );
   }
+  ngOnInit() {}
 }

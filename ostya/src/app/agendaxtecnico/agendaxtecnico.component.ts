@@ -22,6 +22,7 @@ export class AgendaxtecnicoComponent implements OnInit {
   calendarEvents: EventInput[] = [{}]; //array de eventos a mostrar en el calendario
   newEvent: boolean = false;
   newLog: boolean = true;
+  utc = 0;
   logAgenda: any = {
     orden: 0
   };
@@ -54,7 +55,7 @@ export class AgendaxtecnicoComponent implements OnInit {
       .valueChanges()
       .subscribe(usuarios => {
         this.usuariosFire = usuarios;
-        console.log(this.usuariosFire);
+        // console.log(this.usuariosFire);
       });
   }
   agendaFechaFire: any;
@@ -76,7 +77,7 @@ export class AgendaxtecnicoComponent implements OnInit {
       .valueChanges()
       .subscribe(agendas => {
         this.agendaFire = agendas;
-        console.log(this.agendaFire);
+        // console.log(this.agendaFire);
       });
   }
   agendaHTxFecha() {
@@ -85,7 +86,7 @@ export class AgendaxtecnicoComponent implements OnInit {
       .valueChanges()
       .subscribe(agenda => {
         this.agendaFire = agenda;
-        console.log(this.agendaFire);
+        // console.log(this.agendaFire);
       });
   }
   buscarOrden() {
@@ -132,8 +133,8 @@ export class AgendaxtecnicoComponent implements OnInit {
             //aramado de array de eventos a mostrar en la agenda
             this.calendarEvents = this.calendarEvents.concat({
               title: this.agendaFire[i].title,
-              start: this.agendaFire[i].startOk,
-              end: this.agendaFire[i].endOk,
+              start: this.agendaFire[i].startOk - this.utc,
+              end: this.agendaFire[i].endOk - this.utc,
               allDay: false,
               color: this.agendaFire[i].color,
               editable: this.agendaFire[i].editable,

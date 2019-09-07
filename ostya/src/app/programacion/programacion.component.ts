@@ -10,6 +10,7 @@ import { Agenda } from "../interfaces/agenda";
 import { FormGroup, FormControl, Validators } from "@angular/forms";
 import { Alert } from "selenium-webdriver";
 import { DatePipe } from "@angular/common";
+import { AuthenticationService } from "../services/authentication.service";
 
 @Component({
   selector: "app-programacion",
@@ -306,6 +307,13 @@ export class ProgramacionComponent implements OnInit {
     }
     return -1;
   }
+  asignarUid() {
+    for (let i = 0; i < this.userFire.length; i++) {
+      if (this.userFire[i].nombre == this.agenda.tecnico) {
+        this.ordenFire.uid = this.userFire[i].uid;
+      }
+    }
+  }
 
   reTecnico() {
     this.retecnico = true;
@@ -349,7 +357,8 @@ export class ProgramacionComponent implements OnInit {
         this.ordenFire.estado = "Reprogramado";
         this.agenda.estado = "Reprogramado";
       }
-      this.ordenFire.tecnicoAsignado = this.agenda.tecnico; //Asigna a la orden el tecnico asignado
+      this.ordenFire.tecnicoAsignado = this.agenda.tecnico; //Asigna a la orden el tecnico seleccionado
+      this.asignarUid();
       this.firebaseService.ActOrdenAgendada(this.ordenFire); // Guarda la orden
       this.firebaseService.guardarAgenda(this.agenda); //Guarda la agenda
       this.btnProgramar = false; //oculta boton programar

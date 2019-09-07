@@ -14,7 +14,7 @@ export const environment = {
   }
 };
 
-/*
+/* https://ostya-7a75c.firebaseio.com/
  * For easier debugging in development mode, you can import the following file
  * to ignore zone related error stack frames such as `zone.run`, `zoneDelegate.invokeTask`.
  *

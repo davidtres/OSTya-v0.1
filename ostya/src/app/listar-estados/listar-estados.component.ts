@@ -17,7 +17,7 @@ export class ListarEstadosComponent implements OnInit {
       .valueChanges()
       .subscribe(estados => {
         this.estadosfire = estados;
-        console.log(estados);
+        // console.log(estados);
       });
   }
 

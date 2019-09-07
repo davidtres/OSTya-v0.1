@@ -15,7 +15,7 @@ export class ListarUsuariosComponent implements OnInit {
       .valueChanges()
       .subscribe(usuarios => {
         this.usuariosfire = usuarios;
-        console.log(usuarios);
+        // console.log(usuarios);
       });
   }
 

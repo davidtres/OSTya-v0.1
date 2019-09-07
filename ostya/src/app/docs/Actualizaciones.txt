@@ -1,0 +1,9 @@
+6/09/2019.
+*Home:* 
+    1. Muestra solo servicios asignados al tecnico.
+    2. Se quita triage, para tecnico.
+    3. Se agrega Nombre del usuario al boton
+*Actualizaciones*
+    1. Se agregó icono de ubicacion, para verificacion en el mapa.
+    2. Se mostrará boton "En sitio" solo al tecnico asignado a la orden.
+    3. Se mejoró vista para moviles.

@@ -33,17 +33,21 @@
     </div>
   </div>
 
-  <!-- -----inicio Home-------  -->
+  <!-- -----MODULOS-------  -->
 </div>
-<div class="container card">
+<div class="container card" *ngIf="tipoUser == 'admin'">
   <app-triage></app-triage>
 </div>
 <br />
 <div class="container card" *ngIf="tipoUser == 'Tecnico'">
-  <app-cola-tecnico></app-cola-tecnico>
+  <app-cola-tecnico
+    [userAuth]="userFireAuth"
+    [userFire]="userFire"
+    [ordenFire]="ordenFireOpen"
+  ></app-cola-tecnico>
 </div>
 <div class="container card" *ngIf="tipoUser == 'admin'">
-  <app-listar-ordenes></app-listar-ordenes>
+  <app-listar-ordenes [ordenFire]="ordenFireOpen"></app-listar-ordenes>
 </div>
 <br />
 <div class="container card">

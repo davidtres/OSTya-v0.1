@@ -78,7 +78,7 @@ export class OrdenComponent implements OnInit {
       .valueChanges()
       .subscribe(next => {
         this.consecutivofire = next;
-        console.log(this.consecutivofire);
+        // console.log(this.consecutivofire);
         //verificar Consecutivo vacio desde el servicio y lo crea
         if (this.consecutivofire == 0) {
           this.consecutivofire = {
@@ -169,7 +169,7 @@ export class OrdenComponent implements OnInit {
         this.orden.idCliente = this.clientesfire[i].id;
       }
     }
-    console.log(this.orden.idCliente);
+    // console.log(this.orden.idCliente);
   }
 
   // Validacion si el cliente existe.

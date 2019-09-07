@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild, ElementRef } from "@angular/core";
 import { AuthenticationService } from "../services/authentication.service";
 import { Router } from "@angular/router";
+import { FirebaseService } from "../services/firebase.service";
 
 @Component({
   selector: "app-menu",
@@ -9,14 +10,13 @@ import { Router } from "@angular/router";
 })
 export class MenuComponent implements OnInit {
   userFireAuth: any;
+  public userFire: any;
   constructor(
+    private firebaseService: FirebaseService,
     private router: Router,
     private authenticationService: AuthenticationService
-  ) {
-    authenticationService.getStatus().subscribe(user => {
-      this.userFireAuth = user;
-    });
-  }
+  ) {}
+
   logout() {
     this.authenticationService
       .logOut()
@@ -27,5 +27,18 @@ export class MenuComponent implements OnInit {
         console.log(err);
       });
   }
-  ngOnInit() {}
+  ngOnInit() {
+    this.authenticationService.getStatus().subscribe(user => {
+      this.userFireAuth = user;
+      console.log(this.userFireAuth);
+
+      this.firebaseService
+        .getUserUid(this.userFireAuth.uid)
+        .valueChanges()
+        .subscribe(usuario => {
+          this.userFire = usuario;
+          console.log(this.userFire);
+        });
+    });
+  }
 }

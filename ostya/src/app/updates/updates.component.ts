@@ -1,7 +1,9 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, Input } from "@angular/core";
 import { FormGroup, FormControl, Validators } from "@angular/forms";
 import { FirebaseService } from "../services/firebase.service";
 import { ActivatedRoute, Router } from "@angular/router";
+import { AuthenticationService } from "../services/authentication.service";
+import { MenuComponent } from "../menu/menu.component";
 
 @Component({
   selector: "app-updates",
@@ -52,10 +54,12 @@ export class UpdatesComponent implements OnInit {
   lat: number;
   lng: number;
   distance: any = 0;
+  userFire: unknown[];
   constructor(
     private firebaseService: FirebaseService,
     private route: ActivatedRoute,
-    private ruta: Router
+    private ruta: Router,
+    private authenticationService: AuthenticationService
   ) {
     this.ordenGet.id = this.route.snapshot.params["id"]; //Recupera parametro id de url
     this.agendaGet.id = this.route.snapshot.params["id"]; //Recupera parametro id de url
@@ -114,10 +118,10 @@ export class UpdatesComponent implements OnInit {
       .valueChanges()
       .subscribe(cliente => {
         this.clienteFire = cliente;
-        console.log(this.clienteFire);
+        // console.log(this.clienteFire);
         if (this.clienteFire.coordenadas[0] == 0) {
           this.sinCoordenadas = true;
-          console.log("no tiene coordenadas ");
+          // console.log("no tiene coordenadas ");
         } else {
           this.obtenetUbicacion();
         }
@@ -130,7 +134,7 @@ export class UpdatesComponent implements OnInit {
     this.spinner = true;
     if (confirm("¿Desea actualizar la orden ?")) {
       this.ordenFire.estado = this.update.estado;
-      console.log(this.agendaFire);
+      // console.log(this.agendaFire);
       if (!this.agendaFire === null) {
         this.agendaFire.estado = this.update.estado;
       }
@@ -171,18 +175,18 @@ export class UpdatesComponent implements OnInit {
     };
 
     let geoError = function(error) {
-      console.log("Error occurred. Error code: " + error.code);
+      // console.log("Error occurred. Error code: " + error.code);
     };
     navigator.geolocation.getCurrentPosition(geoSuccess, geoError, geoOptions);
     setTimeout(() => {
-      console.log(this.lat + " - " + this.lng);
+      // console.log(this.lat + " - " + this.lng);
       this.distance = this.getKilometros(
         this.lat,
         this.lng,
         this.clienteFire.coordenadas[0],
         this.clienteFire.coordenadas[1]
       );
-      console.log(this.distance);
+      // console.log(this.distance);
     }, 500);
   }
   // -----Calcular distancia del cliente -----
@@ -206,7 +210,7 @@ export class UpdatesComponent implements OnInit {
   enSitio() {
     if (this.clienteFire.coordenadas[0] == 0) {
       this.sinCoordenadas = true;
-      console.log("no tiene coordenadas ");
+      // console.log("no tiene coordenadas ");
     } else {
       this.agendaFire.coordenadas = [this.lat, this.lng];
       this.agendaFire.estado = "En sitio";
@@ -228,7 +232,7 @@ export class UpdatesComponent implements OnInit {
       this.firebaseService.ActOrdenAgendada(this.ordenFire);
       this.firebaseService.guardarUpdates(this.update);
       this.firebaseService.guardarAgenda(this.agendaFire);
-      console.log(this.agendaFire);
+      // console.log(this.agendaFire);
       this.ruta.navigate(["/home"]);
     }
   }
@@ -239,7 +243,7 @@ export class UpdatesComponent implements OnInit {
       hoy.getDate() + "-" + (hoy.getMonth() + 1) + "-" + hoy.getFullYear();
 
     let horaHoy = hoy.getHours() + ":" + hoy.getMinutes();
-    console.log(this.Nota);
+    // console.log(this.Nota);
     this.ordenFire.nota +=
       "  <+> " + this.Nota + " ( " + fechaHoy + " - " + horaHoy + "). ";
     this.firebaseService.ActOrdenEstado(this.ordenFire);
@@ -254,9 +258,20 @@ export class UpdatesComponent implements OnInit {
       }
     }
   }
-
+  uidActual: any;
   ngOnInit() {
     this.buildForm();
+
+    this.authenticationService.getStatus().subscribe(status => {
+      this.uidActual = status.uid;
+      this.firebaseService
+        .getUserUid(this.uidActual)
+        .valueChanges()
+        .subscribe(user => {
+          this.userFire = user;
+          console.log(this.userFire);
+        });
+    });
   }
   private buildForm() {
     this.formGroup = new FormGroup({

@@ -2,7 +2,9 @@
 <div id="inicio" class="container card">
   <div class=" text-center ">
     <br />
-    <h4 class="alert alert-success">ACTUALIZACION DE LA ORDEN</h4>
+    <h5 class="alert alert-success">
+      ACTUALIZACION ORDEN N° {{ ordenFire.id }}
+    </h5>
   </div>
   <!-- ------------------Datos de la orden----------------- -->
   <div class="card-body">
@@ -12,9 +14,6 @@
           <th class="text-center">Orden</th>
           <th>Cliente</th>
           <th>Solicitud</th>
-          <th>
-            Tecnico
-          </th>
         </tr>
       </thead>
       <tr>
@@ -24,11 +23,19 @@
         <td>
           <strong>{{ ordenFire.cliente }}</strong>
         </td>
-        <td>{{ ordenFire.solicitud }}</td>
-        <td>{{ ordenFire.tecnicoAsignado }}</td>
+        <td>
+          {{ ordenFire.solicitud }}
+          <span
+            *ngIf="agendaFire"
+            [ngStyle]="{ 'background-color': agendaFire.color }"
+            class="badge  badge-light"
+            >{{ agendaFire.tecnico }}</span
+          >
+        </td>
       </tr>
     </table>
 
+    <hr />
     <!-- -------------------Notas ----------------------- -->
     <div *ngIf="ordenFire.nota">
       <strong
@@ -37,58 +44,69 @@
       >
     </div>
   </div>
+  <hr />
   <!-- ----------------botones de opciones -------------- -->
   <div class="container">
-    <div class="form-row">
+    <div class="form-row justify-content-center">
+      <!-- ----------Boton Agendar ------------ -->
       <div
-        class="form-group col-md-2"
-        *ngIf="!(ordenFire.estado == 'En sitio')"
+        class="form-group col-md-2 col-4"
+        *ngIf="!(ordenFire.estado == 'En sitio') && userFire[0].rol == 'admin'"
       >
-        <!-- ----------Boton Agendar ------------ -->
         <a class="btn btn-primary" routerLink="/programacion/{{ ordenFire.id }}"
           >Agendar</a
         >
       </div>
-      <div class="form-group col-md-6" *ngIf="!agendaFire">
+      <!-- -----------Aviso no tiene agenda--------------- -->
+      <div class="form-group col-md-6 col-6" *ngIf="!agendaFire">
         <strong
           ><p style="color: tomato">
             Esta orden no tiene agenda programada
           </p></strong
         >
       </div>
+      <div
+        class="col-md-10 col-8"
+        *ngIf="
+          (ordenFire.uid == uidActual && ordenFire.estado == 'Programado') ||
+          (ordenFire.uid == uidActual && ordenFire.estado == 'Reprogramado')
+        "
+      >
+        <div class="row">
+          <!-- -----Boton En sitio ----- -->
+          <div *ngIf="!sinCoordenadas" class="col-md-3 col-5">
+            <div>
+              <a
+                data-toggle="modal"
+                data-target="#exampleModal"
+                class="btn btn-danger"
+                style="color: white"
+                >En sitio</a
+              >
+            </div>
+          </div>
+          <!-- ---------Icono ubicacion--------- -->
+          <div class=" text-center col-md-1 col-2">
+            <div>
+              <a [routerLink]="['/mapa']"
+                ><img
+                  src="https://img.icons8.com/color/48/000000/place-marker.png"
+              /></a>
+            </div>
+          </div>
+          <!-- ---------Aviso de Distancia ------------ -->
+          <div *ngIf="distance > 500" class="col-md-8 col-12">
+            <div>
+              <p class="alert alert-danger">
+                Estas fuera de sitio por: {{ distance }} mts
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
 
-      <!-- -----Boton En sitio ----- -->
-      <div *ngIf="!sinCoordenadas" class="form-group col-md-2">
-        <div
-          *ngIf="
-            ordenFire.estado == 'Programado' ||
-            ordenFire.estado == 'Reprogramado'
-          "
-        >
-          <a
-            data-toggle="modal"
-            data-target="#exampleModal"
-            class="btn btn-danger"
-            style="color: white"
-            >En sitio</a
-          >
-        </div>
-      </div>
-      <!-- ---------Aviso de Distancia ------------ -->
-      <div *ngIf="distance > 500" class="form-group col-md-4">
-        <div
-          *ngIf="
-            ordenFire.estado == 'Programado' ||
-            ordenFire.estado == 'Reprogramado'
-          "
-        >
-          <p class="alert alert-danger">
-            Estas fuera de sitio : {{ distance }} mts
-          </p>
-        </div>
-      </div>
       <!-- Button asignar coordenadas -->
-      <div class="form-group col-md-4" *ngIf="sinCoordenadas">
+      <div class="form-group col-md-4 col-12" *ngIf="sinCoordenadas">
         <button
           type="button"
           class="btn btn-warning"
@@ -126,19 +144,22 @@
                   >
                 </div>
               </th>
-              <th scope="col">Estado</th>
             </tr>
           </thead>
           <tbody *ngFor="let updated of updateFire; let i = index">
             <tr>
               <td id="fecha">
-                {{ updated[1].fecha | date: "short" }}
+                {{ updated[1].fecha | date: "dd/MM/yyyy , hh:mm a" }}
               </td>
               <td id="update">
                 {{ updated[1].update }}
               </td>
-              <td id="usuario">{{ updated[1].usuario }}</td>
-              <td id="estado">{{ updated[1].estado }}</td>
+              <td id="usuario">
+                {{ updated[1].usuario }}
+                <span id="bg" class="badge badge-secondary">{{
+                  updated[1].estado
+                }}</span>
+              </td>
             </tr>
           </tbody>
         </table> </ng-container
@@ -175,7 +196,7 @@
         <tbody *ngFor="let updated of noSistem; let i = index">
           <tr>
             <td id="fecha">
-              {{ updated[1].fecha | date: "short" }}
+              {{ updated[1].fecha | date: "dd/MM/yyyy , hh:mm a"}}
             </td>
             <td id="update">
               {{ updated[1].update }}
@@ -291,11 +312,11 @@
           ></textarea>
         </div>
       </div>
-
+      <!-- -----------boton Actualizar Nota------------ -->
       <div class="form-row justify-content-md-center">
         <div class="form-group col-md-2">
           <button type="submit" class="btn btn-primary">
-            Actualizar Nota
+            Ingresar Nota
           </button>
         </div>
         <div class="spinner-border text-primary" role="status" *ngIf="spinner">

@@ -10,18 +10,7 @@ export class TriageComponent implements OnInit {
   ordenFire: any;
   ordenTriage: any;
   colorVence = "#b2ffff";
-  constructor(private firebaseService: FirebaseService) {
-    firebaseService
-      .getOrdenesEnTriage()
-      .valueChanges()
-      .subscribe(orden => {
-        this.ordenFire = orden;
-        // console.log(orden);
-        this.tiempoRestante(this.ordenFire);
-        this.ordenarVencimiento(this.ordenFire);
-      });
-    // console.log(this.ordenFire);
-  }
+  constructor(private firebaseService: FirebaseService) {}
   ordenOrdenada: any;
 
   ordenarVencimiento(a) {
@@ -121,5 +110,14 @@ export class TriageComponent implements OnInit {
     }
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.firebaseService
+      .getOrdenesEnTriage()
+      .valueChanges()
+      .subscribe(orden => {
+        this.ordenFire = orden;
+        this.tiempoRestante(this.ordenFire);
+        this.ordenarVencimiento(this.ordenFire);
+      });
+  }
 }

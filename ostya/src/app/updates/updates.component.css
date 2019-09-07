@@ -9,14 +9,14 @@ table .d {
   width: 15%;
 }
 #update {
-  width: 60%;
+  width: 70%;
 }
-#estado {
-  width: 10%;
-}
+
 .encabezado {
   background-color: lightsteelblue;
 }
 #orden {
   text-align: center;
+}
+@media (max-width: 575.98px) {
 }

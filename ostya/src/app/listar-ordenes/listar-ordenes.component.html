@@ -24,7 +24,7 @@
             <a routerLink="/updates/{{ ordenes.id }}">{{ ordenes.id }}</a>
           </td>
           <td id="ingreso">
-            {{ ordenes.fechaSolicitud | date: "short" }}
+            {{ ordenes.fechaSolicitud | date: "dd/MM/yyyy , hh:mm a" }}
           </td>
           <td id="cliente">
             {{ ordenes.cliente }}.

@@ -2,9 +2,11 @@
   class="navbar navbar-expand-lg navbar-light bg-light border border-secondary"
   style="padding: 0px"
 >
+  <!-- ---------logo---------------- -->
   <a class="navbar-brand" routerLink="/home">
     <img src="assets/img/LogoOstya.PNG" height="50px" alt="" />
   </a>
+  <!-- -----------Menu Clientes-------- -->
   <button
     class="navbar-toggler"
     type="button"
@@ -61,12 +63,12 @@
         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
           <a class="dropdown-item" routerLink="/crear-orden/new">Crear Orden</a>
           <div class="dropdown-divider"></div>
-          <a class="dropdown-item" routerLink="/listar-ordenes"
+          <!-- <a class="dropdown-item" routerLink="/listar-ordenes"
             >Listar Ordenes</a
           >
           <a class="dropdown-item" routerLink="/cola-tecnico"
             >Cola Usuario Actual</a
-          >
+          > -->
         </div>
       </li>
       <!-- -----------Menu agenda--------------- -->
@@ -124,9 +126,9 @@
     </ul>
 
     <!-- ---------Boton de Usuario --------- -->
-    <div class="btn-group" *ngIf="userFireAuth">
+    <div class="btn-group" *ngIf="userFire">
       <button type="button" class="btn btn-warning">
-        {{ userFireAuth.email }}
+        {{ userFire[0].nombre }}
       </button>
       <button
         type="button"

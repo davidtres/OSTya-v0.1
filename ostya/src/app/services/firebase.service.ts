@@ -4,11 +4,13 @@ import { AngularFireModule } from "@angular/fire";
 import { AngularFireDatabase } from "angularfire2/database";
 import { CrearClienteComponent } from "../crear-cliente/crear-cliente.component";
 import { createNodeAtIndex } from "@angular/core/src/render3/instructions";
+import { AuthenticationService } from "./authentication.service";
 
 @Injectable({
   providedIn: "root"
 })
 export class FirebaseService {
+  userFireAuth: any;
   /* --------------CLIENTES ---------------------*/
   //metodo de guardar cliente
   public guardarCliente(cliente) {

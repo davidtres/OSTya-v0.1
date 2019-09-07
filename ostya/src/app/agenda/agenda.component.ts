@@ -33,13 +33,14 @@ export class AgendaComponent implements OnInit {
         this.verAgendas();
       });
   }
+  utc = 0;
   verAgendas() {
     for (let i = 0; i < this.agendaFire.length; i++) {
       this.calendarEvents = this.calendarEvents.concat({
         // adiciona el resto de agendas a la vista.
         title: this.agendaFire[i].title,
-        start: this.agendaFire[i].start,
-        end: this.agendaFire[i].end,
+        start: this.agendaFire[i].start - this.utc,
+        end: this.agendaFire[i].end - this.utc,
         allDay: false,
         color: this.agendaFire[i].color,
         editable: this.agendaFire[i].editable,
@@ -47,6 +48,7 @@ export class AgendaComponent implements OnInit {
         tecnico: this.agendaFire[i].tecnico
       });
     }
+    // console.log(this.calendarEvents);
     this.filtrarTecnico();
   }
   filtrarTecnico() {
@@ -76,7 +78,7 @@ export class AgendaComponent implements OnInit {
   }
   contador = 0;
   eventInfo(event) {
-    console.log(event);
+    // console.log(event);
   }
   agendaTecnico() {
     if (this.contador == 0) {

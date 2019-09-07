@@ -11,6 +11,14 @@ export class MapaComponent implements OnInit {
   constructor() {
     this.obtenetUbicacion();
   }
+
+  loading = false;
+  recalcular() {
+    this.loading = true;
+    setTimeout(() => {
+      this.obtenetUbicacion();
+    }, 2000);
+  }
   obtenetUbicacion() {
     var startPos;
     var geoOptions = {
@@ -26,7 +34,8 @@ export class MapaComponent implements OnInit {
       document.getElementById("accuracy").innerHTML =
         " Precisión: " +
         startPos.coords.accuracy +
-        " mts. Latitud: " +
+        " mts ." +
+        "Latitud: " +
         startPos.coords.latitude +
         " Longitud: " +
         startPos.coords.longitude;
@@ -40,6 +49,7 @@ export class MapaComponent implements OnInit {
       //   3: timed out
     };
     navigator.geolocation.getCurrentPosition(geoSuccess, geoError, geoOptions);
+    this.loading = false;
   }
 
   ngOnInit() {}

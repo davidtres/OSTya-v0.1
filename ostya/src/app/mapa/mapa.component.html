@@ -1,37 +1,22 @@
-<h1>Mapa Ubicacion</h1>
-
-<div class="container card">
-  <h4 id="accuracy"></h4>
+<h2 class="text-center alert-warning">Mi Ubicacion</h2>
+<br />
+<h4 class="alert-primary text-center" id="accuracy"></h4>
+<div class="container card" style="padding: 10px;">
   <agm-map [latitude]="lat" [longitude]="lng" [zoom]="18">
     <agm-marker [latitude]="lat" [longitude]="lng"></agm-marker>
   </agm-map>
   <br />
-  <div class="container">
-    <div class="form-row">
-      <div class="form-group col-md-2">
-        <button
-          type="button"
-          class="btn btn-warning"
-          (click)="obtenetUbicacion()"
-        >
-          Volver a calcular
-        </button>
-      </div>
-      <div class="form-group col-md-2"></div>
-      <div class="form-group col-md-2">
-        <button
-          type="button"
-          class="btn btn-primary"
-          (click)="addCoordenadas()"
-        >
-          Aceptar
-        </button>
-      </div>
-      <div class="form-group col-md-2">
-        <button type="button" class="btn btn-danger" (click)="cancelar()">
-          Cancelar
-        </button>
-      </div>
+  <div class="row justify-content-between">
+    <div class="form-group col-4">
+      <button type="button" class="btn btn-warning" (click)="recalcular()">
+        Recalcular
+      </button>
+    </div>
+    <div *ngIf="loading" class="spinner-border text-primary" role="status">
+      <span class="sr-only">Loading...</span>
+    </div>
+    <div class="form-group col-4">
+      <a class="btn btn-danger" href="javascript: history.go(-1)">Regresar</a>
     </div>
   </div>
 </div>

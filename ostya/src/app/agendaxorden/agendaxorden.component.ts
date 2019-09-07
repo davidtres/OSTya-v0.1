@@ -42,6 +42,7 @@ export class AgendaxordenComponent implements OnInit {
     private route: ActivatedRoute,
     private ruta: Router
   ) {}
+  utc = 0;
   buscarOrden() {
     this.firebaseService //obtener orden por ID
       .getAgendaHO(this.agendaGet)
@@ -68,8 +69,8 @@ export class AgendaxordenComponent implements OnInit {
                     [i] +
                     " Programado : " +
                     this.agendaFire[i].tecnico,
-                  start: this.agendaFire[i].start,
-                  end: this.agendaFire[i].end,
+                  start: this.agendaFire[i].start - this.utc,
+                  end: this.agendaFire[i].end - this.utc,
                   allDay: false,
                   color: "#66E352",
                   editable: this.agendaFire[i].editable
@@ -77,8 +78,8 @@ export class AgendaxordenComponent implements OnInit {
                 this.calendarEvents = this.calendarEvents.concat({
                   title:
                     "id: " + [i] + " En sitio : " + this.agendaFire[i].tecnico,
-                  start: this.agendaFire[i].startOk,
-                  end: this.agendaFire[i].endOk,
+                  start: this.agendaFire[i].startOk - this.utc,
+                  end: this.agendaFire[i].endOk - this.utc,
                   allDay: false,
                   color: "#F47C7C",
                   editable: this.agendaFire[i].editable
@@ -94,8 +95,9 @@ export class AgendaxordenComponent implements OnInit {
                         [i] +
                         " Programado : " +
                         this.agendaFire[i].tecnico,
-                      start: this.agendaFire[i].log[e[x]].inicial.start,
-                      end: this.agendaFire[i].log[e[x]].inicial.end,
+                      start:
+                        this.agendaFire[i].log[e[x]].inicial.start - this.utc,
+                      end: this.agendaFire[i].log[e[x]].inicial.end - this.utc,
                       allDay: false,
                       color: "#66E352",
                       editable: this.agendaFire[i].editable
@@ -107,8 +109,9 @@ export class AgendaxordenComponent implements OnInit {
                         [i] +
                         " Reprogramado : " +
                         this.agendaFire[i].tecnico,
-                      start: this.agendaFire[i].log[e[x]].inicial.start,
-                      end: this.agendaFire[i].log[e[x]].inicial.end,
+                      start:
+                        this.agendaFire[i].log[e[x]].inicial.start - this.utc,
+                      end: this.agendaFire[i].log[e[x]].inicial.end - this.utc,
                       allDay: false,
                       color: "#7CBFF4",
                       editable: this.agendaFire[i].editable
@@ -118,8 +121,8 @@ export class AgendaxordenComponent implements OnInit {
                 this.calendarEvents = this.calendarEvents.concat({
                   title:
                     "id: " + [i] + " En sitio : " + this.agendaFire[i].tecnico,
-                  start: this.agendaFire[i].startOk,
-                  end: this.agendaFire[i].endOk,
+                  start: this.agendaFire[i].startOk - this.utc,
+                  end: this.agendaFire[i].endOk - this.utc,
                   allDay: false,
                   color: "#F47C7C",
                   editable: this.agendaFire[i].editable
