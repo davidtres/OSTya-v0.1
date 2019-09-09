@@ -15,7 +15,8 @@ export class ListarClienteComponent implements OnInit {
       .valueChanges()
       .subscribe(clientes => {
         this.clientesfire = clientes;
-        //console.log(clientes);
+        let clientesSort = firebaseService.ordenanzaNombre(this.clientesfire);
+        console.log(clientesSort);
       });
   }
 

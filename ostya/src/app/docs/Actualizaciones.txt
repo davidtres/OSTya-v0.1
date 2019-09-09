@@ -1,9 +1,27 @@
-6/09/2019.
-*Home:* 
-    1. Muestra solo servicios asignados al tecnico.
-    2. Se quita triage, para tecnico.
-    3. Se agrega Nombre del usuario al boton
-*Actualizaciones*
-    1. Se agregó icono de ubicacion, para verificacion en el mapa.
-    2. Se mostrará boton "En sitio" solo al tecnico asignado a la orden.
-    3. Se mejoró vista para moviles.
+v.1.03.00 - 09/09/2019
+  Nueva funcionalidades
+    * Multiples sedes para un cliente*
+      + Permite crear todas las sedes del cliente y hacer proceso de asignacion de 
+        coordenadas en caso de no encontrarla en google.
+      + Al crear la orden, se debe selccionar la sede respectiva.
+
+v. 1.02.00 - 07/09/2019
+ 
+    <b>*Nueva funcionalidades*</b>
+    <b>ESTADOS AUTOMATICOS:</b>
+    Al actualizar con un estado la orden, se re asigna automaticamente al
+    usuario que tenga configurado el estado correspondiente.
+    <b>ESTADOS QUE DAN SOLUCION*</b>
+    Se configuran los estados que dan por solucionado la solicitud del cliente.
+    Ej: "Terminado", "Realizado", etc
+--------------------------------------------------------------
+  v 1.01.00 - 6/09/2019.
+
+    *Home:*
+    1. Muestra solo servicios asignados al tecnico. 2. Se quita triage, para
+    tecnico. 3. Se agrega Nombre del usuario al boton
+    <b>*Actualizaciones* </b>
+    1. Se agregó icono de ubicacion, para verificacion en el mapa. 2. Se
+    mostrará boton "En sitio" solo al tecnico asignado a la orden. 3. Se mejoró
+    vista para moviles.
+

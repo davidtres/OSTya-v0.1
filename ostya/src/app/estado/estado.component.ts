@@ -11,7 +11,7 @@ import { ActivatedRoute, Router } from "@angular/router";
 })
 export class EstadoComponent implements OnInit {
   public formGroup: FormGroup; //variable para formulario
-  usuariosfire: any; //almacena usuario obtenidos de firebase
+  userFire: any; //almacena usuario obtenidos de firebase
   nextFire: any; // guarda actual consecutivo en firebase
   Guardando: boolean;
   // inicializacion varible para interactuar con campos del HTML (Interfaces)
@@ -20,7 +20,9 @@ export class EstadoComponent implements OnInit {
     nombre: "",
     finOrden: false,
     doc: "estados",
-    modificador: "new"
+    modificador: "new",
+    asignado: "",
+    solucionado: false
   };
   id: any = null; //para capturar parametro de la URL
   estadoObtenido: any; //se guarda estado filtrado por el parametro para edicion
@@ -36,18 +38,27 @@ export class EstadoComponent implements OnInit {
 
     // Condicional para saber si el cliente es new o trae ID en el paramtro
     if (this.id != "new") {
-      firebaseService
+      this.firebaseService
         .obtenerUnoId(this.estado)
         .valueChanges()
         .subscribe(estado => {
           this.estadoObtenido = estado;
           //console.log(this.clienteObtenido);
-          //this.cliente = this.clienteObtenido
           this.estado = this.estadoObtenido;
           this.estado.modificador = "act";
         });
     }
-    firebaseService
+  }
+
+  ngOnInit() {
+    this.firebaseService
+      .getUusariosActivos()
+      .valueChanges()
+      .subscribe(usuarios => {
+        this.userFire = usuarios;
+        console.log(this.userFire);
+      });
+    this.firebaseService
       .getNext(this.estado.doc)
       .valueChanges()
       .subscribe(next => {
@@ -61,11 +72,9 @@ export class EstadoComponent implements OnInit {
           this.firebaseService.setNext(this.nextFire);
         }
       });
-  }
-  ngOnInit() {
+
     this.buildForm();
   }
-
   // constructor del formulario
   private buildForm() {
     this.formGroup = new FormGroup({
@@ -73,12 +82,14 @@ export class EstadoComponent implements OnInit {
         Validators.required,
         Validators.minLength(3)
       ]),
-      Cierra: new FormControl(this.estado.finOrden, [])
+      Cierra: new FormControl(this.estado.finOrden, []),
+      Solucionado: new FormControl(this.estado.solucionado, []),
+      Asignado: new FormControl(this.estado.asignado, [Validators.required])
     });
   }
   // funcion del boton "Guardar"
   guardarEstado() {
-    //NewCliente verdadero para enviar alert de creacion en html
+    //Guardando verdadero para enviar alert de creacion en html
     this.Guardando = true;
     //Si es nuevo, incrementa ID y se lo asigna
     if (this.estado.modificador == "new") {

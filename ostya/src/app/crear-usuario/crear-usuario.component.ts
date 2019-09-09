@@ -20,7 +20,7 @@ export class CrearUsuarioComponent implements OnInit {
     nombre: "",
     correo: "",
     password: "",
-    direcciones: [],
+    direccion: "",
     telefono: 0,
     celular: 0,
     fechaCreacion: new Date(Date.now()),
@@ -95,7 +95,7 @@ export class CrearUsuarioComponent implements OnInit {
           /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
         )
       ]),
-      Dir: new FormControl(this.empleado.direcciones, [Validators.required]),
+      Dir: new FormControl(this.empleado.direccion, [Validators.required]),
       Cel: new FormControl(this.empleado.celular, [
         Validators.required,
         Validators.minLength(10)

@@ -17,12 +17,14 @@
           {{ estados.nombre }}
         </li></a
       > -->
-      <table class="table table-striped">
+      <table class="table table-hover ">
         <thead>
           <tr>
             <th scope="col">ID</th>
-            <th scope="col">NOMBRE</th>
+            <th scope="col">ESTADO</th>
+            <th scope="col">ASIGNAR A:</th>
             <th scope="col">FIN ORDEN</th>
+            <th scope="col">SOLUCION</th>
           </tr>
         </thead>
         <tbody *ngFor="let estados of estadosfire; let i = index">
@@ -31,8 +33,11 @@
             <a routerLink="/estados/{{ estados.id }}"
               ><td>{{ estados.nombre }}</td></a
             >
+            <td>{{ estados.asignado }}</td>
             <td *ngIf="estados.finOrden">SI</td>
             <td *ngIf="!estados.finOrden">NO</td>
+            <td *ngIf="estados.solucionado">SI</td>
+            <td *ngIf="!estados.solucionado">NO</td>
           </tr>
         </tbody>
       </table>

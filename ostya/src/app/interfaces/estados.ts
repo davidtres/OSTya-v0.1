@@ -4,4 +4,6 @@ export interface Estados {
   finOrden: boolean;
   doc: string;
   modificador: string;
+  asignado: string;
+  solucionado: boolean;
 }

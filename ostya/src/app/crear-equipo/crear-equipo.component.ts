@@ -99,10 +99,10 @@ export class CrearEquipoComponent implements OnInit {
       pantalla: new FormControl(this.newEquipo.caractersiticas["pantalla"], []),
       garantia: new FormControl(this.newEquipo.caractersiticas["garantia"], []),
       otros: new FormControl(this.newEquipo.caractersiticas["otros"], []),
-      tipoLic: new FormControl(this.newEquipo.software["tipo"], []),
-      activaLic: new FormControl(this.newEquipo.software["activa"], []),
-      serialLic: new FormControl(this.newEquipo.software["serial"], []),
-      notaLic: new FormControl(this.newEquipo.software["nota"], []),
+      tipoLic: new FormControl(this.newLicencia.tipo, []),
+      activaLic: new FormControl(this.newLicencia.activa, []),
+      serialLic: new FormControl(this.newLicencia.serial, []),
+      notaLic: new FormControl(this.newLicencia.nota, []),
       ipwan: new FormControl(
         this.newEquipo.comunicaciones.confWan["ipwan"],
         []
@@ -168,8 +168,7 @@ export class CrearEquipoComponent implements OnInit {
     this.radioGroupForm = this.formBuilder.group({
       model: true
     });
-
-    // console.log(this.tipoEquipos);
+    console.log(this.newEquipo);
   }
 
   // **************** ------------------------------------********************************
@@ -211,13 +210,15 @@ export class CrearEquipoComponent implements OnInit {
     serial: null,
     nota: null
   };
-  cero: number = 0;
   addLicencia() {
-    if (this.cero == 0) {
-      this.cero++;
-      // console.log('de primero' + this.cero);
-      this.newEquipo.software.push(this.newLicencia);
-      // console.log(this.newLicencia);
+    if (
+      this.newEquipo.software.length == 1 &&
+      !this.newEquipo.software[0].tipo
+    ) {
+      this.newEquipo.software[0].tipo = this.newLicencia.tipo;
+      this.newEquipo.software[0].activa = this.newLicencia.activa;
+      this.newEquipo.software[0].serial = this.newLicencia.serial;
+      this.newEquipo.software[0].nota = this.newLicencia.nota;
       this.newLicencia = {
         tipo: null,
         activa: null,
@@ -225,10 +226,7 @@ export class CrearEquipoComponent implements OnInit {
         nota: null
       };
     } else {
-      this.cero++;
       this.newEquipo.software.push(this.newLicencia);
-      // console.log('de segundo' + this.cero);
-      // console.log(this.newLicencia);
       this.newLicencia = {
         tipo: null,
         activa: null,
@@ -238,15 +236,19 @@ export class CrearEquipoComponent implements OnInit {
     }
   }
   removeLic() {
-    if (this.cero == 0) {
+    if (this.newEquipo.software.length == 1) {
       this.newEquipo.software[0].tipo = null;
       this.newEquipo.software[0].activa = null;
       this.newEquipo.software[0].serial = null;
       this.newEquipo.software[0].nota = null;
+      this.newLicencia = {
+        tipo: null,
+        activa: null,
+        serial: null,
+        nota: null
+      };
     } else {
-      this.cero--;
       this.newEquipo.software.pop();
-      console.log(this.newEquipo.software);
     }
   }
   // cambia nombre de cliente por su Id, en la variable a enviar a Firebase.

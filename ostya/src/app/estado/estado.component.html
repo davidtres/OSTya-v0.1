@@ -35,6 +35,34 @@
       </div>
     </div>
     <div class="form-row justify-content-md-center">
+      <div class="form-group col-md-6 alert-secondary">
+        <label for="inputNombre">Asignar al usuario</label>
+        <p>
+          <b>{{ estado.asignado }}</b>
+        </p>
+
+        <p *ngIf="!estado.asignado">
+          <b>Asigna un usuario valido....</b>
+        </p>
+      </div>
+    </div>
+    <div class="form-row justify-content-md-center">
+      <div class="form-group col-md-6">
+        <label for="inputNombre">Cambiar usuario:</label>
+        <select
+          formControlName="Asignado"
+          class="form-control"
+          [(ngModel)]="estado.asignado"
+        >
+          <option>Seleccione usuario ... </option>
+          <option>Queda igual </option>
+          <option *ngFor="let usuario of userFire"
+            >{{ usuario.nombre }}
+          </option>
+        </select>
+      </div>
+    </div>
+    <div class="form-row justify-content-md-center">
       <div class="form-check" class="form-group col-md-3">
         <input
           class="form-check-input"
@@ -45,6 +73,19 @@
         />
         <label class="form-check-label" for="accesoOstya">
           CIERRA LA ORDEN
+        </label>
+      </div>
+    </div>
+    <div class="form-row justify-content-md-center">
+      <div class="form-check" class="form-group col-md-3">
+        <input
+          class="form-check-input"
+          formControlName="Solucionado"
+          type="checkbox"
+          [(ngModel)]="estado.solucionado"
+        />
+        <label class="form-check-label">
+          DA SOLUCION A LA SOLICITUD
         </label>
       </div>
     </div>

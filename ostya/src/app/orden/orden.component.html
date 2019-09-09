@@ -22,23 +22,66 @@
       </ng-template>
     </div>
     <!-- ------------inicio del formulario --------------------- -->
-    <div class="form-row justify-content-md-center ">
-      <div class="form-group col-md-10 ">
-        <label for="cliente">Cliente</label>
-        <select
-          formControlName="cliente"
-          class="form-control"
-          [(ngModel)]="orden.cliente"
-          name="cliente"
-          (change)="setIdCliente()"
-        >
-          <option>Seleccione cliente ... </option>
-          <option *ngFor="let clienteSelect of clientesfire"
-            >{{ clienteSelect.nombre }}
-          </option>
-        </select>
+    <!-- ------------Cliente----------- -->
+    <ng-container>
+      <div class="form-row justify-content-md-center ">
+        <div class="form-group col-md-10 ">
+          <label for="cliente">Cliente</label>
+          <select
+            formControlName="cliente"
+            class="form-control"
+            [(ngModel)]="orden.cliente"
+            name="cliente"
+            (change)="setIdCliente()"
+          >
+            <option>Seleccione cliente ... </option>
+            <option *ngFor="let clienteSelect of clientesfire"
+              >{{ clienteSelect.nombre }}
+            </option>
+          </select>
+        </div>
       </div>
-    </div>
+    </ng-container>
+
+    <!-- ------------Sede----------------- -->
+    <ng-container *ngIf="clienteSeleccionado.length > 0">
+      <div class="form-row justify-content-md-center">
+        <div class="form-group col-md-10 ">
+          <b
+            ><label
+              for="Sede"
+              *ngIf="clienteSeleccionado[0].direcciones.length == 1"
+              >Sede</label
+            ></b
+          >
+          <b
+            ><label
+              for="Sede"
+              *ngIf="clienteSeleccionado[0].direcciones.length > 1"
+              style="color: crimson"
+              >Cliente tiene varias sedes</label
+            ></b
+          >
+          <select
+            formControlName="sede"
+            class="form-control"
+            [(ngModel)]="orden.sede"
+            name="sede"
+          >
+            <option>Seleccione sede ... </option>
+            <option
+              *ngFor="
+                let sedes of clienteSeleccionado[0].direcciones;
+                let i = index
+              "
+              >{{ sedes.sede }}
+            </option>
+          </select>
+        </div>
+      </div>
+    </ng-container>
+
+    <!-- ---------------Tipo de Servicio--------------- -->
     <div class="form-row justify-content-md-center">
       <div class="form-group col-md-10">
         <label for="tiposerv">Tipo Servicio</label>

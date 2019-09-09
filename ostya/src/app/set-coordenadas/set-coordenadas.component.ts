@@ -15,6 +15,7 @@ export class SetCoordenadasComponent implements OnInit {
     doc: "clientes"
   };
   clienteFire: any = {};
+  sede: any;
 
   constructor(
     private firebaseService: FirebaseService,
@@ -23,7 +24,7 @@ export class SetCoordenadasComponent implements OnInit {
   ) {
     this.obtenetUbicacion();
     this.clienteGet.id = this.route.snapshot.params["id"]; //Recupera parametro id de url
-
+    this.sede = this.route.snapshot.queryParams["sede"];
     firebaseService
       .obtenerUnoId(this.clienteGet)
       .valueChanges()
@@ -63,9 +64,12 @@ export class SetCoordenadasComponent implements OnInit {
     navigator.geolocation.getCurrentPosition(geoSuccess, geoError, geoOptions);
   }
   addCoordenadas() {
-    this.clienteFire.coordenadas[0] = this.lat;
-    this.clienteFire.coordenadas[1] = this.lng;
-    console.log(this.clienteFire.coordenadas);
+    for (let i = 0; i < this.clienteFire.direcciones.length; i++) {
+      if (this.clienteFire.direcciones[i].sede == this.sede) {
+        this.clienteFire.direcciones[i].lat = this.lat;
+        this.clienteFire.direcciones[i].lng = this.lng;
+      }
+    }
     this.firebaseService.guardarCliente(this.clienteFire);
     this.ruta.navigate(["/home"]);
   }

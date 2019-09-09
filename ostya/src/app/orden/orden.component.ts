@@ -36,7 +36,9 @@ export class OrdenComponent implements OnInit {
     doc: "orden",
     modificador: "new",
     idCliente: 0,
-    uid: ""
+    uid: "",
+    Solucionador: "",
+    sede: ""
   };
 
   constructor(
@@ -117,6 +119,7 @@ export class OrdenComponent implements OnInit {
   private buildForm() {
     this.formGroup = new FormGroup({
       cliente: new FormControl(this.orden.cliente, [Validators.required]),
+      sede: new FormControl(this.orden.sede, [Validators.required]),
       tiposerv: new FormControl(this.orden.tipo, [Validators.required]),
       servicio: new FormControl(this.orden.solicitud, [
         Validators.required,
@@ -163,10 +166,14 @@ export class OrdenComponent implements OnInit {
   onReset() {
     this.formGroup.reset();
   }
+  clienteSeleccionado: any[] = [];
   setIdCliente() {
+    this.clienteSeleccionado = [];
     for (let i = 0; i < this.clientesfire.length; i++) {
       if (this.clientesfire[i].nombre == this.orden.cliente) {
         this.orden.idCliente = this.clientesfire[i].id;
+        this.clienteSeleccionado.push(this.clientesfire[i]);
+        console.log(this.clienteSeleccionado[0].direcciones);
       }
     }
     // console.log(this.orden.idCliente);

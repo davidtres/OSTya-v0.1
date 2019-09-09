@@ -37,8 +37,8 @@ export class EditarClienteComponent implements OnInit {
       Tel: new FormControl(this.cliente.celular, [Validators.minLength(7)]),
       Contact: new FormControl(this.cliente.contacto, []),
       Tipo: new FormControl(this.cliente.tipo, [Validators.required]),
-      Lat: new FormControl(this.cliente.coordenadas[0], []),
-      Long: new FormControl(this.cliente.coordenadas[1], []),
+      Lat: new FormControl(this.cliente.direccion, []),
+      Long: new FormControl(this.cliente.direccion, []),
       Acceso: new FormControl(this.cliente.acceder, []),
       fecha: new FormControl(this.cliente.fechaCreacion, [Validators.required])
     });
@@ -54,7 +54,7 @@ export class EditarClienteComponent implements OnInit {
     celular: 0,
     fechaCreacion: new Date(Date.now()),
     contacto: "",
-    coordenadas: [0, 0],
+    direccion: "",
     tipo: "",
     lastBuy: null,
     activo: true,

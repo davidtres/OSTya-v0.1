@@ -18,4 +18,6 @@ export interface Orden {
   modificador: string;
   idCliente: number;
   uid: string;
+  Solucionador: string;
+  sede: string;
 }

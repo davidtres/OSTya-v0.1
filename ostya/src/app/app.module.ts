@@ -48,6 +48,8 @@ import { HttpClientModule } from "@angular/common/http";
 import { SetCoordenadasComponent } from "./set-coordenadas/set-coordenadas.component";
 import { AuthenticationGuard } from "./services/authentication.guard";
 import { ColaTecnicoComponent } from "./cola-tecnico/cola-tecnico.component";
+import { SortfieldPipe } from "./pipes/sortfield.pipe";
+import { VersionesComponent } from "./versiones/versiones.component";
 
 const appRoutes: Routes = [
   { path: "", component: HomeComponent },
@@ -189,6 +191,10 @@ const appRoutes: Routes = [
     path: "cola-tecnico",
     component: ColaTecnicoComponent,
     canActivate: [AuthenticationGuard]
+  },
+  {
+    path: "versiones",
+    component: VersionesComponent
   }
 ];
 @NgModule({
@@ -222,7 +228,9 @@ const appRoutes: Routes = [
     AgendaxtecnicoComponent,
     AgendaxordenComponent,
     SetCoordenadasComponent,
-    ColaTecnicoComponent
+    ColaTecnicoComponent,
+    SortfieldPipe,
+    VersionesComponent
   ],
   imports: [
     BrowserModule,

@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, ViewChild, ElementRef } from "@angular/core";
 import { FirebaseService } from "../services/firebase.service";
 import { Cliente } from "../interfaces/cliente";
 import { FormGroup, Validators, FormControl } from "@angular/forms";
@@ -13,6 +13,8 @@ import { HttpClient } from "@angular/common/http";
   styleUrls: ["./crear-cliente.component.css"]
 })
 export class CrearClienteComponent implements OnInit {
+  @ViewChild("sedeCliente") sedeCliente: ElementRef;
+  cero: number = 0; //contador de direcciones
   // Variable contiene formulario HTML
   public formGroup: FormGroup;
   private searchField: FormControl;
@@ -23,12 +25,18 @@ export class CrearClienteComponent implements OnInit {
     nombre: "",
     correo: "",
     password: "",
-    direcciones: [],
+    direcciones: [
+      {
+        sede: null,
+        direccion: null,
+        lat: null,
+        lng: null
+      }
+    ],
     telefono: null,
     celular: 0,
     fechaCreacion: new Date(Date.now()),
     contacto: "",
-    coordenadas: [0, 0],
     tipo: "",
     lastBuy: null,
     activo: true,
@@ -69,6 +77,7 @@ export class CrearClienteComponent implements OnInit {
       .valueChanges()
       .subscribe(clientes => {
         this.clientesfire = clientes;
+        console.log(this.clientesfire);
       });
     //Se captura parametro de la URl
     this.id = this.route.snapshot.params["id"];
@@ -89,10 +98,59 @@ export class CrearClienteComponent implements OnInit {
 
   selectAdress(result) {
     console.log(result);
-    this.cliente.direcciones[0] = result.formatted_address;
-    this.cliente.coordenadas[0] = result.geometry.location.lat;
-    this.cliente.coordenadas[1] = result.geometry.location.lng;
+    this.newDireccion.direccion = result.formatted_address;
+    this.newDireccion.lat = result.geometry.location.lat;
+    this.newDireccion.lng = result.geometry.location.lng;
     this.buscarDir = "";
+    this.irSede();
+  }
+  irSede(): void {
+    this.sedeCliente.nativeElement.focus();
+  }
+  // asignar o remover software a un equipo.
+  clearAdress() {
+    this.newDireccion = {
+      sede: null,
+      direccion: null,
+      lat: null,
+      lng: null
+    };
+  }
+  newDireccion = {
+    sede: null,
+    direccion: null,
+    lat: null,
+    lng: null
+  };
+  addDireccion() {
+    if (!this.newDireccion.sede || !this.newDireccion.direccion) {
+      return alert("Faltan sede o dirección.");
+    } else {
+      if (
+        this.cliente.direcciones.length == 1 &&
+        !this.cliente.direcciones[0].sede
+      ) {
+        this.cliente.direcciones[0].sede = this.newDireccion.sede;
+        this.cliente.direcciones[0].direccion = this.newDireccion.direccion;
+        this.cliente.direcciones[0].lat = this.newDireccion.lat;
+        this.cliente.direcciones[0].lng = this.newDireccion.lng;
+        this.clearAdress();
+      } else {
+        this.cliente.direcciones.push(this.newDireccion);
+        this.clearAdress();
+      }
+    }
+  }
+  removeDir() {
+    if (this.cliente.direcciones.length == 1) {
+      this.cliente.direcciones[0].sede = null;
+      this.cliente.direcciones[0].direccion = null;
+      this.cliente.direcciones[0].lat = null;
+      this.cliente.direcciones[0].lng = null;
+      this.clearAdress();
+    } else {
+      this.cliente.direcciones.pop();
+    }
   }
   pasarAgoogle() {
     this.buscarDir = this.cliente.nombre;
@@ -115,17 +173,18 @@ export class CrearClienteComponent implements OnInit {
           /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
         )
       ]),
-      Dir: new FormControl(this.cliente.direcciones, [Validators.required]),
+      Dir: new FormControl(this.newDireccion.direccion, []),
       Dir1: new FormControl(this.cliente.direcciones, []),
+      Sede: new FormControl(this.newDireccion.sede, []),
       Cel: new FormControl(this.cliente.celular, [
         Validators.required,
         Validators.minLength(10)
       ]),
-      Tel: new FormControl(this.cliente.celular, [Validators.minLength(7)]),
+      Tel: new FormControl(this.cliente.telefono, []),
       Contact: new FormControl(this.cliente.contacto, []),
       Tipo: new FormControl(this.cliente.tipo, [Validators.required]),
-      Lat: new FormControl(this.cliente.coordenadas[0], []),
-      Long: new FormControl(this.cliente.coordenadas[1], []),
+      Lat: new FormControl(this.newDireccion.lat, []),
+      Long: new FormControl(this.newDireccion.lng, []),
       Acceso: new FormControl(this.cliente.acceder, []),
       fecha: new FormControl(this.cliente.fechaCreacion, [Validators.required])
     });

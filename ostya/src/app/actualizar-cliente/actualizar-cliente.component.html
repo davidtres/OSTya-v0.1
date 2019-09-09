@@ -17,9 +17,11 @@
       <b>Telefono: </b>{{ clienteActual.telefono }} <br />
       <b>Celular: </b>{{ clienteActual.celular }} <br />
     </div>
-    <div class="col">
-      <b>Direcciones: </b>{{ clienteActual.direcciones }} <br />
-      <b>Coordenadas: </b>{{ clienteActual.coordenadas }} <br />
+    <div class="col" *ngFor="let cliente of clienteActual.direcciones">
+      <b>Sede: </b>{{ cliente.sede }} <br />
+      <b>Direccion: </b>{{ cliente.direccion }} <br />
+      <b>Latitud: </b>{{ cliente.lat }} <b>Longitud: </b>{{ cliente.lng }}
+      <br />
     </div>
   </div>
   <br />

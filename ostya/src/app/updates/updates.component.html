@@ -21,7 +21,12 @@
           <strong>{{ ordenFire.id }}</strong>
         </td>
         <td>
-          <strong>{{ ordenFire.cliente }}</strong>
+          <strong
+            >{{ ordenFire.cliente }}
+            <span *ngIf="agendaFire" class="badge  badge-dark">{{
+              ordenFire.sede
+            }}</span></strong
+          >
         </td>
         <td>
           {{ ordenFire.solicitud }}
@@ -95,25 +100,24 @@
             </div>
           </div>
           <!-- ---------Aviso de Distancia ------------ -->
-          <div *ngIf="distance > 500" class="col-md-8 col-12">
+          <div *ngIf="distance > 200" class="col-md-8 col-12">
             <div>
               <p class="alert alert-danger">
                 Estas fuera de sitio por: {{ distance }} mts
               </p>
             </div>
           </div>
+          <!-------- Button asignar coordenadas -------->
+          <div class="form-group col-md-4 col-12" *ngIf="sinCoordenadas">
+            <a
+              [routerLink]="['/set-coordenadas', ordenFire.idCliente]"
+              [queryParams]="{ sede: ordenFire.sede }"
+              class="btn btn-warning"
+            >
+              Asignar Coordenadas
+            </a>
+          </div>
         </div>
-      </div>
-
-      <!-- Button asignar coordenadas -->
-      <div class="form-group col-md-4 col-12" *ngIf="sinCoordenadas">
-        <button
-          type="button"
-          class="btn btn-warning"
-          (click)="setCoordenadas()"
-        >
-          Asignar Coordenadas la cliente
-        </button>
       </div>
     </div>
   </div>
@@ -196,7 +200,7 @@
         <tbody *ngFor="let updated of noSistem; let i = index">
           <tr>
             <td id="fecha">
-              {{ updated[1].fecha | date: "dd/MM/yyyy , hh:mm a"}}
+              {{ updated[1].fecha | date: "dd/MM/yyyy , hh:mm a" }}
             </td>
             <td id="update">
               {{ updated[1].update }}
@@ -245,6 +249,7 @@
             class="form-control"
             name="estado"
             [(ngModel)]="update.estado"
+            (change)="cambiarEstado()"
           >
             <option>Nuevo estado</option>
             <option *ngFor="let estados of estadosFire"

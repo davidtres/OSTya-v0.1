@@ -1,6 +1,8 @@
 <div class="text-center">
   <h2>ASIGNACION DE COORDENAS A CLIENTE</h2>
-  <h3 *ngIf="clienteFire.nombre">{{ clienteFire.nombre }}</h3>
+  <h3 *ngIf="clienteFire.nombre">
+    {{ clienteFire.nombre }} Sede : <b style="color: crimson">{{ sede }}</b>
+  </h3>
 </div>
 <!-- --------Mapa --------------- -->
 <div class="container card">
@@ -16,18 +18,17 @@
   <div class="container">
     <div class="form-row">
       <!-- Volver a calcular -->
-      <div class="form-group col-md-2">
+      <div class="form-group col-md-2 col-4">
         <button
           type="button"
           class="btn btn-warning"
           (click)="obtenetUbicacion()"
         >
-          Volver a calcular
+          Re calcular
         </button>
       </div>
       <!-- Aceptar -->
-      <div class="form-group col-md-2"></div>
-      <div class="form-group col-md-2">
+      <div class="form-group col-md-2 col-4">
         <button
           type="button"
           class="btn btn-primary"
@@ -38,7 +39,7 @@
         </button>
       </div>
       <!-- Cancelar -->
-      <div class="form-group col-md-2">
+      <div class="form-group col-md-2 col-4">
         <button type="button" class="btn btn-danger" (click)="cancelar()">
           Cancelar
         </button>
@@ -72,7 +73,7 @@
       </div>
       <div class="modal-body">
         Latitud: {{ lat }} y Longitud: {{ lng }} para el cliente
-        {{ clienteFire.nombre }}
+        {{ clienteFire.nombre }} <b>Sede: {{ sede }}</b>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-danger" data-dismiss="modal">

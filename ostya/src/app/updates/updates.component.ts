@@ -3,7 +3,6 @@ import { FormGroup, FormControl, Validators } from "@angular/forms";
 import { FirebaseService } from "../services/firebase.service";
 import { ActivatedRoute, Router } from "@angular/router";
 import { AuthenticationService } from "../services/authentication.service";
-import { MenuComponent } from "../menu/menu.component";
 
 @Component({
   selector: "app-updates",
@@ -54,7 +53,10 @@ export class UpdatesComponent implements OnInit {
   lat: number;
   lng: number;
   distance: any = 0;
-  userFire: unknown[];
+  userFire: any[];
+  asignadoActual: string;
+  lngFire: any;
+  latFire: any;
   constructor(
     private firebaseService: FirebaseService,
     private route: ActivatedRoute,
@@ -76,6 +78,7 @@ export class UpdatesComponent implements OnInit {
       .valueChanges()
       .subscribe(orden => {
         this.ordenFire = orden;
+        this.asignadoActual = this.ordenFire.tecnicoAsignado;
         //actualiza variable a guardar con los datos de la orden actual
         this.update.orden = this.ordenFire.id;
         this.update.usuario = this.ordenFire.tecnicoAsignado;
@@ -118,12 +121,18 @@ export class UpdatesComponent implements OnInit {
       .valueChanges()
       .subscribe(cliente => {
         this.clienteFire = cliente;
-        // console.log(this.clienteFire);
-        if (this.clienteFire.coordenadas[0] == 0) {
-          this.sinCoordenadas = true;
-          // console.log("no tiene coordenadas ");
-        } else {
-          this.obtenetUbicacion();
+        console.log(this.clienteFire);
+
+        for (let i = 0; i < this.clienteFire.direcciones.length; i++) {
+          if (this.clienteFire.direcciones[i].sede == this.ordenFire.sede) {
+            this.latFire = this.clienteFire.direcciones[i].lat;
+            this.lngFire = this.clienteFire.direcciones[i].lng;
+            if (!this.clienteFire.direcciones[i].lat) {
+              this.sinCoordenadas = true;
+            } else {
+              this.obtenetUbicacion();
+            }
+          }
         }
       });
   }
@@ -144,7 +153,7 @@ export class UpdatesComponent implements OnInit {
       setTimeout(() => {
         this.salirSitio();
         this.spinner = false;
-        this.ruta.navigate(["/listar-ordenes"]);
+        this.ruta.navigate(["/home"]);
       }, 2000);
     }
   }
@@ -157,9 +166,6 @@ export class UpdatesComponent implements OnInit {
       this.firebaseService.guardarAgendaHfecha(this.agendaFire);
       this.firebaseService.EliminarAgenda(this.agendaFire);
     }
-  }
-  setCoordenadas() {
-    this.ruta.navigate(["/set-coordenadas/" + this.ordenFire.idCliente]);
   }
   obtenetUbicacion() {
     let startPos;
@@ -183,8 +189,8 @@ export class UpdatesComponent implements OnInit {
       this.distance = this.getKilometros(
         this.lat,
         this.lng,
-        this.clienteFire.coordenadas[0],
-        this.clienteFire.coordenadas[1]
+        this.latFire,
+        this.lngFire
       );
       // console.log(this.distance);
     }, 500);
@@ -208,33 +214,32 @@ export class UpdatesComponent implements OnInit {
     return d.toFixed(0); //Retorna tres decimales
   }
   enSitio() {
-    if (this.clienteFire.coordenadas[0] == 0) {
-      this.sinCoordenadas = true;
-      // console.log("no tiene coordenadas ");
-    } else {
-      this.agendaFire.coordenadas = [this.lat, this.lng];
-      this.agendaFire.estado = "En sitio";
-      this.agendaFire.startOk = Date.now();
-      let fechaHoy = new Date(Date.now());
-      this.update = {
-        update:
-          "Reporte en sitio : " +
-          fechaHoy.toUTCString() +
-          ", tecnico: " +
-          this.ordenFire.tecnicoAsignado,
-        estado: "En sitio",
-        usuario: "Sistema",
-        orden: this.update.orden,
-        fecha: Date.now()
-      };
-      this.ordenFire.estado = this.update.estado;
-      this.ordenFire.enTriage = false;
-      this.firebaseService.ActOrdenAgendada(this.ordenFire);
-      this.firebaseService.guardarUpdates(this.update);
-      this.firebaseService.guardarAgenda(this.agendaFire);
-      // console.log(this.agendaFire);
-      this.ruta.navigate(["/home"]);
-    }
+    // if (this.clienteFire.coordenadas[0] == 0) {
+    //   this.sinCoordenadas = true;
+    //   // console.log("no tiene coordenadas ");
+    // } else {
+    this.agendaFire.coordenadas = [this.lat, this.lng];
+    this.agendaFire.estado = "En sitio";
+    this.agendaFire.startOk = Date.now();
+    let fechaHoy = new Date(Date.now());
+    this.update = {
+      update:
+        "Reporte en sitio : " +
+        fechaHoy.toUTCString() +
+        ", tecnico: " +
+        this.ordenFire.tecnicoAsignado,
+      estado: "En sitio",
+      usuario: "Sistema",
+      orden: this.update.orden,
+      fecha: Date.now()
+    };
+    this.ordenFire.estado = this.update.estado;
+    this.ordenFire.enTriage = false;
+    this.firebaseService.ActOrdenAgendada(this.ordenFire);
+    this.firebaseService.guardarUpdates(this.update);
+    this.firebaseService.guardarAgenda(this.agendaFire);
+    // console.log(this.agendaFire);
+    this.ruta.navigate(["/home"]);
   }
   Nota: string;
   addNota() {
@@ -249,6 +254,24 @@ export class UpdatesComponent implements OnInit {
     this.firebaseService.ActOrdenEstado(this.ordenFire);
     this.Nota = "";
     location.reload();
+  }
+
+  cambiarEstado() {
+    for (let i = 0; i < this.estadosFire.length; i++) {
+      if (this.estadosFire[i].nombre == this.update.estado) {
+        if (this.estadosFire[i].asignado == "Queda igual") {
+          this.ordenFire.tecnicoAsignado = this.asignadoActual;
+        } else {
+          this.ordenFire.tecnicoAsignado = this.estadosFire[i].asignado;
+        }
+        if (this.estadosFire[i].solucionado == true) {
+          this.ordenFire.solucionador = this.asignadoActual;
+        } else {
+          this.ordenFire.solucionador = "";
+        }
+      }
+    }
+    console.log(this.ordenFire);
   }
   cerrarOrden() {
     let estados = this.estadoQueCierran;

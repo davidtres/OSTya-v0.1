@@ -2,12 +2,34 @@
 <div class="container">
   <h3>CLIENTES ACTUALES</h3>
   <ul class="list-group">
-    <ng-container *ngFor="let cliente of clientesfire; let i = index">
-      <a routerLink="/actualizar-cliente/{{ cliente.id }}"
-        ><li class="list-group-item" [ngClass]="{ numero_par: (i + 1) % 2 }">
-          {{ cliente.nombre }}
-        </li></a
-      >
+    <ng-container>
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th scope="col">CLIENTE</th>
+            <th scope="col">CORREO</th>
+            <th scope="col">TELEFONO</th>
+            <th scope="col">CELULAR</th>
+          </tr>
+        </thead>
+        <tbody
+          *ngFor="
+            let cliente of clientesfire | sortfield: 'nombre';
+            let i = index
+          "
+        >
+          <tr>
+            <td>
+              <a routerLink="/actualizar-cliente/{{ cliente.id }}">
+                {{ cliente.nombre }}
+              </a>
+            </td>
+            <td>{{ cliente.correo }}</td>
+            <td>{{ cliente.telefono }}</td>
+            <td>{{ cliente.celular }}</td>
+          </tr>
+        </tbody>
+      </table>
     </ng-container>
   </ul>
 </div>
