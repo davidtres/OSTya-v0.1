@@ -1,3 +1,4 @@
+
 <br />
 <div id="inicio" class="container card">
   <div class=" text-center ">
@@ -61,6 +62,11 @@
         <a class="btn btn-primary" routerLink="/programacion/{{ ordenFire.id }}"
           >Agendar</a
         >
+      </div>
+      <!-- ------------------Boton Imprimir Orden------------------ -->
+      <div class=" form-group col-md-2 col-4">
+
+        <a (click)="imprimir()" class="btn btn-warning" > Imprimir</a>
       </div>
       <!-- -----------Aviso no tiene agenda--------------- -->
       <div class="form-group col-md-6 col-6" *ngIf="!agendaFire">

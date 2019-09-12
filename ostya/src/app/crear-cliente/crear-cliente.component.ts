@@ -180,7 +180,10 @@ export class CrearClienteComponent implements OnInit {
         Validators.required,
         Validators.minLength(10)
       ]),
-      Tel: new FormControl(this.cliente.telefono, []),
+      Tel: new FormControl(this.cliente.telefono, [
+        Validators.required,
+        Validators.minLength(1)
+      ]),
       Contact: new FormControl(this.cliente.contacto, []),
       Tipo: new FormControl(this.cliente.tipo, [Validators.required]),
       Lat: new FormControl(this.newDireccion.lat, []),

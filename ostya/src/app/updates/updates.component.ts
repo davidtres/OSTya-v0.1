@@ -3,7 +3,8 @@ import { FormGroup, FormControl, Validators } from "@angular/forms";
 import { FirebaseService } from "../services/firebase.service";
 import { ActivatedRoute, Router } from "@angular/router";
 import { AuthenticationService } from "../services/authentication.service";
-
+import * as jsPDF from "jspdf";
+import { ToolsService } from "../services/tools.service";
 @Component({
   selector: "app-updates",
   templateUrl: "./updates.component.html",
@@ -61,7 +62,8 @@ export class UpdatesComponent implements OnInit {
     private firebaseService: FirebaseService,
     private route: ActivatedRoute,
     private ruta: Router,
-    private authenticationService: AuthenticationService
+    private authenticationService: AuthenticationService,
+    private tools: ToolsService
   ) {
     this.ordenGet.id = this.route.snapshot.params["id"]; //Recupera parametro id de url
     this.agendaGet.id = this.route.snapshot.params["id"]; //Recupera parametro id de url
@@ -127,6 +129,9 @@ export class UpdatesComponent implements OnInit {
           if (this.clienteFire.direcciones[i].sede == this.ordenFire.sede) {
             this.latFire = this.clienteFire.direcciones[i].lat;
             this.lngFire = this.clienteFire.direcciones[i].lng;
+            this.ordenFire.direccion = this.clienteFire.direcciones[
+              i
+            ].direccion;
             if (!this.clienteFire.direcciones[i].lat) {
               this.sinCoordenadas = true;
             } else {
@@ -309,5 +314,143 @@ export class UpdatesComponent implements OnInit {
     this.formGroupNota = new FormGroup({
       nota: new FormControl(this.update.estado, [Validators.required])
     });
+  }
+  imprimir() {
+    // Conversion de fecha de solicitud
+    let fch = new Date(this.ordenFire.fechaSolicitud);
+    let fechaSolicitud = this.tools.convFecha(fch);
+    // variables calculo de espacios en parrafos
+    const pageWidth = 200,
+      lineHeight = 1.2,
+      mg = 10,
+      maxLineWidth = pageWidth - mg * 2,
+      fontSize = 12,
+      ptsPerInch = 72 / 25.6,
+      oneLineHeight = (fontSize * lineHeight) / ptsPerInch,
+      doc = new jsPDF({
+        lineHeight: lineHeight
+      }).setProperties({ title: "Orden " + this.ordenFire.id });
+    // inicio de formato
+    doc.line(10, 10, 200, 10);
+    doc.setFontSize(18);
+    doc.text("HARDSOFT COMPUTERS S.A.S", 150, 18, null, null, "center");
+    doc.setFontSize(11);
+    doc.text(
+      "Calle 30 #64-105, Cartagena - Colombia.\n (5) 678 5089, 317 855 4109,  317 6818136.\n serviciotecnico@hardsoftcomputers.com.co ",
+      150,
+      25,
+      null,
+      null,
+      "center"
+    );
+    doc.line(10, 37, 200, 37);
+    let img = new Image();
+    img.src = "assets/img/hsc.jpg";
+    doc.addImage(img, "png", 10, 18);
+    doc.setFontSize(18);
+    doc.text(
+      "ORDEN DE TRABAJO N°" + this.ordenFire.id,
+      100,
+      44,
+      null,
+      null,
+      "center"
+    );
+    // ------------DATOS DEL CLIENTE-------------
+    doc.setDrawColor(0);
+    doc.setFillColor(220, 220, 220);
+    doc.rect(10, 45, 190, 18, "F");
+    doc.line(10, 45, 200, 45);
+    doc.setFontSize(12);
+    doc.setFontStyle("bold");
+    doc.text(
+      "CLIENTE: " +
+        this.ordenFire.cliente +
+        "  -  SEDE: " +
+        this.ordenFire.sede,
+      10,
+      50
+    );
+    doc.setFontStyle("normal");
+    doc.text(
+      "DIRECCION: " +
+        this.ordenFire.direccion +
+        "\nTELEFONOS: " +
+        this.clienteFire.telefono +
+        " , " +
+        this.clienteFire.celular,
+      10,
+      56
+    );
+    doc.text("ESTADO: " + this.ordenFire.estado, 100, 68, null, null, "center");
+    doc.line(10, 70, 200, 70);
+    // -----------------DATOS DE LA SOLICITUD---------------
+    doc.setFontSize(11);
+    doc.text("Fecha Solicitud: " + fechaSolicitud, 10, 76);
+    doc.text("Tipo de Servicio: " + this.ordenFire.tipo, 100, 76);
+    doc.text("Asignado a: " + this.ordenFire.tecnicoAsignado, 10, 82);
+    // ------------------------------------------
+    // SERVICIO SOLICITADO
+    // ------------------------------------------
+    doc.setFontStyle("bold");
+    doc.text("Solicitud: ", 10, 90);
+    doc.setFontStyle("normal");
+    let solicitudTxt = doc.splitTextToSize(this.ordenFire.solicitud, 175);
+    doc.text(solicitudTxt, 30, 90);
+    let txtHg: number =
+      (solicitudTxt.length * fontSize * lineHeight) / ptsPerInch + 90;
+    // ------------------------------------------
+    // NOTAS ADICIONALES
+    // ------------------------------------------
+    doc.setFontStyle("bold");
+    doc.text("Notas : ", 10, txtHg);
+    doc.setFontStyle("normal");
+    let notasTxt = doc.splitTextToSize(this.ordenFire.nota, 175);
+    doc.text(notasTxt, 30, txtHg);
+    txtHg = (notasTxt.length * fontSize * lineHeight) / ptsPerInch + txtHg;
+    doc.line(10, txtHg - 2, 200, txtHg - 2);
+    // ------------------------------------------
+    // ACTUALIZACIONES DE LA ORDEN
+    // ------------------------------------------
+    txtHg = txtHg + 6;
+    doc.setFontSize(12);
+    doc.setFontStyle("bold");
+    doc.text("ACTUALIZACIONES", 100, txtHg, null, null, "center");
+    txtHg = txtHg + 5;
+    doc.setFontStyle("normal");
+    doc.setFontSize(10);
+    this.updateFire.forEach((update, i) => {
+      if (update[1].usuario != "Sistema") {
+        let fchUpd = new Date(update[1].fecha);
+        let fechaUpdate = this.tools.convFecha(fchUpd);
+        doc.text("Fecha : " + fechaUpdate, 10, txtHg);
+        // -------------Txt actualizacion---------------
+        let actualizacionesTxt = doc.splitTextToSize(
+          update[1].update +
+            " - " +
+            update[1].usuario +
+            " - " +
+            update[1].estado +
+            ".",
+          175
+        );
+        doc.text(actualizacionesTxt, 15, txtHg + 6);
+        txtHg =
+          txtHg +
+          6 +
+          (actualizacionesTxt.length * fontSize * lineHeight) / ptsPerInch;
+      }
+    });
+    // -------------------FINAL-------------------------------
+    doc.line(130, 264, 180, 264);
+    doc.text("Firma Cliente ", 145, 267);
+    doc.text(
+      "Cliente recibe a satisfaccion los trabajos descritos en el presente informe. ",
+      10,
+      267
+    );
+
+    let orden = "Orden " + this.ordenFire.id;
+    doc.save(orden);
   }
 }

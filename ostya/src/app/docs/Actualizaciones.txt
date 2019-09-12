@@ -1,10 +1,18 @@
+v.1.04.00 - 11/09/2019
+  *Nueva funcionalidades*
+    *Impresion orden en Pdf*
+      + Se imprime desde la ventana de Actualizaciones, solo muestra las actualizaciones del usuario
+      + No muestra actualizaciones del sistema como: Creado, Programado, En sitio, reprogramado.
+    *Correcciones*
+      + Se cambió vista del mes por defecto de la agenda en el home. 
+-----------------------------------------------------------
 v.1.03.00 - 09/09/2019
   Nueva funcionalidades
     * Multiples sedes para un cliente*
       + Permite crear todas las sedes del cliente y hacer proceso de asignacion de 
         coordenadas en caso de no encontrarla en google.
       + Al crear la orden, se debe selccionar la sede respectiva.
-
+-----------------------------------------------------------
 v. 1.02.00 - 07/09/2019
  
     <b>*Nueva funcionalidades*</b>
