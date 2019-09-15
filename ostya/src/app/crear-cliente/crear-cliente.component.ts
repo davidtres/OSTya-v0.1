@@ -153,7 +153,9 @@ export class CrearClienteComponent implements OnInit {
     }
   }
   pasarAgoogle() {
+    this.cliente.nombre = this.cliente.nombre.trim();
     this.buscarDir = this.cliente.nombre;
+    console.log(this.cliente.nombre);
   }
 
   ngOnInit() {

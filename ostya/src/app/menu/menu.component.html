@@ -62,13 +62,6 @@
         </a>
         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
           <a class="dropdown-item" routerLink="/crear-orden/new">Crear Orden</a>
-          <div class="dropdown-divider"></div>
-          <!-- <a class="dropdown-item" routerLink="/listar-ordenes"
-            >Listar Ordenes</a
-          >
-          <a class="dropdown-item" routerLink="/cola-tecnico"
-            >Cola Usuario Actual</a
-          > -->
         </div>
       </li>
       <!-- -----------Menu agenda--------------- -->
@@ -92,6 +85,25 @@
             >Agenda x tecnico
           </a>
           <a class="dropdown-item" routerLink="/agenda-orden">Agenda x orden</a>
+        </div>
+      </li>
+      <!-- MENU REPORTES -->
+      <li class="nav-item dropdown ">
+        <a
+          class="nav-link dropdown-toggle badge-light"
+          href="#"
+          id="navbarDropdown"
+          role="button"
+          data-toggle="dropdown"
+          aria-haspopup="true"
+          aria-expanded="false"
+        >
+          REPORTES
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+          <a class="dropdown-item" routerLink="/reporte-ordenes"
+            >Reportes Ordenes</a
+          >
         </div>
       </li>
       <!-- MENU CONFIGURACION -->
@@ -127,7 +139,7 @@
     <!-- -------------Version ------------------ -->
     <div class="row align-items-center">
       <div class="col" style="margin-right: 3px">
-        <a [routerLink]="['/versiones']">v.1.04.00</a>
+        <a [routerLink]="['/versiones']">v.1.05.00</a>
       </div>
     </div>
 

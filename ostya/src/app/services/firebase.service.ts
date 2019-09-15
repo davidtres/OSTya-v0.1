@@ -173,6 +173,15 @@ export class FirebaseService {
       }
     });
   }
+  // -------------ordenes x fecha--------------------
+  public getOrdenesFecha(data) {
+    return this.afBD.list("orden/", ref =>
+      ref
+        .orderByChild("fechaSolicitud")
+        .startAt(data.desdeM)
+        .endAt(data.hastaM)
+    );
+  }
   /* --------------AGENDA---------------------*/
   public guardarAgenda(data) {
     this.afBD.database.ref("agenda/" + data.orden).set(data, function(error) {

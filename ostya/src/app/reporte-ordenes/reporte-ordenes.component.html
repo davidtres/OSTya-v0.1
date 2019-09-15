@@ -1,0 +1,145 @@
+<div class="container card">
+  <br />
+  <div class=" text-center">
+    <h5 class="alert alert-success">
+      REPORTE ORDENES
+    </h5>
+  </div>
+  <!-- --------------------Formulario -------------------- -->
+  <form
+    [formGroup]="formGroup"
+    (validSubmit)="buscarOrden()"
+    autocomplete="off"
+  >
+    <div class="form-row justify-content-md-center">
+      <!-- --------desde --------- -->
+      <div class="form-group col-md-3">
+        <label for="Long">Desde</label>
+        <input
+          type="date"
+          class="form-control"
+          (change)="validarFechas()"
+          formControlName="desde"
+          [(ngModel)]="busqueda.desde"
+        />
+      </div>
+      <!-- ----------hasta----------- -->
+      <div class="form-group col-md-3">
+        <label for="Long">Hasta</label>
+        <input
+          type="date"
+          (change)="validarFechas()"
+          class="form-control"
+          formControlName="hasta"
+          [(ngModel)]="busqueda.hasta"
+        />
+      </div>
+      <!-- ----------------Cliente-------------- -->
+      <div class="form-group col-md-3">
+        <label for="Long">Cliente</label>
+        <select
+          formControlName="cliente"
+          (change)="clienteFiltro()"
+          class="form-control"
+          [(ngModel)]="busqueda.cliente"
+        >
+          <option></option>
+          <option>TODOS</option>
+          <option *ngFor="let cliente of listCliente">{{ cliente }} </option>
+        </select>
+      </div>
+      <div class="form-group col-md-1"></div>
+    </div>
+    <div class="form-row justify-content-md-center">
+      <!-- -------------- Estado ------------------ -->
+      <div class="form-group col-md-3">
+        <label for="Long">Estado</label>
+        <select
+          formControlName="estado"
+          (change)="estadoFiltro()"
+          class="form-control"
+          [(ngModel)]="busqueda.estado"
+        >
+          <option></option>
+          <option>TODOS</option>
+          <option *ngFor="let estado of listEstado">{{ estado }} </option>
+        </select>
+      </div>
+      <!-- -------------- cerrada ------------------ -->
+      <div class="form-group col-md-3">
+        <label for="Long">Cerrada</label>
+        <select
+          formControlName="cerrada"
+          (change)="cerradaFiltro()"
+          class="form-control"
+          [(ngModel)]="busqueda.cerrada"
+        >
+          <option></option>
+          <option>TODOS</option>
+          <option>ABIERTAS</option>
+          <option>CERRADAS</option>
+        </select>
+      </div>
+      <!-- ---------Seleccion tecnico --- -->
+      <div class="form-group col-md-3">
+        <label for="Long">Usuario</label>
+        <select
+          formControlName="tecnico"
+          (change)="usuarioFiltro()"
+          class="form-control"
+          [(ngModel)]="busqueda.tecnico"
+        >
+          <option></option>
+          <option>TODOS</option>
+          <option *ngFor="let usuario of listUser">{{ usuario }} </option>
+        </select>
+      </div>
+      <!-- -------boton buscar ---------- -->
+      <div class="form-group col-md-1" style="margin-top: 32px">
+        <!-- <button type="submit" class="btn btn-primary">
+          Buscar
+        </button> -->
+      </div>
+    </div>
+
+    <!-- -------------------------Fin formulario---------------------- -->
+  </form>
+  <!-- ---------------------Inicio del reporte --------------------- -->
+  <div class="container" *ngIf="registros">
+    <h6>Registros: {{ registros }}</h6>
+  </div>
+  <ng-container *ngFor="let cliente of listCliente">
+    <br />
+    <h4>
+      <strong style="color:#004085">{{ cliente }} </strong>
+    </h4>
+    <table class="d table-bordered table-sm ">
+      <thead class="encabezado">
+        <tr>
+          <th id="orden" scope="col">Orden</th>
+          <th id="ingreso" scope="col">Ingreso</th>
+          <th id="cliente" scope="col">Asignado</th>
+          <th id="solicitud" scope="col">Solicitud</th>
+        </tr>
+      </thead>
+      <tbody *ngFor="let ordenes of ordenFilter; let i = index">
+        <tr *ngIf="ordenes.cliente == cliente && ordenes.id">
+          <td id="orden">
+            <a routerLink="/updates/{{ ordenes.id }}">{{ ordenes.id }}</a>
+          </td>
+          <td id="ingreso">
+            {{ ordenes.fechaSolicitud | date: "dd/MM/yyyy , hh:mm a" }}
+          </td>
+          <td id="cliente">{{ ordenes.tecnicoAsignado }}.</td>
+          <td id="solicitud">
+            {{ ordenes.solicitud }}
+            <span class="badge badge-pill badge-secondary">{{
+              ordenes.estado
+            }}</span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </ng-container>
+  <br /><br />
+</div>

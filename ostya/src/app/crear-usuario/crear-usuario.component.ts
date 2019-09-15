@@ -42,9 +42,10 @@ export class CrearUsuarioComponent implements OnInit {
     private route: ActivatedRoute,
     private ruta: Router,
     private authenticationService: AuthenticationService
-  ) {
+  ) {}
+  ngOnInit() {
     //Se guardan los clientes obtenidos de firebase
-    firebaseService
+    this.firebaseService
       .getUsuarios()
       .valueChanges()
       .subscribe(usuarios => {
@@ -55,20 +56,18 @@ export class CrearUsuarioComponent implements OnInit {
     // Condicional para saber si el cliente es new o trae ID en el paramtro
     if (this.id != "new") {
       this.registrado = true;
-      firebaseService
+      this.firebaseService
         .obtenerUsuario(this.id)
         .valueChanges()
         .subscribe(usuario => {
           this.usuarioObtenido = usuario;
-          //console.log(this.clienteObtenido);
+          console.log(this.usuarioObtenido);
           //this.cliente = this.clienteObtenido
           this.empleado = this.usuarioObtenido;
           this.obtenerIniciales();
         });
       this.registradoUsuario();
     }
-  }
-  ngOnInit() {
     this.buildForm();
   }
   registradoUsuario() {
@@ -176,6 +175,7 @@ export class CrearUsuarioComponent implements OnInit {
     //return console.log(this.cliente.fechaCreacion);
   }
   obtenerIniciales() {
+    this.empleado.nombre = this.empleado.nombre.trim();
     this.empleado.iniciales = "";
     let separador = " ", // un espacio en blanco
       arregloDeSubCadenas = this.empleado.nombre.split(separador); // SEPARA EL NOMBRE EN CADENAS INDIVIDUALES

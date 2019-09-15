@@ -450,7 +450,7 @@ export class UpdatesComponent implements OnInit {
       267
     );
 
-    let orden = "Orden " + this.ordenFire.id;
+    let orden = "Orden " + this.ordenFire.id + " - " + this.ordenFire.cliente;
     doc.save(orden);
   }
 }

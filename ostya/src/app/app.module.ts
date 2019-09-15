@@ -50,6 +50,7 @@ import { AuthenticationGuard } from "./services/authentication.guard";
 import { ColaTecnicoComponent } from "./cola-tecnico/cola-tecnico.component";
 import { SortfieldPipe } from "./pipes/sortfield.pipe";
 import { VersionesComponent } from "./versiones/versiones.component";
+import { ReporteOrdenesComponent } from "./reporte-ordenes/reporte-ordenes.component";
 
 const appRoutes: Routes = [
   { path: "", component: HomeComponent },
@@ -195,6 +196,10 @@ const appRoutes: Routes = [
   {
     path: "versiones",
     component: VersionesComponent
+  },
+  {
+    path: "reporte-ordenes",
+    component: ReporteOrdenesComponent
   }
 ];
 @NgModule({
@@ -230,7 +235,8 @@ const appRoutes: Routes = [
     SetCoordenadasComponent,
     ColaTecnicoComponent,
     SortfieldPipe,
-    VersionesComponent
+    VersionesComponent,
+    ReporteOrdenesComponent
   ],
   imports: [
     BrowserModule,
