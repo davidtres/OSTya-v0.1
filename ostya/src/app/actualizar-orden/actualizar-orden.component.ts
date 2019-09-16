@@ -26,7 +26,7 @@ export class ActualizarOrdenComponent implements OnInit {
       })
     );
   }
-
+  ancho = "50%";
   burcarUsuario() {
     this.firebaseService
       .getUserUid("s4gfjNUZMahpsHkf9UxHEobbynA2")

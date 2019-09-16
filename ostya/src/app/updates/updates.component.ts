@@ -420,6 +420,7 @@ export class UpdatesComponent implements OnInit {
     doc.setFontStyle("normal");
     doc.setFontSize(10);
     this.updateFire.forEach((update, i) => {
+      // debugger;
       if (update[1].usuario != "Sistema") {
         let fchUpd = new Date(update[1].fecha);
         let fechaUpdate = this.tools.convFecha(fchUpd);
@@ -451,6 +452,7 @@ export class UpdatesComponent implements OnInit {
     );
 
     let orden = "Orden " + this.ordenFire.id + " - " + this.ordenFire.cliente;
+    orden = orden.replace(/\./g, "");
     doc.save(orden);
   }
 }

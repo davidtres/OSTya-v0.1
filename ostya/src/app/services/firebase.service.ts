@@ -134,12 +134,23 @@ export class FirebaseService {
     );
   }
   /* --------------ORDENES---------------------*/
+  public guardarOrdenM(data) {
+    this.afBD.database.ref("orden/" + data.id).set(data, function(error) {
+      if (error) {
+        console.log(error);
+      } else {
+        alert("Guardado con exito");
+      }
+    });
+  }
   public getOrdenesAbiertas() {
     return this.afBD.list("orden/", ref =>
       ref.orderByChild("cerrada").equalTo(false)
     );
   }
-
+  public getOrdenesKey() {
+    return this.afBD.list("orden/", ref => ref.orderByKey());
+  }
   public getOrdenesEnTriage() {
     return this.afBD.list("orden/", ref =>
       ref.orderByChild("enTriage").equalTo(true)

@@ -1,0 +1,156 @@
+<br />
+<div class="col-md-6 offset-md-3 card">
+  <form
+    [formGroup]="formGroup"
+    (validSubmit)="guardarOrden()"
+    autocomplete="off"
+  >
+    <!-- -----------seleccion de encabezado a mostrar new o editar ------------  -->
+    <div class="form-row justify-content-md-center">
+      <ng-container *ngIf="orden.id == 'new'; then Crea; else Edita">
+      </ng-container>
+      <ng-template #Crea>
+        <div>
+          <h1>Crear Orden</h1>
+        </div>
+      </ng-template>
+      <ng-template #Edita>
+        <div>
+          <h1>Ingresar Orden</h1>
+        </div>
+      </ng-template>
+    </div>
+    <!-- ------------inicio del formulario --------------------- -->
+    <!-- -----------------N° de Orden ----------------- -->
+    <div class="form-row justify-content-md-center ">
+      <div class="form-group col-md-3 ">
+        <label for="idOrden">N° de Orden</label>
+
+        <input
+          type="number"
+          (blur)="validarId()"
+          class="form-control"
+          formControlName="Id"
+          [(ngModel)]="orden.id"
+          name="idOrden"
+        />
+      </div>
+      <div class="alert alert-danger" role="alert" *ngIf="existe">
+        <p>ORDEN YA EXISTE !!!!</p>
+      </div>
+    </div>
+    <!-- -----------------Fecha------------------ -->
+    <div class="form-row justify-content-md-center ">
+      <div class="form-group col-md-6">
+        <label for="fecha">Fecha Solicitud</label>
+        <input
+          type="date"
+          (change)="convFecha()"
+          class="form-control"
+          formControlName="fecha"
+          [(ngModel)]="fechaIngreso"
+        />
+      </div>
+    </div>
+    <!-- ------------Cliente----------- -->
+    <ng-container>
+      <div class="form-row justify-content-md-center ">
+        <div class="form-group col-md-10 ">
+          <label for="cliente">Cliente</label>
+          <select
+            formControlName="cliente"
+            class="form-control"
+            [(ngModel)]="orden.cliente"
+            name="cliente"
+            (change)="setIdCliente()"
+          >
+            <option>Seleccione cliente ... </option>
+            <option *ngFor="let clienteSelect of clientesfire"
+              >{{ clienteSelect.nombre }}
+            </option>
+          </select>
+        </div>
+      </div>
+    </ng-container>
+
+    <!-- ---------------Tipo de Servicio--------------- -->
+    <!-- <div class="form-row justify-content-md-center">
+      <div class="form-group col-md-10">
+        <label for="tiposerv">Tipo Servicio</label>
+        <select
+          formControlName="tiposerv"
+          class="form-control"
+          [(ngModel)]="orden.tipo"
+          name="tiposerv"
+        >
+          <option>Seleccione servicio ... </option>
+          <option *ngFor="let tipo of tipoOrden">{{ tipo.nombre }} </option>
+        </select>
+      </div>
+    </div> -->
+    <!-- ----------------Servicio Solicitado------------ -->
+    <div class="form-row justify-content-md-center">
+      <div class="form-group col-md-10">
+        <label for="servicio">Servicio Solicitado</label>
+        <textarea
+          rows="3"
+          class="form-control"
+          formControlName="servicio"
+          placeholder="Descripcion del servicio..."
+          [(ngModel)]="orden.solicitud"
+          name="servicio"
+        ></textarea>
+      </div>
+    </div>
+    <!-- --------------Comentarios----------------- -->
+    <div class="form-row justify-content-md-center">
+      <div class="form-group col-md-10">
+        <label for="comentarios">Comentarios Internos</label>
+        <textarea
+          rows="3"
+          class="form-control"
+          formControlName="comentarios"
+          placeholder="Comentarios adicionales"
+          [(ngModel)]="orden.nota"
+          name="comentarios"
+        ></textarea>
+      </div>
+    </div>
+    <!-- --------------Actualizacion----------------- -->
+    <div class="form-row justify-content-md-center">
+      <div class="form-group col-md-10">
+        <label for="comentarios">Actualizacion</label>
+        <textarea
+          rows="10"
+          class="form-control"
+          formControlName="update"
+          (change)="updateOrden()"
+          [(ngModel)]="update"
+          name="comentarios"
+        ></textarea>
+      </div>
+    </div>
+    <div class="form-row justify-content-md-center">
+      <div *ngIf="formGroup.status == 'VALID'">
+        <button type="submit" class="btn btn-primary">CREAR ORDEN</button>
+      </div>
+      <div *ngIf="formGroup.status == 'INVALID'">
+        <a class="btn btn-danger" routerLink="/home/">CANCELAR</a>
+      </div>
+      <div
+        style="padding-left: 35px"
+        class="d-flex align-items-center"
+        *ngIf="guardando == true"
+      >
+        <strong>Guardando...</strong>
+        <div
+          class="spinner-border ml-auto text-primary"
+          role="status"
+          aria-hidden="true"
+        ></div>
+      </div>
+    </div>
+    <br />
+  </form>
+</div>
+<br />

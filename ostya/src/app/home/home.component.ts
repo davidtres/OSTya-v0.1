@@ -25,12 +25,12 @@ export class HomeComponent implements OnInit {
   ) {}
 
   buscarOrden() {
-    if (this.orden > this.next[1] || this.orden < 0) {
-      alert("Orden no existe");
-      this.orden = "";
-    } else {
-      this.router.navigate(["updates/" + this.orden]);
-    }
+    // if (this.orden > this.next[1] || this.orden < 0) {
+    //   alert("Orden no existe");
+    //   this.orden = "";
+    // } else {
+    // }
+    this.router.navigate(["updates/" + this.orden]);
   }
   getStatus() {
     return new Promise((resolve, reject) => {

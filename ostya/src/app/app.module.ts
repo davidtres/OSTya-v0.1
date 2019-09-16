@@ -51,6 +51,7 @@ import { ColaTecnicoComponent } from "./cola-tecnico/cola-tecnico.component";
 import { SortfieldPipe } from "./pipes/sortfield.pipe";
 import { VersionesComponent } from "./versiones/versiones.component";
 import { ReporteOrdenesComponent } from "./reporte-ordenes/reporte-ordenes.component";
+import { OrdenManualComponent } from "./orden-manual/orden-manual.component";
 
 const appRoutes: Routes = [
   { path: "", component: HomeComponent },
@@ -75,8 +76,7 @@ const appRoutes: Routes = [
   },
   {
     path: "actualizar-orden",
-    component: ActualizarOrdenComponent,
-    canActivate: [AuthenticationGuard]
+    component: ActualizarOrdenComponent
   },
   {
     path: "crear-cliente/:id",
@@ -200,6 +200,10 @@ const appRoutes: Routes = [
   {
     path: "reporte-ordenes",
     component: ReporteOrdenesComponent
+  },
+  {
+    path: "orden-manual",
+    component: OrdenManualComponent
   }
 ];
 @NgModule({
@@ -236,7 +240,8 @@ const appRoutes: Routes = [
     ColaTecnicoComponent,
     SortfieldPipe,
     VersionesComponent,
-    ReporteOrdenesComponent
+    ReporteOrdenesComponent,
+    OrdenManualComponent
   ],
   imports: [
     BrowserModule,
