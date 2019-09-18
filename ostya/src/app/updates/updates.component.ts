@@ -58,6 +58,19 @@ export class UpdatesComponent implements OnInit {
   asignadoActual: string;
   lngFire: any;
   latFire: any;
+  Nota: string;
+  uidActual: any;
+  estadoQueCierran: any;
+  spinner = false;
+  noSistem = [];
+  saliendoSitio: boolean = false;
+  quality: any = {
+    LLT: [],
+    RES: [],
+    RSS: [],
+    userId: ""
+  };
+  qualityFire: any[];
   constructor(
     private firebaseService: FirebaseService,
     private route: ActivatedRoute,
@@ -73,6 +86,7 @@ export class UpdatesComponent implements OnInit {
       .valueChanges()
       .subscribe(agenda => {
         this.agendaFire = agenda;
+        this.quality.userId = this.agendaFire.userId;
       });
     //obtener orden por ID
     firebaseService
@@ -141,9 +155,7 @@ export class UpdatesComponent implements OnInit {
         }
       });
   }
-  estadoQueCierran: any;
-  spinner = false;
-  noSistem = [];
+
   guardarUpdates() {
     this.spinner = true;
     if (confirm("¿Desea actualizar la orden ?")) {
@@ -162,9 +174,9 @@ export class UpdatesComponent implements OnInit {
       }, 2000);
     }
   }
-  saliendoSitio: boolean = false;
   salirSitio() {
     if (this.saliendoSitio) {
+      this.rss();
       this.agendaFire.endOk = Date.now();
       this.firebaseService.guardarAgendaHTecnico(this.agendaFire);
       this.firebaseService.guardarAgendaHOrden(this.agendaFire);
@@ -243,10 +255,12 @@ export class UpdatesComponent implements OnInit {
     this.firebaseService.ActOrdenAgendada(this.ordenFire);
     this.firebaseService.guardarUpdates(this.update);
     this.firebaseService.guardarAgenda(this.agendaFire);
+    this.llt();
+    this.res();
     // console.log(this.agendaFire);
     this.ruta.navigate(["/home"]);
   }
-  Nota: string;
+
   addNota() {
     let hoy = new Date(Date.now());
     let fechaHoy =
@@ -260,7 +274,6 @@ export class UpdatesComponent implements OnInit {
     this.Nota = "";
     location.reload();
   }
-
   cambiarEstado() {
     for (let i = 0; i < this.estadosFire.length; i++) {
       if (this.estadosFire[i].nombre == this.update.estado) {
@@ -286,10 +299,9 @@ export class UpdatesComponent implements OnInit {
       }
     }
   }
-  uidActual: any;
+
   ngOnInit() {
     this.buildForm();
-
     this.authenticationService.getStatus().subscribe(status => {
       this.uidActual = status.uid;
       this.firebaseService
@@ -300,6 +312,22 @@ export class UpdatesComponent implements OnInit {
           console.log(this.userFire);
         });
     });
+    this.firebaseService
+      .getQuality(this.quality.userId)
+      .valueChanges()
+      .subscribe(quality => {
+        this.qualityFire = quality;
+        if (this.qualityFire[0].LLT) {
+          this.quality.LLT = this.qualityFire[0].LLT;
+        }
+        if (this.qualityFire[0].RES) {
+          this.quality.RES = this.qualityFire[0].RES;
+        }
+        if (this.qualityFire[0].RSS) {
+          this.quality.RSS = this.qualityFire[0].RSS;
+        }
+        console.log(this.quality);
+      });
   }
   private buildForm() {
     this.formGroup = new FormGroup({
@@ -454,5 +482,65 @@ export class UpdatesComponent implements OnInit {
     let orden = "Orden " + this.ordenFire.id + " - " + this.ordenFire.cliente;
     orden = orden.replace(/\./g, "");
     doc.save(orden);
+  }
+  // Valida llegada a tiempo - calificacion
+  llt() {
+    if (this.agendaFire.start < this.agendaFire.startOk) {
+      this.addQualityLlt(0);
+    } else {
+      this.addQualityLlt(1);
+    }
+  }
+   //Valida reporte en sitio - calificacion
+  res() {
+    if (this.distance < 200) {
+    this.addQualityRes(1)    
+    } else {
+      this.addQualityRes(0)    
+    
+    }
+
+  }
+  //Valida reporte salida de sitio - calificacion
+  rss() {
+    if (this.distance < 200) {
+      this.addQualityRss(1)
+    } else {
+      this.addQualityRss(0)
+    }
+  }
+  addQualityLlt(valor: number) {
+    if (this.quality.LLT.length == 30) {
+      this.quality.LLT.slice(-30, 1);
+      this.quality.LLT.push(valor);
+    } else {
+      this.quality.LLT.push(valor);
+    }
+  }
+  addQualityRes(valor: number) {
+    if (this.quality.RES.length == 30) {
+      this.quality.RES.slice(-30, 1);
+      this.quality.RES.push(valor);
+      this.subirQuality()
+    } else {
+      this.quality.RES.push(valor);
+      this.subirQuality()
+    }
+  }
+  addQualityRss(valor: number) {
+    if (this.quality.RSS.length == 30) {
+      this.quality.RSS.slice(-30, 1);
+      this.quality.RSS.push(valor);
+      this.subirQuality()
+    } else {
+      this.quality.RSS.push(valor);
+      this.subirQuality()
+    }
+  }
+
+ 
+  //Guarda calificacion asignada.
+  subirQuality() {
+    this.firebaseService.guardarQuality(this.quality);
   }
 }

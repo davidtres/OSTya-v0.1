@@ -54,6 +54,7 @@ export class CrearClienteComponent implements OnInit {
   id: any = null; //para capturar parametro
   clienteObtenido: any; //se guarda cliente filtrado por el paramtro
   results: Observable<any>;
+  spinner: boolean = false;
 
   constructor(
     private firebaseService: FirebaseService,
@@ -197,6 +198,7 @@ export class CrearClienteComponent implements OnInit {
 
   // funcion del boton "Crear cliente"
   guardarCliente() {
+    this.spinner = true;
     //Asignacion de fecha de creacion del cliente
     this.asignarFecha();
     // llamado al metodo "guardarCliente del servicio para comunicacion con firebase"

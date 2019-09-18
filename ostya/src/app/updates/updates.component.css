@@ -2,7 +2,7 @@ table .d {
   table-layout: fixed;
   width: 100%;
 }
-#fecha {
+#ingreso {
   width: 15%;
 }
 #usuario {
@@ -11,7 +11,9 @@ table .d {
 #update {
   width: 70%;
 }
-
+#bg-i {
+  display: none;
+}
 .encabezado {
   background-color: lightsteelblue;
 }
@@ -19,4 +21,7 @@ table .d {
   text-align: center;
 }
 @media (max-width: 575.98px) {
+  #bg-i {
+    display: inline;
+  }
 }

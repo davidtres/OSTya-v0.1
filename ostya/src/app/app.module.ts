@@ -52,6 +52,7 @@ import { SortfieldPipe } from "./pipes/sortfield.pipe";
 import { VersionesComponent } from "./versiones/versiones.component";
 import { ReporteOrdenesComponent } from "./reporte-ordenes/reporte-ordenes.component";
 import { OrdenManualComponent } from "./orden-manual/orden-manual.component";
+import { QualityComponent } from "./quality/quality.component";
 
 const appRoutes: Routes = [
   { path: "", component: HomeComponent },
@@ -204,6 +205,10 @@ const appRoutes: Routes = [
   {
     path: "orden-manual",
     component: OrdenManualComponent
+  },
+  {
+    path: "quality",
+    component: QualityComponent
   }
 ];
 @NgModule({
@@ -241,7 +246,8 @@ const appRoutes: Routes = [
     SortfieldPipe,
     VersionesComponent,
     ReporteOrdenesComponent,
-    OrdenManualComponent
+    OrdenManualComponent,
+    QualityComponent
   ],
   imports: [
     BrowserModule,

@@ -93,7 +93,7 @@
       <div class="form-group col-md-2">
         <label for="Tel">Telefono</label>
         <input
-          type="text"
+          type="number"
           class="form-control"
           formControlName="Tel"
           placeholder="Telefono"
@@ -104,7 +104,7 @@
       <div class="form-group col-md-2">
         <label for="Cel">Celular</label>
         <input
-          type="text"
+          type="number"
           class="form-control"
           formControlName="Cel"
           placeholder="Celular"
@@ -240,14 +240,26 @@
         </label>
       </div>
     </div>
-    <!-- ------------- Botones de guardar o Cancelar ---------- -->
-    <div *ngIf="formGroup.status == 'VALID'">
-      <button type="submit" class="btn btn-primary">Guardar Cliente</button>
+    <br />
+    <div class="form-row">
+      <!-- ------------- Botones de guardar o Cancelar ---------- -->
+      <div class="form-group col-md-2">
+        <div *ngIf="formGroup.status == 'VALID'">
+          <button type="submit" class="btn btn-primary">Guardar Cliente</button>
+        </div>
+        <div *ngIf="formGroup.status == 'INVALID'">
+          <a class="btn btn-danger" routerLink="/home/">Cancelar</a>
+        </div>
+      </div>
+      <!-- -------spinner----- -->
+      <div class="form-group col-md-4" *ngIf="spinner">
+        <div class="spinner-border text-primary" role="status">
+          <span class="sr-only"><b>Loading...</b> </span>
+        </div>
+      </div>
     </div>
   </form>
-  <div *ngIf="formGroup.status == 'INVALID'">
-    <a class="btn btn-danger" routerLink="/home/">Cancelar</a>
-  </div>
+
   <br />
 </div>
 <br />

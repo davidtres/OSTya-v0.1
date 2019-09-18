@@ -1,3 +1,20 @@
+*NUEVAS FUNCIONALIDADES*
+  *Calificaciones por agenda*
+    Con cada agendamiento el tecnico es calificado en 3 aspectos asi:
+      + *Llegada a tiempo* = Se compara hora de reporte en sitio Vs hora agendada.
+      + *Reporte en sitio* = Se califica reporte en sitio o fuera de el.
+      + *Reporte Salida de sitio* = Se valida que la actualizacion con salida de sitio se haga donde el cliente.
+
+  *Valor Calificaciones*
+    La Calificacion de una agenda al 100% implica los tres aspectos anteriores, discriminados así:
+      + *Llegada a tiempo* = 50%.
+      + *Reporte en sitio* = 20%.
+      + *Reporte salida de sitio* = 30%.
+    El promedio total de las 30 ultimas agenda, será la calificacion actual del tecnico. 
+*CORRECIONES*
+  - Se habilita boton "Re-programar" cuando la orden tiene agenda activa. 
+
+-----------------------------------------------------------
 v.1.05.00 - 15/09/2019
   *Nueva funcionalidades*
     *REPORTE DE ORDENES*

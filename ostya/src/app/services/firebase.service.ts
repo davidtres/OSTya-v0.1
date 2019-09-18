@@ -5,6 +5,7 @@ import { AngularFireDatabase } from "angularfire2/database";
 import { CrearClienteComponent } from "../crear-cliente/crear-cliente.component";
 import { createNodeAtIndex } from "@angular/core/src/render3/instructions";
 import { AuthenticationService } from "./authentication.service";
+import { database } from "firebase";
 
 @Injectable({
   providedIn: "root"
@@ -194,6 +195,20 @@ export class FirebaseService {
     );
   }
   /* --------------AGENDA---------------------*/
+  public guardarQuality(data) {
+    // Guarda la agenda definitiva para historico por tecnico
+    this.afBD.database
+      .ref("quality/" + data.userId + "/")
+      .set(data, function(error) {
+        if (error) {
+          console.log(error);
+        } else {
+        }
+      });
+  }
+  public getQuality(userId) {
+    return this.afBD.list("quality/" + userId);
+  }
   public guardarAgenda(data) {
     this.afBD.database.ref("agenda/" + data.orden).set(data, function(error) {
       if (error) {
@@ -202,6 +217,10 @@ export class FirebaseService {
       }
     });
   }
+  public getQualityAll() {
+    return this.afBD.list("quality/");
+  }
+
   public guardarAgendaHTecnico(data) {
     // Guarda la agenda definitiva para historico por tecnico
     this.afBD.database
