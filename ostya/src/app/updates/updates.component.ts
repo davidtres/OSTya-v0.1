@@ -5,6 +5,8 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { AuthenticationService } from "../services/authentication.service";
 import * as jsPDF from "jspdf";
 import { ToolsService } from "../services/tools.service";
+import { promise } from "protractor";
+import { reject } from "q";
 @Component({
   selector: "app-updates",
   templateUrl: "./updates.component.html",
@@ -65,12 +67,15 @@ export class UpdatesComponent implements OnInit {
   noSistem = [];
   saliendoSitio: boolean = false;
   quality: any = {
-    LLT: [],
-    RES: [],
-    RSS: [],
+    LLT: [1],
+    RES: [1],
+    RSS: [1],
     userId: ""
   };
-  qualityFire: any[];
+  qualityFire: any;
+  qualityGet: any = {
+    userId: 0
+  };
   constructor(
     private firebaseService: FirebaseService,
     private route: ActivatedRoute,
@@ -87,6 +92,7 @@ export class UpdatesComponent implements OnInit {
       .subscribe(agenda => {
         this.agendaFire = agenda;
         this.quality.userId = this.agendaFire.userId;
+        this.loadQuality();
       });
     //obtener orden por ID
     firebaseService
@@ -230,6 +236,7 @@ export class UpdatesComponent implements OnInit {
     let d = R * c;
     return d.toFixed(0); //Retorna tres decimales
   }
+  fechaHoy = this.tools.convFechaHora(new Date(Date.now()));
   enSitio() {
     // if (this.clienteFire.coordenadas[0] == 0) {
     //   this.sinCoordenadas = true;
@@ -238,11 +245,11 @@ export class UpdatesComponent implements OnInit {
     this.agendaFire.coordenadas = [this.lat, this.lng];
     this.agendaFire.estado = "En sitio";
     this.agendaFire.startOk = Date.now();
-    let fechaHoy = new Date(Date.now());
+
     this.update = {
       update:
         "Reporte en sitio : " +
-        fechaHoy.toUTCString() +
+        this.fechaHoy +
         ", tecnico: " +
         this.ordenFire.tecnicoAsignado,
       estado: "En sitio",
@@ -263,13 +270,7 @@ export class UpdatesComponent implements OnInit {
 
   addNota() {
     let hoy = new Date(Date.now());
-    let fechaHoy =
-      hoy.getDate() + "-" + (hoy.getMonth() + 1) + "-" + hoy.getFullYear();
-
-    let horaHoy = hoy.getHours() + ":" + hoy.getMinutes();
-    // console.log(this.Nota);
-    this.ordenFire.nota +=
-      "  <+> " + this.Nota + " ( " + fechaHoy + " - " + horaHoy + "). ";
+    this.ordenFire.nota += "  <+> " + this.Nota + " ( " + this.fechaHoy + "). ";
     this.firebaseService.ActOrdenEstado(this.ordenFire);
     this.Nota = "";
     location.reload();
@@ -299,6 +300,36 @@ export class UpdatesComponent implements OnInit {
       }
     }
   }
+  getQuality() {
+    return new Promise((resolve, reject) => {
+      this.firebaseService
+        .getQuality(this.quality.userId)
+        .valueChanges()
+        .subscribe(quality => {
+          this.qualityFire = quality;
+          resolve(this.qualityFire);
+        });
+    });
+  }
+  loadQuality() {
+    this.getQuality().then(quality => {
+      console.log(this.qualityFire);
+      if (this.qualityFire) {
+        if (this.qualityFire.LLT) {
+          this.quality.LLT = this.qualityFire.LLT;
+          console.log(this.quality);
+        }
+        if (this.qualityFire.RES) {
+          this.quality.RES = this.qualityFire.RES;
+          console.log(this.quality);
+        }
+        if (this.qualityFire.RSS) {
+          this.quality.RSS = this.qualityFire.RSS;
+          console.log(this.quality);
+        }
+      }
+    });
+  }
 
   ngOnInit() {
     this.buildForm();
@@ -309,25 +340,9 @@ export class UpdatesComponent implements OnInit {
         .valueChanges()
         .subscribe(user => {
           this.userFire = user;
-          console.log(this.userFire);
+          // console.log(this.userFire);
         });
     });
-    this.firebaseService
-      .getQuality(this.quality.userId)
-      .valueChanges()
-      .subscribe(quality => {
-        this.qualityFire = quality;
-        if (this.qualityFire[0].LLT) {
-          this.quality.LLT = this.qualityFire[0].LLT;
-        }
-        if (this.qualityFire[0].RES) {
-          this.quality.RES = this.qualityFire[0].RES;
-        }
-        if (this.qualityFire[0].RSS) {
-          this.quality.RSS = this.qualityFire[0].RSS;
-        }
-        console.log(this.quality);
-      });
   }
   private buildForm() {
     this.formGroup = new FormGroup({
@@ -491,24 +506,23 @@ export class UpdatesComponent implements OnInit {
       this.addQualityLlt(1);
     }
   }
-   //Valida reporte en sitio - calificacion
+  //Valida reporte en sitio - envía la calificacion
   res() {
     if (this.distance < 200) {
-    this.addQualityRes(1)    
+      this.addQualityRes(1);
     } else {
-      this.addQualityRes(0)    
-    
+      this.addQualityRes(0);
     }
-
   }
-  //Valida reporte salida de sitio - calificacion
+  //Valida reporte salida de sitio - envía la calificacion
   rss() {
     if (this.distance < 200) {
-      this.addQualityRss(1)
+      this.addQualityRss(1);
     } else {
-      this.addQualityRss(0)
+      this.addQualityRss(0);
     }
   }
+  //agrega la calificacion al array y solicita guardar.
   addQualityLlt(valor: number) {
     if (this.quality.LLT.length == 30) {
       this.quality.LLT.slice(-30, 1);
@@ -517,28 +531,29 @@ export class UpdatesComponent implements OnInit {
       this.quality.LLT.push(valor);
     }
   }
+  //agrega la calificacion al array y solicita guardar.
   addQualityRes(valor: number) {
     if (this.quality.RES.length == 30) {
       this.quality.RES.slice(-30, 1);
       this.quality.RES.push(valor);
-      this.subirQuality()
+      this.subirQuality();
     } else {
       this.quality.RES.push(valor);
-      this.subirQuality()
+      this.subirQuality();
     }
   }
+  //agrega la calificacion al array y solicita guardar.
   addQualityRss(valor: number) {
     if (this.quality.RSS.length == 30) {
       this.quality.RSS.slice(-30, 1);
       this.quality.RSS.push(valor);
-      this.subirQuality()
+      this.subirQuality();
     } else {
       this.quality.RSS.push(valor);
-      this.subirQuality()
+      this.subirQuality();
     }
   }
 
- 
   //Guarda calificacion asignada.
   subirQuality() {
     this.firebaseService.guardarQuality(this.quality);

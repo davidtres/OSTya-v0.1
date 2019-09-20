@@ -11,6 +11,7 @@ import { FormGroup, FormControl, Validators } from "@angular/forms";
 import { Alert } from "selenium-webdriver";
 import { DatePipe } from "@angular/common";
 import { AuthenticationService } from "../services/authentication.service";
+import { ToolsService } from "../services/tools.service";
 
 @Component({
   selector: "app-programacion",
@@ -86,7 +87,8 @@ export class ProgramacionComponent implements OnInit {
   constructor(
     private firebaseService: FirebaseService,
     private route: ActivatedRoute,
-    private ruta: Router
+    private ruta: Router,
+    private tool: ToolsService
   ) {
     this.ordenGet.id = this.route.snapshot.params["id"]; //Recupera parametro id de url
     this.agendaGet.id = this.route.snapshot.params["id"]; //Recupera parametro id de url
@@ -384,12 +386,14 @@ export class ProgramacionComponent implements OnInit {
           if (this.logAgenda.orden != 0) {
             this.firebaseService.guardarLogAgenda(this.logAgenda);
           }
-          let startAgenda = new Date(this.agenda.start);
-          console.log(startAgenda.toDateString());
+          let startAgenda = this.tool.convFechaHora(
+            new Date(this.agenda.start)
+          );
+          // console.log(startAgenda.toDateString());
           this.update = {
             update:
-              "Orden Reprogramada para el dia : " +
-              startAgenda.toUTCString() +
+              "Orden agendada para el dia : " +
+              startAgenda +
               ", asistirá el tecnico: " +
               this.agenda.tecnico,
             estado: this.agenda.estado,

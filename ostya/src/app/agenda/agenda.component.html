@@ -65,3 +65,49 @@
   </div>
 </div>
 <br />
+<!-- ------------------------------Agenda para movil -------------------------- -->
+<!-- -------------------------------------------------------------------------- -->
+<div id="agendaMovil" class="container card">
+  <div style="text-align: center">
+    <h3 class="alert alert-primary">AGENDA POR USUARIO</h3>
+  </div>
+  <!-- ----------Seleccionar usuario ----------------- -->
+  <div class="form-row">
+    <div class="form-group col-md-8 text-center" style="margin-top: 10px;">
+      <div class="bg" *ngFor="let list of listUserColor">
+        <span
+          [ngStyle]="{ 'background-color': list.color, color: black }"
+          class="badge"
+          >{{ list.tecnico }}</span
+        >
+      </div>
+    </div>
+  </div>
+
+  <!-- -------------------Calendario------------------ -->
+  <div class="container card">
+    <br /><full-calendar
+      #calendar
+      defaultView="dayGridDay"
+      [header]="{
+        left: 'prev,next ',
+        center: 'title',
+        right: 'today'
+      }"
+      [locale]="idioma"
+      [buttonText]="{
+        today: 'Hoy',
+        month: 'Mes',
+        week: 'Semana',
+        day: 'Dia',
+        list: 'lista'
+      }"
+      [nowIndicator]="true"
+      [plugins]="calendarPlugins"
+      [(events)]="calendarEvents"
+      minTime="07:00:00"
+      maxTime="19:00:00"
+      (eventClick)="eventInfo($event)"
+    ></full-calendar>
+  </div>
+</div>

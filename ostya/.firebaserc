@@ -1,6 +1,7 @@
 {
   "projects": {
     "default": "ostya-7a75c",
-    "demoostya": "demoostya"
+    "demoostya": "demoostya",
+    "ostya-Hsc": "ostya-7a75c"
   }
 }

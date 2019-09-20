@@ -199,7 +199,7 @@ export class FirebaseService {
     // Guarda la agenda definitiva para historico por tecnico
     this.afBD.database
       .ref("quality/" + data.userId + "/")
-      .set(data, function(error) {
+      .update(data, function(error) {
         if (error) {
           console.log(error);
         } else {
@@ -207,7 +207,9 @@ export class FirebaseService {
       });
   }
   public getQuality(userId) {
-    return this.afBD.list("quality/" + userId);
+    console.log(userId);
+
+    return this.afBD.object("quality/" + userId);
   }
   public guardarAgenda(data) {
     this.afBD.database.ref("agenda/" + data.orden).set(data, function(error) {

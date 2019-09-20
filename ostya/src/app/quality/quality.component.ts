@@ -43,14 +43,19 @@ export class QualityComponent implements OnInit {
           let qRss = (qlt.RSS.reduce(reducer) / qlt.RSS.length) * 0.3 * 100;
           let qRes = (qlt.RES.reduce(reducer) / qlt.RES.length) * 0.2 * 100;
           let qltUser = {
-            User: user.nombre,
+            User: user.iniciales,
+            Color: user.color,
             LLT: Math.trunc(qLlt) + "%",
             RES: Math.trunc(qRes) + "%",
             RSS: Math.trunc(qRss) + "%",
-            TTL: Math.trunc(qLlt) + Math.trunc(qRss) + Math.trunc(qRes) + "%"
+            TTL: Math.trunc(qLlt) + Math.trunc(qRss) + Math.trunc(qRes) + "%",
+            TST:
+              (Math.trunc(qLlt) + Math.trunc(qRss) + Math.trunc(qRes)) / 10 / 2
           };
           this.quality.push(qltUser);
-          console.log(this.quality);
+          this.quality.sort(function(a, b) {
+            return b.TST - a.TST;
+          });
         }
       });
     });

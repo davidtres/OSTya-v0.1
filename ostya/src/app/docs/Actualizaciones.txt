@@ -11,9 +11,18 @@
       + *Reporte en sitio* = 20%.
       + *Reporte salida de sitio* = 30%.
     El promedio total de las 30 ultimas agenda, será la calificacion actual del tecnico. 
+
+  -----------------------------------------------------------
+v.1.05.01 - 19/09/2019
+*FUNCIONALIDADES*
+  + Se agrega formulario para ingresar ordenes de GST manualmente.
 *CORRECIONES*
   - Se habilita boton "Re-programar" cuando la orden tiene agenda activa. 
+  - Se corrige fecha errada en comentarios de usuario Sistema.
+  - Se coloca en el home de los moviles la agenda vertical.
+  - Al modificar un usuario, muestre rol asignado.  
 
+-----------------------------------------------------------
 -----------------------------------------------------------
 v.1.05.00 - 15/09/2019
   *Nueva funcionalidades*

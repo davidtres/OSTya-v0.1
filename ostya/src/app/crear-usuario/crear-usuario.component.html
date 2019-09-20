@@ -92,7 +92,7 @@
           [(ngModel)]="empleado.rol"
           name="Tipo"
         >
-          <option value="">Seleccionar...</option>
+          <option value="">{{ empleado.rol }}</option>
           <option *ngFor="let Rol of roles">{{ Rol }} </option>
         </select>
       </div>

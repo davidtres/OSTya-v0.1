@@ -13,15 +13,14 @@
 }
 /* ccs para icono iniciales */
 #pInicial {
-  padding: 8px;
+  padding: 6px;
   border-radius: 50%;
-  border: solid 1px darkgray;
-  width: 45px;
-  height: 45px;
+  width: 36px;
+  height: 36px;
   -webkit-text-stroke-width: medium;
 }
 #divInicial {
-  display: flex;
+  display: inline-grid;
   justify-content: center;
   align-items: center;
 }
@@ -42,6 +41,9 @@ table .d {
 #orden {
   text-align: center;
 }
+#agendaMovil {
+  display: none;
+}
 @media (max-width: 575.98px) {
   #ingreso {
     display: none;
@@ -61,5 +63,17 @@ table .d {
   }
   #agenda {
     display: none;
+  }
+  #agendaMovil {
+    display: block;
+  }
+  .fc-center {
+    font-size: x-small;
+  }
+  div h4 {
+    font-size: large;
+  }
+  div h3 {
+    font-size: large;
   }
 }
