@@ -53,6 +53,7 @@ import { VersionesComponent } from "./versiones/versiones.component";
 import { ReporteOrdenesComponent } from "./reporte-ordenes/reporte-ordenes.component";
 import { OrdenManualComponent } from "./orden-manual/orden-manual.component";
 import { QualityComponent } from "./quality/quality.component";
+import { QualityDetalleComponent } from "./quality-detalle/quality-detalle.component";
 
 const appRoutes: Routes = [
   { path: "", component: HomeComponent },
@@ -209,6 +210,10 @@ const appRoutes: Routes = [
   {
     path: "quality",
     component: QualityComponent
+  },
+  {
+    path: "quality-detalle/:id",
+    component: QualityDetalleComponent
   }
 ];
 @NgModule({
@@ -247,7 +252,8 @@ const appRoutes: Routes = [
     VersionesComponent,
     ReporteOrdenesComponent,
     OrdenManualComponent,
-    QualityComponent
+    QualityComponent,
+    QualityDetalleComponent
   ],
   imports: [
     BrowserModule,

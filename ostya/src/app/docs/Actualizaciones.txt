@@ -1,3 +1,8 @@
+v.1.06.01 - 22/09/2019
+*MEJORAS*
+  + Se agrega listado del detallado de calificaiones. Click en la puntuacion para acceder.
+---------------------------------------------------------
+v.1.06.00 - 20/09/2019
 *NUEVAS FUNCIONALIDADES*
   *Calificaciones por agenda*
     Con cada agendamiento el tecnico es calificado en 3 aspectos asi:

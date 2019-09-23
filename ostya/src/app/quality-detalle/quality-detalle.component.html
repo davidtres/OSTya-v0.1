@@ -1,0 +1,91 @@
+<br />
+<div class="container card">
+  <br />
+  <h3 class="text-center alert alert-primary">{{ qltParams.params.user }}</h3>
+  <div class="container">
+    <div class="progress">
+      <div
+        class="progress-bar"
+        role="progressbar"
+        [ngStyle]="{ width: qltParams.params.LLT }"
+      >
+        LLT {{ qltParams.params.LLT }}
+      </div>
+      <div
+        class="progress-bar bg-success"
+        role="progressbar"
+        [ngStyle]="{ width: qltParams.params.RES }"
+      >
+        RES {{ qltParams.params.RES }}
+      </div>
+      <div
+        class="progress-bar bg-warning"
+        role="progressbar"
+        [ngStyle]="{ width: qltParams.params.RSS }"
+      >
+        RSS {{ qltParams.params.RSS }}
+      </div>
+    </div>
+
+    {{ qltParams.params.TTL }}
+  </div>
+
+  <ng-container *ngFor="let orden of listOrden">
+    <table class="table">
+      <thead class="thead-light">
+        <tr>
+          <th scope="col">Ord: {{ orden }}</th>
+          <th scope="col">F. Prog</th>
+          <th scope="col">F. Lleg</th>
+          <th scope="col">Range</th>
+          <th scope="col">Point</th>
+        </tr>
+      </thead>
+      <tbody *ngFor="let qlt of qualityFire.LLT">
+        <tr *ngIf="qlt.orden == orden">
+          <th scope="row">LLT</th>
+          <td>{{ qlt.fhPro | date: "dd/MM/yyyy , hh:mm a" }}</td>
+          <td
+            [ngStyle]="{
+              color: qlt.fhPro > qlt.fhLle ? 'green' : 'red'
+            }"
+          >
+            {{ qlt.fhLle | date: "dd/MM/yyyy , hh:mm a" }}
+          </td>
+          <td>{{ qlt.distance }}mts</td>
+          <td>{{ qlt.calif }}</td>
+        </tr>
+      </tbody>
+      <tbody *ngFor="let qlt of qualityFire.RES">
+        <tr *ngIf="qlt.orden == orden">
+          <th scope="row">RES</th>
+          <td>{{ qlt.fhPro | date: "dd/MM/yyyy , hh:mm a" }}</td>
+          <td>{{ qlt.fhLle | date: "dd/MM/yyyy , hh:mm a" }}</td>
+          <td
+            [ngStyle]="{
+              color: qlt.distance < 200 ? 'green' : 'red'
+            }"
+          >
+            {{ qlt.distance }}mts
+          </td>
+          <td>{{ qlt.calif }}</td>
+        </tr>
+      </tbody>
+      <tbody *ngFor="let qlt of qualityFire.RSS">
+        <tr *ngIf="qlt.orden == orden">
+          <th scope="row">RSS</th>
+          <td>{{ qlt.fhPro | date: "dd/MM/yyyy , hh:mm a" }}</td>
+          <td>{{ qlt.fhLle | date: "dd/MM/yyyy , hh:mm a" }}</td>
+          <td
+            [ngStyle]="{
+              color: qlt.distance < 200 ? 'green' : 'red'
+            }"
+          >
+            {{ qlt.distance }}mts
+          </td>
+          <td>{{ qlt.calif }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </ng-container>
+</div>

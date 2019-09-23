@@ -8,3 +8,11 @@ Pasos para subir al Hosting
     3.3 Configurar como single_page app (Y)
     3.4 Reescribir index (N)
 4. firebase deploy 
+
+
+  // ----- CRITERIO DE NOTIFICACIONES  ------
+  // - NUEVO: Servicios ingresados las ultimas 24 horas.
+  // - ACTUALIZADO: Ultima actualizacion hace menos de 24h.
+  // - DESACTUALIZADO: Ultima actualizacion tiene mas de 3 dias y menos de 7 dias.
+  // - ANTIGUO: Ultima actualizacion tiene mas de 7 dias.
+  // - SIN NOTIFICACION: Está en periodo de ejecucion ultima actualizacion tiene menos de 3 dias y mas de 24h

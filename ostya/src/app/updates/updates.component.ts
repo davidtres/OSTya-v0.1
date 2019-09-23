@@ -67,9 +67,9 @@ export class UpdatesComponent implements OnInit {
   noSistem = [];
   saliendoSitio: boolean = false;
   quality: any = {
-    LLT: [1],
-    RES: [1],
-    RSS: [1],
+    LLT: [],
+    RES: [],
+    RSS: [],
     userId: ""
   };
   qualityFire: any;
@@ -300,36 +300,6 @@ export class UpdatesComponent implements OnInit {
       }
     }
   }
-  getQuality() {
-    return new Promise((resolve, reject) => {
-      this.firebaseService
-        .getQuality(this.quality.userId)
-        .valueChanges()
-        .subscribe(quality => {
-          this.qualityFire = quality;
-          resolve(this.qualityFire);
-        });
-    });
-  }
-  loadQuality() {
-    this.getQuality().then(quality => {
-      console.log(this.qualityFire);
-      if (this.qualityFire) {
-        if (this.qualityFire.LLT) {
-          this.quality.LLT = this.qualityFire.LLT;
-          console.log(this.quality);
-        }
-        if (this.qualityFire.RES) {
-          this.quality.RES = this.qualityFire.RES;
-          console.log(this.quality);
-        }
-        if (this.qualityFire.RSS) {
-          this.quality.RSS = this.qualityFire.RSS;
-          console.log(this.quality);
-        }
-      }
-    });
-  }
 
   ngOnInit() {
     this.buildForm();
@@ -498,6 +468,36 @@ export class UpdatesComponent implements OnInit {
     orden = orden.replace(/\./g, "");
     doc.save(orden);
   }
+  getQuality() {
+    return new Promise((resolve, reject) => {
+      this.firebaseService
+        .getQuality(this.quality.userId)
+        .valueChanges()
+        .subscribe(quality => {
+          this.qualityFire = quality;
+          resolve(this.qualityFire);
+        });
+    });
+  }
+  loadQuality() {
+    this.getQuality().then(quality => {
+      console.log(this.qualityFire);
+      if (this.qualityFire) {
+        if (this.qualityFire.LLT) {
+          this.quality.LLT = this.qualityFire.LLT;
+          console.log(this.quality);
+        }
+        if (this.qualityFire.RES) {
+          this.quality.RES = this.qualityFire.RES;
+          console.log(this.quality);
+        }
+        if (this.qualityFire.RSS) {
+          this.quality.RSS = this.qualityFire.RSS;
+          console.log(this.quality);
+        }
+      }
+    });
+  }
   // Valida llegada a tiempo - calificacion
   llt() {
     if (this.agendaFire.start < this.agendaFire.startOk) {
@@ -524,32 +524,56 @@ export class UpdatesComponent implements OnInit {
   }
   //agrega la calificacion al array y solicita guardar.
   addQualityLlt(valor: number) {
+    let data = {
+      user: this.agendaFire.userId,
+      orden: this.ordenFire.id,
+      fhPro: this.agendaFire.start,
+      fhLle: this.agendaFire.startOk,
+      distance: this.distance,
+      calif: valor
+    };
     if (this.quality.LLT.length == 30) {
       this.quality.LLT.slice(-30, 1);
-      this.quality.LLT.push(valor);
+      this.quality.LLT.push(data);
     } else {
-      this.quality.LLT.push(valor);
+      this.quality.LLT.push(data);
     }
   }
   //agrega la calificacion al array y solicita guardar.
   addQualityRes(valor: number) {
+    let data = {
+      user: this.agendaFire.userId,
+      orden: this.ordenFire.id,
+      fhPro: this.agendaFire.start,
+      fhLle: this.agendaFire.startOk,
+      distance: this.distance,
+      calif: valor
+    };
     if (this.quality.RES.length == 30) {
       this.quality.RES.slice(-30, 1);
-      this.quality.RES.push(valor);
+      this.quality.RES.push(data);
       this.subirQuality();
     } else {
-      this.quality.RES.push(valor);
+      this.quality.RES.push(data);
       this.subirQuality();
     }
   }
   //agrega la calificacion al array y solicita guardar.
   addQualityRss(valor: number) {
+    let data = {
+      user: this.agendaFire.userId,
+      orden: this.ordenFire.id,
+      fhPro: this.agendaFire.start,
+      fhLle: this.agendaFire.startOk,
+      distance: this.distance,
+      calif: valor
+    };
     if (this.quality.RSS.length == 30) {
       this.quality.RSS.slice(-30, 1);
-      this.quality.RSS.push(valor);
+      this.quality.RSS.push(data);
       this.subirQuality();
     } else {
-      this.quality.RSS.push(valor);
+      this.quality.RSS.push(data);
       this.subirQuality();
     }
   }

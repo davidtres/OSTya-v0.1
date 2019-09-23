@@ -50,7 +50,7 @@
           class="form-control"
           formControlName="Dir"
           placeholder="Direccion"
-          [(ngModel)]="empleado.direcciones[0]"
+          [(ngModel)]="empleado.direccion"
           name="Dir"
         />
       </div>
@@ -92,8 +92,8 @@
           [(ngModel)]="empleado.rol"
           name="Tipo"
         >
-          <option value="">{{ empleado.rol }}</option>
           <option *ngFor="let Rol of roles">{{ Rol }} </option>
+          <option value="">{{ empleado.rol }}</option>
         </select>
       </div>
     </div>

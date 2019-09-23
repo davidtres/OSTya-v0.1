@@ -8,7 +8,7 @@ import { FirebaseService } from "../services/firebase.service";
 })
 export class QualityComponent implements OnInit {
   quality: any[] = [];
-  qualityFire: any[];
+  qualityFire: any;
   success: boolean;
   warning: boolean;
   danger: boolean;
@@ -21,7 +21,6 @@ export class QualityComponent implements OnInit {
       .valueChanges()
       .subscribe(users => {
         this.userFire = users;
-        console.log(this.userFire);
         this.firebaseService
           .getQualityAll()
           .valueChanges()
@@ -34,15 +33,57 @@ export class QualityComponent implements OnInit {
 
   loadQuality() {
     this.quality = [];
-    this.qualityFire.forEach((qlt: any, q) => {
-      this.userFire.forEach((user, u) => {
+    this.qualityFire.forEach((qlt: any, i) => {
+      this.userFire.forEach(user => {
         if (user.id == qlt.userId) {
+          let calLLT = this.qualityFire
+            .filter(q => {
+              return q.userId == qlt.userId;
+            })
+            .map(cal => {
+              return cal.LLT;
+            })
+            .reduce(function(accumulator, currentValue) {
+              return accumulator.concat(currentValue);
+            })
+            .map(cal2 => {
+              return cal2.calif;
+            });
+
+          let calRES = this.qualityFire
+            .filter(q => {
+              return q.userId == qlt.userId;
+            })
+            .map(cal => {
+              return cal.RES;
+            })
+            .reduce(function(accumulator, currentValue) {
+              return accumulator.concat(currentValue);
+            })
+            .map(cal2 => {
+              return cal2.calif;
+            });
+          let calRSS = this.qualityFire
+            .filter(q => {
+              return q.userId == qlt.userId;
+            })
+            .map(cal => {
+              return cal.RSS;
+            })
+            .reduce(function(accumulator, currentValue) {
+              return accumulator.concat(currentValue);
+            })
+            .map(cal2 => {
+              return cal2.calif;
+            });
           const reducer = (accumulator, currentValue) =>
             accumulator + currentValue;
-          let qLlt = (qlt.LLT.reduce(reducer) / qlt.LLT.length) * 0.5 * 100;
-          let qRss = (qlt.RSS.reduce(reducer) / qlt.RSS.length) * 0.3 * 100;
-          let qRes = (qlt.RES.reduce(reducer) / qlt.RES.length) * 0.2 * 100;
+          let qLlt = (calLLT.reduce(reducer) / qlt.LLT.length) * 0.5 * 100;
+          let qRss = (calRSS.reduce(reducer) / qlt.RSS.length) * 0.3 * 100;
+          let qRes = (calRES.reduce(reducer) / qlt.RES.length) * 0.2 * 100;
           let qltUser = {
+            userId: user.id,
+            user: user.nombre,
             User: user.iniciales,
             Color: user.color,
             LLT: Math.trunc(qLlt) + "%",
@@ -59,5 +100,6 @@ export class QualityComponent implements OnInit {
         }
       });
     });
+    console.log(this.quality);
   }
 }

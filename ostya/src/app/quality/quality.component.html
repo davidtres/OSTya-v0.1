@@ -19,10 +19,20 @@
           ></div>
         </div>
       </div>
-      {{ q.TST }}
+      <a
+        routerLink="/quality-detalle/{{ q.userId }}"
+        [queryParams]="{
+          user: q.user,
+          LLT: q.LLT,
+          RES: q.RES,
+          RSS: q.RSS,
+          TTL: q.TTL
+        }"
+        >{{ q.TST }}</a
+      >
     </li>
   </ul>
-
+  <i class="fas fa-camera fa-3x"></i>
   <a class="attribution" href="http://fontawesome.io/"
     ><i class="fa fa-font-awesome"></i> fontawesome.io</a
   >
