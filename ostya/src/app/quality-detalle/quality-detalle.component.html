@@ -34,9 +34,11 @@
     <table class="table">
       <thead class="thead-light">
         <tr>
-          <th scope="col">Ord: {{ orden }}</th>
+          <th scope="col">
+            <a routerLink="/updates/{{ orden }}">Ord: {{ orden }}</a>
+          </th>
           <th scope="col">F. Prog</th>
-          <th scope="col">F. Lleg</th>
+          <th scope="col">F. Lleg / Sal</th>
           <th scope="col">Range</th>
           <th scope="col">Point</th>
         </tr>

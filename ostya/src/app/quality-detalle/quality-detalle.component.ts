@@ -27,7 +27,6 @@ export class QualityDetalleComponent implements OnInit {
     // this.user = this.route.snapshot.queryParams["user"];
     this.route.queryParamMap.subscribe(params => {
       this.qltParams = { ...params.keys, ...params };
-      console.log(this.qltParams);
     });
 
     this.firebaseService
@@ -35,7 +34,6 @@ export class QualityDetalleComponent implements OnInit {
       .valueChanges()
       .subscribe(quality => {
         this.qualityFire = quality;
-        console.log(this.qualityFire);
         this.qualityFire.LLT.forEach(qlt => {
           if (!this.listOrden.includes(qlt.orden)) {
             this.listOrden.push(qlt.orden);

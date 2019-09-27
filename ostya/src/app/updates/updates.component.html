@@ -30,6 +30,9 @@
         </td>
         <td>
           {{ ordenFire.solicitud }}
+          <span *ngIf="agendaFire" class="badge  badge-secondary">{{
+            ordenFire.tipo
+          }}</span>
           <span
             *ngIf="agendaFire"
             [ngStyle]="{ 'background-color': agendaFire.color }"
@@ -51,6 +54,7 @@
   </div>
   <hr />
   <!-- ----------------botones de opciones -------------- -->
+  <!-- -------Seleccion Boton agendar o re agendar------- -->
   <div class="container">
     <div class="form-row justify-content-center">
       <ng-container
@@ -68,7 +72,9 @@
         <div
           class="form-group col-md-2 col-4"
           *ngIf="
-            !(ordenFire.estado == 'En sitio') && userFire[0].rol == 'admin'
+            !(ordenFire.estado == 'En sitio') &&
+            userFire[0].rol == 'admin' &&
+            !ordenFire.cerrada
           "
         >
           <a
@@ -83,7 +89,9 @@
         <div
           class="form-group col-md-2 col-4"
           *ngIf="
-            !(ordenFire.estado == 'En sitio') && userFire[0].rol == 'admin'
+            !(ordenFire.estado == 'En sitio') &&
+            userFire[0].rol == 'admin' &&
+            !ordenFire.cerrada
           "
         >
           <a
@@ -98,63 +106,79 @@
       <div class=" form-group col-md-2 col-4">
         <a (click)="imprimir()" class="btn btn-warning"> Imprimir</a>
       </div>
+
       <!-- -----------Aviso no tiene agenda--------------- -->
       <div class="form-group col-md-6 col-6" *ngIf="!agendaFire">
         <strong
-          ><p style="color: tomato">
+          ><p style="color: tomato" *ngIf="!ordenFire.cerrada">
             Esta orden no tiene agenda programada
-          </p></strong
-        >
+          </p>
+          <p style="color: tomato" *ngIf="ordenFire.cerrada">
+            ORDEN CERRADA.
+          </p>
+        </strong>
       </div>
-      <div
-        class="col-md-10 col-8"
-        *ngIf="
-          (ordenFire.uid == uidActual && ordenFire.estado == 'Programado') ||
-          (ordenFire.uid == uidActual && ordenFire.estado == 'Reprogramado')
-        "
-      >
-        <div class="row">
-          <!-- -----Boton En sitio ----- -->
-          <div *ngIf="!sinCoordenadas" class="col-md-3 col-5">
-            <div>
+      <ng-container *ngIf="ordenFire.domicilio; then ensitio; else remoto"></ng-container>
+      <ng-template #ensitio>
+        <div
+          class="col-md-10 col-8"
+          *ngIf="
+            (ordenFire.uid == uidActual && ordenFire.estado == 'Programado') ||
+            (ordenFire.uid == uidActual && ordenFire.estado == 'Reprogramado')
+          "
+        >
+          <div class="row">
+            <!-- -----Boton En sitio ----- -->
+            <div *ngIf="!sinCoordenadas" class="col-md-3 col-5">
+              <div>
+                <a
+                  data-toggle="modal"
+                  data-target="#exampleModal"
+                  class="btn btn-danger"
+                  style="color: white"
+                  >En sitio</a
+                >
+              </div>
+            </div>
+            <!-- ---------Icono ubicacion--------- -->
+            <div class=" text-center col-md-1 col-2">
+              <div>
+                <a [routerLink]="['/mapa']"
+                  ><img
+                    src="https://img.icons8.com/color/48/000000/place-marker.png"
+                /></a>
+              </div>
+            </div>
+            <!-- ---------Aviso de Distancia ------------ -->
+            <div *ngIf="distance > 200" class="col-md-8 col-12">
+              <div>
+                <p class="alert alert-danger">
+                  Estas fuera de sitio por: {{ distance }} mts
+                </p>
+              </div>
+            </div>
+            <!-------- Button asignar coordenadas -------->
+            <div class="form-group col-md-4 col-12" *ngIf="sinCoordenadas">
               <a
-                data-toggle="modal"
-                data-target="#exampleModal"
-                class="btn btn-danger"
-                style="color: white"
-                >En sitio</a
+                [routerLink]="['/set-coordenadas', ordenFire.idCliente]"
+                [queryParams]="{ sede: ordenFire.sede }"
+                class="btn btn-warning"
               >
+                Asignar Coordenadas
+              </a>
             </div>
-          </div>
-          <!-- ---------Icono ubicacion--------- -->
-          <div class=" text-center col-md-1 col-2">
-            <div>
-              <a [routerLink]="['/mapa']"
-                ><img
-                  src="https://img.icons8.com/color/48/000000/place-marker.png"
-              /></a>
-            </div>
-          </div>
-          <!-- ---------Aviso de Distancia ------------ -->
-          <div *ngIf="distance > 200" class="col-md-8 col-12">
-            <div>
-              <p class="alert alert-danger">
-                Estas fuera de sitio por: {{ distance }} mts
-              </p>
-            </div>
-          </div>
-          <!-------- Button asignar coordenadas -------->
-          <div class="form-group col-md-4 col-12" *ngIf="sinCoordenadas">
-            <a
-              [routerLink]="['/set-coordenadas', ordenFire.idCliente]"
-              [queryParams]="{ sede: ordenFire.sede }"
-              class="btn btn-warning"
-            >
-              Asignar Coordenadas
-            </a>
           </div>
         </div>
-      </div>
+      </ng-template>
+      <ng-template #remoto>
+              <!-- -----Boton En remoto ----- -->
+            <div class="col-md-2 col-5"  *ngIf="
+            (ordenFire.uid == uidActual && ordenFire.estado == 'Programado') ||
+            (ordenFire.uid == uidActual && ordenFire.estado == 'Reprogramado')
+          ">
+                  <button type="button" class="btn btn-danger" (click)="enRemoto()">En remoto</button>
+          </div>
+      </ng-template>
     </div>
   </div>
   <!-- --------------Historial Actualizaciones------------------------>
@@ -259,98 +283,108 @@
     <br />
   </ng-template>
   <!-- -----------------New Updates ------------------------->
-  <div class="container card" *ngIf="update.orden != 0 && !cOp">
-    <br />
-    <div class="form-row  justify-content-md-center ">
-      <div class="form-group col-md-8 text-center">
-        <h4 class="alert alert-warning">NUEVA ACTUALIZACION</h4>
+  <ng-container *ngIf="!ordenFire.cerrada">
+    <div class="container card" *ngIf="update.orden != 0 && !cOp">
+      <br />
+      <div class="form-row  justify-content-md-center ">
+        <div class="form-group col-md-8 text-center">
+          <h4 class="alert alert-warning">NUEVA ACTUALIZACION</h4>
+        </div>
       </div>
-    </div>
 
-    <form
-      [formGroup]="formGroup"
-      (validSubmit)="guardarUpdates()"
-      autocomplete="off"
-    >
-      <!-- -------------textarea-------------- -->
-      <div class="form-row justify-content-md-center">
-        <div class="form-group col-md-8">
-          <textarea
-            name="update"
-            style="min-width: 100%"
-            formControlName="update"
-            placeholder="Ingresar Actualizacion de la orden"
-            [(ngModel)]="update.update"
-            class="form-control"
-            rows="4"
-          ></textarea>
-        </div>
-      </div>
-      <!-- --------------select---------------- -->
-      <div class="form-row justify-content-md-center">
-        <div class="form-group col-md-4">
-          <select
-            formControlName="estado"
-            class="form-control"
-            name="estado"
-            [(ngModel)]="update.estado"
-            (change)="cambiarEstado()"
-          >
-            <option>Nuevo estado</option>
-            <option *ngFor="let estados of estadosFire"
-              >{{ estados.nombre }}
-            </option>
-          </select>
-        </div>
-      </div>
-      <div class="form-row justify-content-md-center">
-        <!-- ---------Aviso de Distancia ------------ -->
-        <div
-          *ngIf="distance > 200 && saliendoSitio == true"
-          class="col-md-6 col-12"
-        >
-          <div data-container="body" class="text-center">
-            <p class="alert alert-danger">
-              Fuera de sitio por: {{ distance }} mts, Tendras mala calificacion
-              si continuas
-            </p>
+      <form
+        [formGroup]="formGroup"
+        (validSubmit)="guardarUpdates()"
+        autocomplete="off"
+      >
+        <!-- -------------textarea-------------- -->
+        <div class="form-row justify-content-md-center">
+          <div class="form-group col-md-8">
+            <textarea
+              name="update"
+              style="min-width: 100%"
+              formControlName="update"
+              placeholder="Ingresar Actualizacion de la orden"
+              [(ngModel)]="update.update"
+              class="form-control"
+              rows="4"
+            ></textarea>
           </div>
         </div>
-      </div>
-      <div class="form-row justify-content-md-center">
-        <!-- -------------CheckBox Salir de sitio ------------------- -->
-        <div
-          *ngIf="ordenFire.estado == 'En sitio'"
-          style="margin-top: 8px"
-          class="custom-control custom-switch"
-        >
-          <input
-            formControlName="salirsitio"
-            name="salirsitio"
-            type="checkbox"
-            data-toggle="modal"
-            data-target="#exampleModal2"
-            class="custom-control-input"
-            id="customSwitch2"
-            [(ngModel)]="saliendoSitio"
-          />
-          <label class="custom-control-label" for="customSwitch2"
-            >Salir de sitio</label
+        <!-- --------------select---------------- -->
+        <div class="form-row justify-content-md-center">
+          <div class="form-group col-md-4">
+            <select
+              formControlName="estado"
+              class="form-control"
+              name="estado"
+              [(ngModel)]="update.estado"
+              (change)="cambiarEstado()"
+            >
+              <option>Nuevo estado</option>
+              <option *ngFor="let estados of estadosFire"
+                >{{ estados.nombre }}
+              </option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row justify-content-md-center">
+          <!-- ---------Aviso de Distancia ------------ -->
+          <div
+            *ngIf="distance > 200 && saliendoSitio == true"
+            class="col-md-6 col-12"
           >
+            <div data-container="body" class="text-center">
+              <p *ngIf="ordenFire.domicilio" class="alert alert-danger">
+                Fuera de sitio por: {{ distance }} mts, Tendras mala
+                calificacion si continuas.
+              </p>
+              <p *ngIf="!ordenFire.domicilio" class="alert alert-primary">
+                  Fuera de sitio por: {{ distance }} mts, NO Tendras mala
+                  calificacion si continuas.
+                </p>
+            </div>
+          </div>
         </div>
-        <!-- --------------boton Actualizar----------------- -->
-        <div class="form-group col-md-2">
-          <button type="submit" class="btn btn-primary">
-            Actualizar
-          </button>
+        <div class="form-row justify-content-md-center">
+          <!-- -------------CheckBox Salir de sitio ------------------- -->
+          <div
+            *ngIf="eSr"
+            style="margin-top: 8px"
+            class="custom-control custom-switch"
+          >
+            <input
+              formControlName="salirsitio"
+              name="salirsitio"
+              type="checkbox"
+              data-toggle="modal"
+              data-target="#exampleModal2"
+              class="custom-control-input"
+              id="customSwitch2"
+              [(ngModel)]="saliendoSitio"
+            />
+            <label class="custom-control-label" for="customSwitch2"
+              >Salir de sitio</label
+            >
+          </div>
+          <!-- --------------boton Actualizar----------------- -->
+          <div class="form-group col-md-2">
+            <button type="submit" class="btn btn-primary">
+              Actualizar
+            </button>
+          </div>
+          <!-- -------spinner----- -->
+          <div
+            class="spinner-border text-primary"
+            role="status"
+            *ngIf="spinner"
+          >
+            <span class="sr-only">Loading...</span>
+          </div>
         </div>
-        <!-- -------spinner----- -->
-        <div class="spinner-border text-primary" role="status" *ngIf="spinner">
-          <span class="sr-only">Loading...</span>
-        </div>
-      </div>
-    </form>
-  </div>
+      </form>
+    </div>
+  </ng-container>
   <br />
   <!-- ------------------Agregar Nota -------------------------- -->
   <div *ngIf="cOp">
@@ -393,7 +427,7 @@
   </div>
   <br />
 </div>
-<!-- Modal reporte en sitio -->
+<!-- -- Modal --- -->
 <div
   class="modal fade"
   id="exampleModal"
@@ -402,6 +436,7 @@
   aria-labelledby="exampleModalLabel"
   aria-hidden="true"
 >
+  <!-- -------reporte en sitio -- -->
   <div *ngIf="distance < 200">
     <div class="modal-dialog" role="document">
       <div class="modal-content">

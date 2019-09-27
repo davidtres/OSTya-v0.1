@@ -88,6 +88,7 @@
         <select
           formControlName="tiposerv"
           class="form-control"
+          (change)="domicilio()"
           [(ngModel)]="orden.tipo"
           name="tiposerv"
         >

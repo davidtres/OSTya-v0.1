@@ -9,12 +9,16 @@ import { Observable } from "rxjs";
 import { AuthenticationService } from "./authentication.service";
 import { map } from "rxjs/operators";
 import { FirebaseService } from "./firebase.service";
+import { resolve } from "path";
+import { reject, nextTick } from "q";
 
 @Injectable({
   providedIn: "root"
 })
 export class AuthenticationGuard implements CanActivate, OnInit {
   rutas: any;
+  userFire: any;
+  statusFire: any;
   constructor(
     private authenticationServices: AuthenticationService,
     private router: Router,
@@ -52,55 +56,119 @@ export class AuthenticationGuard implements CanActivate, OnInit {
       { path: "cola-tecnico", rol: "all" }
     ];
     this.rutas = appRoutes;
-    firebaseService
-      .getUusariosActivos()
-      .valueChanges()
-      .subscribe(user => {
-        this.usuarioFire = user;
-      });
+  }
+  getUsers() {
+    return new Promise<boolean>((resolve, reject) => {
+      this.firebaseService
+        .getUusariosActivos()
+        .valueChanges()
+        .subscribe(user => {
+          this.userFire = user;
+          resolve(true);
+        });
+    });
+  }
+  getStatus() {
+    return new Promise<boolean>((resolve, reject) => {
+      this.authenticationServices
+        .getStatus()
+        .pipe(
+          map(status => {
+            this.statusFire = status;
+            resolve(true);
+          })
+        )
+        .subscribe();
+    });
   }
   usuarioFire: any;
-  permiso: boolean;
+  rol: string;
   canActivate(
     next: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
   ): Observable<boolean> | Promise<boolean> | boolean {
-    return this.authenticationServices.getStatus().pipe(
-      map(status => {
-        let usuario;
-        for (let i = 0; i < this.usuarioFire.length; i++) {
-          if (this.usuarioFire[i].uid == status.uid) {
-            usuario = this.usuarioFire[i].rol;
-          }
-        }
-        // console.log(usuario);
-        if (!status) {
-          this.router.navigate(["/login"]);
-          // console.log("NO hay usuario");
-        } else {
-          for (let i = 0; i < this.rutas.length; i++) {
-            if (this.rutas[i].path == next.routeConfig.path) {
-              // console.log("Encontre la ruta : " + this.rutas[i].path);
-              if (this.rutas[i].rol == "all") {
-                // console.log("Ruta con acceso para todos");
-                return true;
-              } else {
-                if (usuario == "admin") {
-                  // console.log("Es un usuario Admin");
-                  return true;
+    let path = next.routeConfig.path;
+    return this.getUsers().then(users => {
+      return this.getStatus()
+        .then(st => {
+          return st;
+        })
+        .then(st => {
+          let rol: any;
+          let permiso: boolean;
+          this.userFire.forEach(user => {
+            if (user.uid == this.statusFire.uid) {
+              rol = user.rol;
+            }
+          });
+          if (!this.statusFire) {
+            this.router.navigate(["/login"]);
+          } else {
+            this.rutas.forEach(ruta => {
+              // debugger;
+              if (ruta.path == path) {
+                if (ruta.rol == "all") {
+                  permiso = true;
                 } else {
-                  // console.log("Es un usuario restringido");
-                  alert(
-                    "No tiene permisos para entrar a: " + next.routeConfig.path
-                  );
-                  return false;
+                  if (ruta.rol == rol) {
+                    permiso = true;
+                  } else {
+                    permiso = false;
+                  }
                 }
               }
-            }
+            });
           }
-        }
-      })
-    );
+          return permiso;
+        })
+        .then(permiso => {
+          if (permiso) {
+            return true;
+          } else {
+            alert("No tiene permiso para entrar a: " + next.routeConfig.path);
+            return false;
+          }
+        });
+
+      // return st
+    });
+
+    // });
   }
   ngOnInit() {}
+
+  //     let usuario;
+  //     for (let i = 0; i < this.usuarioFire.length; i++) {
+  //       if (this.usuarioFire[i].uid == status.uid) {
+  //         usuario = this.usuarioFire[i].rol;
+  //       }
+  //     }
+  //     console.log(usuario);
+  //     if (!status) {
+  //       this.router.navigate(["/login"]);
+  //       console.log("NO hay usuario");
+  //     } else {
+  //       for (let i = 0; i < this.rutas.length; i++) {
+  //         if (this.rutas[i].path == next.routeConfig.path) {
+  //           console.log("Encontre la ruta : " + this.rutas[i].path);
+  //           if (this.rutas[i].rol == "all") {
+  //             console.log("Ruta con acceso para todos");
+  //             return true;
+  //           } else {
+  //             if (usuario == "admin") {
+  //               console.log("Es un usuario Admin");
+  //               return true;
+  //             } else {
+  //               console.log("Es un usuario restringido");
+  //               alert(
+  //                 "No tiene permisos para entrar a: " + next.routeConfig.path
+  //               );
+  //               return false;
+  //             }
+  //           }
+  //         }
+  //       }
+  //     }
+  //   })
+  // );
 }

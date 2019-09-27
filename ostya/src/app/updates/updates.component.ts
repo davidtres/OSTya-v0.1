@@ -7,6 +7,7 @@ import * as jsPDF from "jspdf";
 import { ToolsService } from "../services/tools.service";
 import { promise } from "protractor";
 import { reject } from "q";
+import { resolve } from "dns";
 @Component({
   selector: "app-updates",
   templateUrl: "./updates.component.html",
@@ -48,6 +49,9 @@ export class UpdatesComponent implements OnInit {
   data = {
     doc: "estados"
   };
+  tipo = {
+    doc: "tServ"
+  };
   estadosFire: any;
   updateFire: any;
   agendaFire: any;
@@ -65,7 +69,7 @@ export class UpdatesComponent implements OnInit {
   estadoQueCierran: any;
   spinner = false;
   noSistem = [];
-  saliendoSitio: boolean = false;
+  saliendoSitio: boolean;
   quality: any = {
     LLT: [],
     RES: [],
@@ -76,6 +80,9 @@ export class UpdatesComponent implements OnInit {
   qualityGet: any = {
     userId: 0
   };
+  domicilio: any; //para saber si la orden es a domicilio.
+  tServFire: any[];
+  eSr: boolean = false;
   constructor(
     private firebaseService: FirebaseService,
     private route: ActivatedRoute,
@@ -86,6 +93,7 @@ export class UpdatesComponent implements OnInit {
     this.ordenGet.id = this.route.snapshot.params["id"]; //Recupera parametro id de url
     this.agendaGet.id = this.route.snapshot.params["id"]; //Recupera parametro id de url
     //obtener agenda por ID
+
     firebaseService
       .obtenerUnoId(this.agendaGet)
       .valueChanges()
@@ -114,15 +122,18 @@ export class UpdatesComponent implements OnInit {
         );
         this.noSistem = sinSistema;
         //determina si la orden tiene estado "Creado" o "Programado"
-        if (this.ordenFire.estado == "Creado") {
+        let estadoActual = this.ordenFire.estado;
+        if (
+          estadoActual == "Creado" ||
+          estadoActual == "Programado" ||
+          estadoActual == "Reprogramado"
+        ) {
           this.cOp = true;
         }
-        if (this.ordenFire.estado == "Programado") {
-          this.cOp = true;
+        if (estadoActual == "En sitio" || estadoActual == "En remoto") {
+          this.eSr = true;
         }
-        if (this.ordenFire.estado == "Reprogramado") {
-          this.cOp = true;
-        }
+
         this.getCoordCliente();
       });
     //obtener Estados
@@ -163,21 +174,25 @@ export class UpdatesComponent implements OnInit {
   }
 
   guardarUpdates() {
-    this.spinner = true;
-    if (confirm("¿Desea actualizar la orden ?")) {
-      this.ordenFire.estado = this.update.estado;
-      // console.log(this.agendaFire);
-      if (!this.agendaFire === null) {
-        this.agendaFire.estado = this.update.estado;
+    if (!this.saliendoSitio && this.eSr) {
+      alert("No puede actualizar sin salir de sitio");
+    } else {
+      if (confirm("¿Desea actualizar la orden ?")) {
+        this.spinner = true;
+        this.ordenFire.estado = this.update.estado;
+        // console.log(this.agendaFire);
+        if (!this.agendaFire === null) {
+          this.agendaFire.estado = this.update.estado;
+        }
+        this.cerrarOrden();
+        this.firebaseService.ActOrdenEstado(this.ordenFire);
+        this.firebaseService.guardarUpdates(this.update);
+        setTimeout(() => {
+          this.salirSitio();
+          this.spinner = false;
+          this.ruta.navigate(["/home"]);
+        }, 2000);
       }
-      this.cerrarOrden();
-      this.firebaseService.ActOrdenEstado(this.ordenFire);
-      this.firebaseService.guardarUpdates(this.update);
-      setTimeout(() => {
-        this.salirSitio();
-        this.spinner = false;
-        this.ruta.navigate(["/home"]);
-      }, 2000);
     }
   }
   salirSitio() {
@@ -262,12 +277,50 @@ export class UpdatesComponent implements OnInit {
     this.firebaseService.ActOrdenAgendada(this.ordenFire);
     this.firebaseService.guardarUpdates(this.update);
     this.firebaseService.guardarAgenda(this.agendaFire);
-    this.llt();
-    this.res();
+    if (!this.qualityFire) {
+      this.llt();
+      this.res();
+      this.rss();
+    } else {
+      this.llt();
+      this.res();
+    }
     // console.log(this.agendaFire);
     this.ruta.navigate(["/home"]);
   }
-
+  enRemoto() {
+    if (confirm("Seguro quiere iniciar soporte remoto?")) {
+      this.agendaFire.coordenadas = [this.lat, this.lng];
+      this.agendaFire.estado = "En remoto";
+      this.agendaFire.startOk = Date.now();
+      this.update = {
+        update:
+          "Reporte en remoto : " +
+          this.fechaHoy +
+          ", tecnico: " +
+          this.ordenFire.tecnicoAsignado,
+        estado: "En remoto",
+        usuario: "Sistema",
+        orden: this.update.orden,
+        fecha: Date.now()
+      };
+      this.ordenFire.estado = this.update.estado;
+      this.ordenFire.enTriage = false;
+      this.firebaseService.ActOrdenAgendada(this.ordenFire);
+      this.firebaseService.guardarUpdates(this.update);
+      this.firebaseService.guardarAgenda(this.agendaFire);
+      if (!this.qualityFire) {
+        this.llt();
+        this.res();
+        this.rss();
+      } else {
+        this.llt();
+        this.res();
+      }
+      // console.log(this.agendaFire);
+      this.ruta.navigate(["/home"]);
+    }
+  }
   addNota() {
     let hoy = new Date(Date.now());
     this.ordenFire.nota += "  <+> " + this.Nota + " ( " + this.fechaHoy + "). ";
@@ -300,7 +353,6 @@ export class UpdatesComponent implements OnInit {
       }
     }
   }
-
   ngOnInit() {
     this.buildForm();
     this.authenticationService.getStatus().subscribe(status => {
@@ -313,6 +365,14 @@ export class UpdatesComponent implements OnInit {
           // console.log(this.userFire);
         });
     });
+    setTimeout(() => {
+      if (this.ordenFire.estado == "En sitio") {
+        this.saliendoSitio = true;
+      } else {
+        this.saliendoSitio = false;
+      }
+      console.log(this.ordenFire);
+    }, 1000);
   }
   private buildForm() {
     this.formGroup = new FormGroup({
@@ -386,15 +446,18 @@ export class UpdatesComponent implements OnInit {
     );
     doc.setFontStyle("normal");
     doc.text(
-      "DIRECCION: " +
-        this.ordenFire.direccion +
-        "\nTELEFONOS: " +
+      "TELEFONOS: " +
         this.clienteFire.telefono +
         " , " +
         this.clienteFire.celular,
-      10,
-      56
+      110,
+      50
     );
+    let direccionTxt = doc.splitTextToSize(
+      "DIRECCION: " + this.ordenFire.direccion,
+      175
+    );
+    doc.text(direccionTxt, 10, 56);
     doc.text("ESTADO: " + this.ordenFire.estado, 100, 68, null, null, "center");
     doc.line(10, 70, 200, 70);
     // -----------------DATOS DE LA SOLICITUD---------------
@@ -415,12 +478,12 @@ export class UpdatesComponent implements OnInit {
     // ------------------------------------------
     // NOTAS ADICIONALES
     // ------------------------------------------
-    doc.setFontStyle("bold");
-    doc.text("Notas : ", 10, txtHg);
-    doc.setFontStyle("normal");
-    let notasTxt = doc.splitTextToSize(this.ordenFire.nota, 175);
-    doc.text(notasTxt, 30, txtHg);
-    txtHg = (notasTxt.length * fontSize * lineHeight) / ptsPerInch + txtHg;
+    // doc.setFontStyle("bold");
+    // doc.text("Notas : ", 10, txtHg);
+    // doc.setFontStyle("normal");
+    // let notasTxt = doc.splitTextToSize(this.ordenFire.nota, 175);
+    // doc.text(notasTxt, 30, txtHg);
+    // txtHg = (notasTxt.length * fontSize * lineHeight) / ptsPerInch + txtHg;
     doc.line(10, txtHg - 2, 200, txtHg - 2);
     // ------------------------------------------
     // ACTUALIZACIONES DE LA ORDEN
@@ -508,18 +571,26 @@ export class UpdatesComponent implements OnInit {
   }
   //Valida reporte en sitio - envía la calificacion
   res() {
-    if (this.distance < 200) {
+    if (!this.ordenFire.domicilio) {
       this.addQualityRes(1);
     } else {
-      this.addQualityRes(0);
+      if (this.distance < 200) {
+        this.addQualityRes(1);
+      } else {
+        this.addQualityRes(0);
+      }
     }
   }
   //Valida reporte salida de sitio - envía la calificacion
   rss() {
-    if (this.distance < 200) {
+    if (!this.ordenFire.domicilio) {
       this.addQualityRss(1);
     } else {
-      this.addQualityRss(0);
+      if (this.distance < 200) {
+        this.addQualityRss(1);
+      } else {
+        this.addQualityRss(0);
+      }
     }
   }
   //agrega la calificacion al array y solicita guardar.
@@ -560,11 +631,12 @@ export class UpdatesComponent implements OnInit {
   }
   //agrega la calificacion al array y solicita guardar.
   addQualityRss(valor: number) {
+    let hoy = new Date(Date.now());
     let data = {
       user: this.agendaFire.userId,
       orden: this.ordenFire.id,
       fhPro: this.agendaFire.start,
-      fhLle: this.agendaFire.startOk,
+      fhLle: hoy,
       distance: this.distance,
       calif: valor
     };

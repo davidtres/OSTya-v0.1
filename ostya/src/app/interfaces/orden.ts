@@ -20,4 +20,5 @@ export interface Orden {
   uid: string;
   Solucionador: string;
   sede: string;
+  domicilio: boolean;
 }

@@ -13,6 +13,7 @@ export class QualityComponent implements OnInit {
   warning: boolean;
   danger: boolean;
   userFire: any[];
+  currentRate = 3;
   constructor(private firebaseService: FirebaseService) {}
 
   ngOnInit() {
@@ -100,6 +101,5 @@ export class QualityComponent implements OnInit {
         }
       });
     });
-    console.log(this.quality);
   }
 }

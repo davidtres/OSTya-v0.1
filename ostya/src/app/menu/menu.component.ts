@@ -31,14 +31,15 @@ export class MenuComponent implements OnInit {
     this.authenticationService.getStatus().subscribe(user => {
       this.userFireAuth = user;
       console.log(this.userFireAuth);
-
-      this.firebaseService
-        .getUserUid(this.userFireAuth.uid)
-        .valueChanges()
-        .subscribe(usuario => {
-          this.userFire = usuario;
-          console.log(this.userFire);
-        });
+      if (this.userFireAuth) {
+        this.firebaseService
+          .getUserUid(this.userFireAuth.uid)
+          .valueChanges()
+          .subscribe(usuario => {
+            this.userFire = usuario;
+            console.log(this.userFire);
+          });
+      }
     });
   }
 }

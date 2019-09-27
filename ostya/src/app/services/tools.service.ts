@@ -10,6 +10,7 @@ export class ToolsService {
     let anio = date.getFullYear();
     let mesT;
     let diaT;
+    mes++;
     if (mes < 10) {
       mesT = "0" + mes;
     } else {
@@ -33,6 +34,7 @@ export class ToolsService {
     let diaT;
     let horaT;
     let minutosT;
+    mes++;
     if (mes < 10) {
       mesT = "0" + mes;
     } else {

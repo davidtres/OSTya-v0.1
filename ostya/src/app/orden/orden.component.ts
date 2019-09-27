@@ -38,7 +38,8 @@ export class OrdenComponent implements OnInit {
     idCliente: 0,
     uid: "",
     Solucionador: "",
-    sede: ""
+    sede: "",
+    domicilio: null
   };
 
   constructor(
@@ -113,6 +114,18 @@ export class OrdenComponent implements OnInit {
   }
   ngOnInit() {
     this.buildForm();
+  }
+  domicilio() {
+    this.tipoOrden.forEach(element => {
+      if (element.nombre == this.orden.tipo) {
+        if (element.visita == true) {
+          this.orden.domicilio = true;
+        } else {
+          this.orden.domicilio = false;
+        }
+      }
+      console.log(this.orden.domicilio);
+    });
   }
 
   // constructor del formulario

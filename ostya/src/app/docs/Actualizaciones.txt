@@ -1,3 +1,22 @@
+v.1.07.01 - 26/09/2019
+*Correcciones*
+  - reporte de detallado calificaiones, fecha y hora de salida, colocaba la misma de entrada.
+  - Desbordamiento del campo direccion en las ordenes impresas en Pdf.
+  - Se corrige falla de carga inicial, demora para autenticacion.
+----------------------------------------------------------
+v.1.07.00 - 24/09/2019
+NUEVAS FUNCIONALIDADES*
+  *Ordenes remotas*
+    las ordenes que nó requieran ser atendidas a domicilio, no tendran en cuenta el sitio, ni la salida,
+    para la calificacion, la cual será positiva en ambos casos
+      + Se deben configurar los tipos de servicios como domicilio "NO".
+*Correciones*
+  - Error no mostraba icono de estrellas en las calificaiones 
+  - Cuando una orden tiene estado "En sitio", no se deja actualizar sin salir de sitio.
+  - Notas de la orden, no se imprimen en el PDF (usar como notas privadas.)
+  - Orden cerrada, no se puede agendar, ni actualizar. Solo imprimir.
+  - Se puede verificar el tipo de servicio en la actualizacion de la orden.
+--------------------------------------------------------
 v.1.06.01 - 22/09/2019
 *MEJORAS*
   + Se agrega listado del detallado de calificaiones. Click en la puntuacion para acceder.

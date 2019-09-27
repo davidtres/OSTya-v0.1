@@ -44,6 +44,9 @@ table .d {
 #agendaMovil {
   display: none;
 }
+body {
+  background-color: #f6f6f6;
+}
 @media (max-width: 575.98px) {
   #ingreso {
     display: none;

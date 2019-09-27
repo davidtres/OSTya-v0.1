@@ -89,6 +89,7 @@ export class EstadoComponent implements OnInit {
   }
   // funcion del boton "Guardar"
   guardarEstado() {
+    this.estado.nombre = this.estado.nombre.trim();
     //Guardando verdadero para enviar alert de creacion en html
     this.Guardando = true;
     //Si es nuevo, incrementa ID y se lo asigna
