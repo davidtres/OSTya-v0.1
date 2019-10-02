@@ -2,6 +2,10 @@
 @import "~@fullcalendar/daygrid/main.css";
 @import "~@fullcalendar/timegrid/main.css";
 /* You can add global styles to this file, and also import other style files */
+td {
+  font-size: 85%;
+  font-weight: 400;
+}
 .numero_par {
   background-color: aliceblue;
   color: darkblue;
@@ -34,6 +38,12 @@ table .d {
 }
 #cliente {
   width: 30%;
+}
+#asignado {
+  width: 20%;
+}
+#soliReporte {
+  width: 65%;
 }
 #solicitud {
   width: 55%;

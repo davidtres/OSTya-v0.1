@@ -27,7 +27,8 @@
       </div>
     </div>
 
-    {{ qltParams.params.TTL }}
+    Cumplimiento: {{ qltParams.params.TTL }} - Visitas:
+    {{ this.qualityFire.LLT.length }} - Ordenes: {{ this.listOrden.length }}
   </div>
 
   <ng-container *ngFor="let orden of listOrden">

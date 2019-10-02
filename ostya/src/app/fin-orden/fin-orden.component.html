@@ -1,0 +1,131 @@
+<br />
+<ng-container>
+  <div class="container card">
+    <br />
+    <div class="form-row  justify-content-md-center ">
+      <div class="form-group col-md-8 text-center">
+        <h4 class="alert alert-warning">FINALIZAR ORDEN</h4>
+      </div>
+    </div>
+
+    <form
+      [formGroup]="formGroup"
+      (validSubmit)="guardarUpdates()"
+      autocomplete="off"
+    >
+      <!-- ------------Seleccionar Final------------- -->
+      <div class="form-row justify-content-md-center">
+        <div
+          class="form-group col-md-8 justify-content-md-center"
+          style="display: flex"
+        >
+          <div class="form-check form-check-inline">
+            <input
+              formControlName="estado"
+              [(ngModel)]="update.estado"
+              class="form-check-input"
+              type="radio"
+              id="inlineRadio1"
+              value="Facturado"
+            />
+            <label class="form-check-label" for="estado">Facturar</label>
+          </div>
+          <div class="form-check form-check-inline">
+            <input
+              formControlName="estado"
+              [(ngModel)]="update.estado"
+              class="form-check-input"
+              type="radio"
+              id="inlineRadio2"
+              value="Garantia"
+            />
+            <label class="form-check-label" for="inlineRadio2">Garantia</label>
+          </div>
+          <div class="form-check form-check-inline">
+            <input
+              formControlName="estado"
+              [(ngModel)]="update.estado"
+              class="form-check-input"
+              type="radio"
+              id="inlineRadio3"
+              value="Contrato"
+            />
+            <label class="form-check-label" for="inlineRadio3">Contrato</label>
+          </div>
+          <div class="form-check form-check-inline">
+            <input
+              formControlName="estado"
+              [(ngModel)]="update.estado"
+              class="form-check-input"
+              type="radio"
+              id="inlineRadio4"
+              value="Cancelado"
+            />
+            <label class="form-check-label" for="inlineRadio">Cancelado</label>
+          </div>
+        </div>
+      </div>
+      <!-- --------------Factura---------------- -->
+      <div class="form-row justify-content-md-center">
+        <!-- ----------N° FActura----------- -->
+        <div class="form-group col-md-4">
+          <input
+            formControlName="factura"
+            [(ngModel)]="update.factura"
+            class="form-control"
+            type="text"
+            placeholder="N° Factura"
+          />
+        </div>
+        <!-- -------------Valor Factura----------- -->
+        <div class="form-group col-md-4">
+          <div class="col-auto">
+            <label class="sr-only" for="inlineFormInputGroup"
+              >Valor Factura</label
+            >
+            <div class="input-group mb-2">
+              <div class="input-group-prepend">
+                <div class="input-group-text">$</div>
+              </div>
+              <input
+                formControlName="valor"
+                [(ngModel)]="update.valor"
+                type="text"
+                class="form-control"
+                id="inlineFormInputGroup"
+                placeholder="Valor Factura"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- ---------Observaciones ------------ -->
+      <div class="form-row justify-content-md-center">
+        <div class="form-group col-md-8">
+          <textarea
+            name="nota"
+            style="min-width: 100%"
+            formControlName="nota"
+            placeholder="Observaciones"
+            class="form-control"
+            rows="2"
+            [(ngModel)]="update.nota"
+          ></textarea>
+        </div>
+      </div>
+      <!-- --------------boton Actualizar----------------- -->
+      <div class="form-row justify-content-md-center">
+        <div class="form-group col-md-2">
+          <button type="submit" class="btn btn-primary">
+            Guardar
+          </button>
+        </div>
+        <!-- -------spinner----- -->
+        <div class="spinner-border text-primary" role="status" *ngIf="spinner">
+          <span class="sr-only">Loading...</span>
+        </div>
+      </div>
+    </form>
+  </div>
+</ng-container>
+<br />

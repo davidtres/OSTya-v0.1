@@ -84,32 +84,33 @@ export class HomeComponent implements OnInit {
       .subscribe(orden => {
         this.ordenFireOpen = orden;
         // -------------------------
-        for (let i = 0; i < this.ordenFireOpen.length; i++) {
-          let keys: any = Object.keys(this.ordenFireOpen[i].updates);
-          let keysReverse = keys.reverse();
-          let hace24h = Date.now() - 86400000;
-          let hace3d = Date.now() - 259200000;
-          let hace7d = Date.now() - 604800000;
-
-          if (this.ordenFireOpen[i].fechaSolicitud > hace24h) {
-            this.ordenFireOpen[i].bgNew = "Nuevo";
-          } else {
-            if (
-              keysReverse[0] > hace24h &&
-              this.ordenFireOpen[i].bgNew != "Nuevo"
-            ) {
-              this.ordenFireOpen[i].bgUpd = "Actualizado";
+        if (this.ordenFireOpen) {
+          for (let i = 0; i < this.ordenFireOpen.length; i++) {
+            let keys: any = Object.keys(this.ordenFireOpen[i].updates);
+            let keysReverse = keys.reverse();
+            let hace24h = Date.now() - 86400000;
+            let hace3d = Date.now() - 259200000;
+            let hace7d = Date.now() - 604800000;
+            if (this.ordenFireOpen[i].fechaSolicitud > hace24h) {
+              this.ordenFireOpen[i].bgNew = "Nuevo";
             } else {
-              if (keysReverse[0] < hace7d) {
-                this.ordenFireOpen[i].bgOld = "Antiguo";
+              if (
+                keysReverse[0] > hace24h &&
+                this.ordenFireOpen[i].bgNew != "Nuevo"
+              ) {
+                this.ordenFireOpen[i].bgUpd = "Actualizado";
               } else {
-                if (keysReverse[0] < hace3d && keysReverse[0] > hace7d) {
-                  this.ordenFireOpen[i].bgDes = "Desactualizado";
+                if (keysReverse[0] < hace7d) {
+                  this.ordenFireOpen[i].bgOld = "Antiguo";
+                } else {
+                  if (keysReverse[0] < hace3d && keysReverse[0] > hace7d) {
+                    this.ordenFireOpen[i].bgDes = "Desactualizado";
+                  }
                 }
               }
             }
+            keys = [];
           }
-          keys = [];
         }
       });
   }

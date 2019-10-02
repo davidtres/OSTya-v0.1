@@ -21,4 +21,7 @@ export interface Orden {
   Solucionador: string;
   sede: string;
   domicilio: boolean;
+  factura: string;
+  valor: number;
+  facturada: boolean;
 }

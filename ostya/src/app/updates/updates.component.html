@@ -69,42 +69,57 @@
 
       <ng-template #agendar>
         <!-- ----------Boton Agendar ------------ -->
-        <div
-          class="form-group col-md-2 col-4"
-          *ngIf="
-            !(ordenFire.estado == 'En sitio') &&
-            userFire[0].rol == 'admin' &&
-            !ordenFire.cerrada
-          "
-        >
-          <a
-            class="btn btn-primary"
-            routerLink="/programacion/{{ ordenFire.id }}"
-            >Agendar</a
+        <div *ngIf="userFire">
+          <div
+            class="form-group col-md-2 col-4"
+            *ngIf="
+              !(ordenFire.estado == 'En sitio') &&
+              userFire[0].rol == 'admin' &&
+              !ordenFire.cerrada
+            "
           >
+            <a
+              class="btn btn-primary"
+              routerLink="/programacion/{{ ordenFire.id }}"
+              >Agendar</a
+            >
+          </div>
         </div>
       </ng-template>
       <ng-template #Reagendar>
         <!-- ----------Boton Re-Agendar ------------ -->
-        <div
-          class="form-group col-md-2 col-4"
-          *ngIf="
-            !(ordenFire.estado == 'En sitio') &&
-            userFire[0].rol == 'admin' &&
-            !ordenFire.cerrada
-          "
-        >
-          <a
-            class="btn btn-primary"
-            routerLink="/programacion/{{ ordenFire.id }}"
-            >Re-Programar</a
+        <div *ngIf="userFire">
+          <div
+            class="form-group "
+            *ngIf="
+              !(ordenFire.estado == 'En sitio') &&
+              userFire[0].rol == 'admin' &&
+              !ordenFire.cerrada
+            "
           >
+            <a
+              class="btn btn-primary"
+              routerLink="/programacion/{{ ordenFire.id }}"
+              >Re-Programar</a
+            >
+          </div>
         </div>
       </ng-template>
 
       <!-- ------------------Boton Imprimir Orden------------------ -->
       <div class=" form-group col-md-2 col-4">
         <a (click)="imprimir()" class="btn btn-warning"> Imprimir</a>
+      </div>
+      <div class=" form-group col-md-2 col-4">
+        <button
+          type="button"
+          class="btn btn-primary"
+          data-toggle="modal"
+          data-target="#nota"
+          data-whatever="@mdo"
+        >
+          Nota
+        </button>
       </div>
 
       <!-- -----------Aviso no tiene agenda--------------- -->
@@ -118,13 +133,17 @@
           </p>
         </strong>
       </div>
-      <ng-container *ngIf="ordenFire.domicilio; then ensitio; else remoto"></ng-container>
+      <ng-container
+        *ngIf="ordenFire.domicilio; then ensitio; else remoto"
+      ></ng-container>
       <ng-template #ensitio>
         <div
           class="col-md-10 col-8"
           *ngIf="
-            (ordenFire.uid == uidActual && ordenFire.estado == 'Programado') ||
-            (ordenFire.uid == uidActual && ordenFire.estado == 'Reprogramado')
+            (ordenFire.uid == userActual.uid &&
+              ordenFire.estado == 'Programado') ||
+            (ordenFire.uid == userActual.uid &&
+              ordenFire.estado == 'Reprogramado')
           "
         >
           <div class="row">
@@ -171,13 +190,20 @@
         </div>
       </ng-template>
       <ng-template #remoto>
-              <!-- -----Boton En remoto ----- -->
-            <div class="col-md-2 col-5"  *ngIf="
-            (ordenFire.uid == uidActual && ordenFire.estado == 'Programado') ||
-            (ordenFire.uid == uidActual && ordenFire.estado == 'Reprogramado')
-          ">
-                  <button type="button" class="btn btn-danger" (click)="enRemoto()">En remoto</button>
-          </div>
+        <!-- -----Boton En remoto ----- -->
+        <div
+          class="col-md-2 col-5"
+          *ngIf="
+            (ordenFire.uid == userActual.uid &&
+              ordenFire.estado == 'Programado') ||
+            (ordenFire.uid == userActual.uid &&
+              ordenFire.estado == 'Reprogramado')
+          "
+        >
+          <button type="button" class="btn btn-danger" (click)="enRemoto()">
+            En remoto
+          </button>
+        </div>
       </ng-template>
     </div>
   </div>
@@ -283,150 +309,119 @@
     <br />
   </ng-template>
   <!-- -----------------New Updates ------------------------->
-  <ng-container *ngIf="!ordenFire.cerrada">
-    <div class="container card" *ngIf="update.orden != 0 && !cOp">
-      <br />
-      <div class="form-row  justify-content-md-center ">
-        <div class="form-group col-md-8 text-center">
-          <h4 class="alert alert-warning">NUEVA ACTUALIZACION</h4>
+  <ng-container *ngIf="!ordenFire.cerrada && !facturar">
+    <div class="col-md-8 col offset-md-2">
+      <p class="alert alert-danger text-center" *ngIf="distance == 'NaN'">No se detecta ubicacion, revise GPS o recargue la pagina</p>
+    </div>
+    <div *ngIf="distance >0">
+      <div class="container card" *ngIf="update.orden != 0 && !cOp">
+        <br />
+        <div class="form-row  justify-content-md-center ">
+          <div class="form-group col-md-8 text-center">
+            <h4 class="alert alert-warning">NUEVA ACTUALIZACION</h4>
+          </div>
         </div>
-      </div>
 
-      <form
-        [formGroup]="formGroup"
-        (validSubmit)="guardarUpdates()"
-        autocomplete="off"
-      >
-        <!-- -------------textarea-------------- -->
-        <div class="form-row justify-content-md-center">
-          <div class="form-group col-md-8">
-            <textarea
-              name="update"
-              style="min-width: 100%"
-              formControlName="update"
-              placeholder="Ingresar Actualizacion de la orden"
-              [(ngModel)]="update.update"
-              class="form-control"
-              rows="4"
-            ></textarea>
+        <form
+          [formGroup]="formGroup"
+          (validSubmit)="guardarUpdates()"
+          autocomplete="off"
+        >
+          <!-- -------------textarea-------------- -->
+          <div class="form-row justify-content-md-center">
+            <div class="form-group col-md-8">
+              <textarea
+                name="update"
+                style="min-width: 100%"
+                formControlName="update"
+                placeholder="Ingresar Actualizacion de la orden"
+                [(ngModel)]="update.update"
+                class="form-control"
+                rows="4"
+              ></textarea>
+            </div>
           </div>
-        </div>
-        <!-- --------------select---------------- -->
-        <div class="form-row justify-content-md-center">
-          <div class="form-group col-md-4">
-            <select
-              formControlName="estado"
-              class="form-control"
-              name="estado"
-              [(ngModel)]="update.estado"
-              (change)="cambiarEstado()"
+          <!-- --------------select---------------- -->
+          <div class="form-row justify-content-md-center">
+            <div class="form-group col-md-4">
+              <select
+                formControlName="estado"
+                class="form-control"
+                name="estado"
+                [(ngModel)]="update.estado"
+                (change)="cambiarEstado()"
+              >
+                <option>Nuevo estado</option>
+                <option *ngFor="let estados of estadosFire"
+                  >{{ estados.nombre }}
+                </option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row justify-content-md-center">
+            <!-- ---------Aviso de Distancia ------------ -->
+            <div
+              *ngIf="distance > 200 && saliendoSitio == true"
+              class="col-md-6 col-12"
             >
-              <option>Nuevo estado</option>
-              <option *ngFor="let estados of estadosFire"
-                >{{ estados.nombre }}
-              </option>
-            </select>
-          </div>
-        </div>
-        <div class="form-row justify-content-md-center">
-          <!-- ---------Aviso de Distancia ------------ -->
-          <div
-            *ngIf="distance > 200 && saliendoSitio == true"
-            class="col-md-6 col-12"
-          >
-            <div data-container="body" class="text-center">
-              <p *ngIf="ordenFire.domicilio" class="alert alert-danger">
-                Fuera de sitio por: {{ distance }} mts, Tendras mala
-                calificacion si continuas.
-              </p>
-              <p *ngIf="!ordenFire.domicilio" class="alert alert-primary">
+              <div data-container="body" class="text-center">
+                <p *ngIf="ordenFire.domicilio" class="alert alert-danger">
+                  Fuera de sitio por: {{ distance }} mts, Tendras mala
+                  calificacion si continuas.
+                </p>
+                <p *ngIf="!ordenFire.domicilio" class="alert alert-primary">
                   Fuera de sitio por: {{ distance }} mts, NO Tendras mala
                   calificacion si continuas.
                 </p>
+              </div>
             </div>
           </div>
-        </div>
-        <div class="form-row justify-content-md-center">
-          <!-- -------------CheckBox Salir de sitio ------------------- -->
-          <div
-            *ngIf="eSr"
-            style="margin-top: 8px"
-            class="custom-control custom-switch"
-          >
-            <input
-              formControlName="salirsitio"
-              name="salirsitio"
-              type="checkbox"
-              data-toggle="modal"
-              data-target="#exampleModal2"
-              class="custom-control-input"
-              id="customSwitch2"
-              [(ngModel)]="saliendoSitio"
-            />
-            <label class="custom-control-label" for="customSwitch2"
-              >Salir de sitio</label
+          <div class="form-row justify-content-md-center">
+            <!-- -------------CheckBox Salir de sitio ------------------- -->
+            <div
+              *ngIf="eSr"
+              style="margin-top: 8px"
+              class="custom-control custom-switch"
             >
+              <input
+                formControlName="salirsitio"
+                name="salirsitio"
+                type="checkbox"
+                data-toggle="modal"
+                data-target="#exampleModal2"
+                class="custom-control-input"
+                id="customSwitch2"
+                [(ngModel)]="saliendoSitio"
+              />
+              <label class="custom-control-label" for="customSwitch2"
+                >Salir de sitio</label
+              >
+            </div>
+            <!-- --------------boton Actualizar----------------- -->
+            <div class="form-group col-md-2">
+              <button type="submit" class="btn btn-primary">
+                Actualizar
+              </button>
+            </div>
+            <!-- -------spinner----- -->
+            <div
+              class="spinner-border text-primary"
+              role="status"
+              *ngIf="spinner"
+            >
+              <span class="sr-only">Loading...</span>
+            </div>
           </div>
-          <!-- --------------boton Actualizar----------------- -->
-          <div class="form-group col-md-2">
-            <button type="submit" class="btn btn-primary">
-              Actualizar
-            </button>
-          </div>
-          <!-- -------spinner----- -->
-          <div
-            class="spinner-border text-primary"
-            role="status"
-            *ngIf="spinner"
-          >
-            <span class="sr-only">Loading...</span>
-          </div>
-        </div>
-      </form>
+        </form>
+      </div>
     </div>
   </ng-container>
   <br />
-  <!-- ------------------Agregar Nota -------------------------- -->
-  <div *ngIf="cOp">
-    <div class="form-row  justify-content-md-center ">
-      <div class="form-group col-md-8 text-center">
-        <h4 class="alert alert-warning">AGREGAR NOTA</h4>
-      </div>
-    </div>
-
-    <form
-      [formGroup]="formGroupNota"
-      (validSubmit)="addNota()"
-      autocomplete="off"
-    >
-      <div class="form-row justify-content-md-center">
-        <div class="form-group col-md-8">
-          <textarea
-            name="nota"
-            style="min-width: 100%"
-            formControlName="nota"
-            placeholder="Ingresar una nueva nota"
-            [(ngModel)]="Nota"
-            class="form-control"
-            rows="4"
-          ></textarea>
-        </div>
-      </div>
-      <!-- -----------boton Actualizar Nota------------ -->
-      <div class="form-row justify-content-md-center">
-        <div class="form-group col-md-2">
-          <button type="submit" class="btn btn-primary">
-            Ingresar Nota
-          </button>
-        </div>
-        <div class="spinner-border text-primary" role="status" *ngIf="spinner">
-          <span class="sr-only">Loading...</span>
-        </div>
-      </div>
-    </form>
-  </div>
-  <br />
 </div>
+<app-fin-orden
+  [OrdenFire]="ordenFire"
+  *ngIf="facturar && userActual.rol == 'admin'"
+></app-fin-orden>
 <!-- -- Modal --- -->
 <div
   class="modal fade"
@@ -509,6 +504,54 @@
             Aceptar
           </button>
         </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- ----------------modal para nota ----------------------- -->
+<div
+  class="modal fade"
+  id="nota"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">
+          Agregar Nota orden {{ ordenFire.id }}
+        </h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="form-group" class="modal-nota">
+            <label for="message-text" class="col-form-label">Nota:</label>
+            <textarea class="form-control" id="message-text"></textarea>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+          Cancelar
+        </button>
+        <button
+          type="button"
+          class="btn btn-primary"
+          data-dismiss="modal"
+          (click)="addNota($event)"
+        >
+          Guardar
+        </button>
       </div>
     </div>
   </div>

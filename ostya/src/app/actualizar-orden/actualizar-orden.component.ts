@@ -9,7 +9,6 @@ import { Chart } from "chart.js";
 export class ActualizarOrdenComponent implements OnInit {
   @ViewChild("canvas") canvas: ElementRef<HTMLCanvasElement>;
   linechart = [];
-  DatabaseReference ref = FirebaseDatabase.getInstance().getReference(); String key = ref.push().getKey(); // this will create a new unique key Map<String, Object> value = new HashMap<>(); value.put("name", "shesh"); value.put("address", "lucknow"); value.put("timestamp", ServerValue.TIMESTAMP); ref.child(key).setValue(value); 
 
   constructor() {}
   ngOnInit() {

@@ -58,6 +58,12 @@ export class ToolsService {
     let fecha = diaT + "/" + mesT + "/" + anio + " - " + horaT + ":" + minutosT;
     return fecha;
   }
-
+  public ordenarPorId(items) {
+    items.sort(function(a, b) {
+      var idA = a.id;
+      var idB = b.id;
+      return idA - idB;
+    });
+  }
   constructor() {}
 }

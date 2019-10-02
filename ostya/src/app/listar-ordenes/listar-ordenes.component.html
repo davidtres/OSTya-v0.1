@@ -20,9 +20,9 @@
       </thead>
       <tbody *ngFor="let ordenes of ordenFire; let i = index">
         <tr *ngIf="ordenes.tecnicoAsignado == User">
-          <td id="orden">
+          <th scope="row" id="orden">
             <a routerLink="/updates/{{ ordenes.id }}">{{ ordenes.id }}</a>
-          </td>
+          </th>
           <td id="ingreso">
             {{ ordenes.fechaSolicitud | date: "dd/MM/yyyy , hh:mm a" }}
           </td>

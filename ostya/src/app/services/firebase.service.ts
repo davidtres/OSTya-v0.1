@@ -1,11 +1,6 @@
 import { Injectable } from "@angular/core";
-import { from } from "rxjs";
-import { AngularFireModule } from "@angular/fire";
 import { AngularFireDatabase } from "angularfire2/database";
-import { CrearClienteComponent } from "../crear-cliente/crear-cliente.component";
-import { createNodeAtIndex } from "@angular/core/src/render3/instructions";
-import { AuthenticationService } from "./authentication.service";
-import { database } from "firebase";
+import * as firebase from "firebase";
 
 @Injectable({
   providedIn: "root"
@@ -24,6 +19,7 @@ export class FirebaseService {
         }
       });
   }
+  public dateFire = firebase.database.ServerValue.TIMESTAMP;
   //metodo obtener todos los clientes
   public getCliente() {
     return this.afBD.list("clientes/");
@@ -167,22 +163,27 @@ export class FirebaseService {
   }
   public guardarUpdates(data) {
     //armar fecha para indice log y data Log
-    this.afBD.database
-      .ref("orden/" + data.orden + "/updates/" + data.fecha)
-      .set(data, function(error) {
+    return new Promise((resolve, reject) => {
+      this.afBD.database
+        .ref("orden/" + data.orden + "/updates/" + data.fecha)
+        .set(data, function(error) {
+          if (error) {
+            console.log(error);
+          } else {
+            resolve(true);
+          }
+        });
+    });
+  }
+  public ActOrdenEstado(data) {
+    return new Promise((resolve, reject) => {
+      this.afBD.database.ref("orden/" + data.id).update(data, function(error) {
         if (error) {
           console.log(error);
         } else {
+          resolve(true);
         }
       });
-  }
-  public ActOrdenEstado(data) {
-    console.log(data);
-    this.afBD.database.ref("orden/" + data.id).update(data, function(error) {
-      if (error) {
-        console.log(error);
-      } else {
-      }
     });
   }
   // -------------ordenes x fecha--------------------
@@ -197,26 +198,30 @@ export class FirebaseService {
   /* --------------AGENDA---------------------*/
   public guardarQuality(data) {
     // Guarda la agenda definitiva para historico por tecnico
-    this.afBD.database
-      .ref("quality/" + data.userId + "/")
-      .update(data, function(error) {
-        if (error) {
-          console.log(error);
-        } else {
-        }
-      });
+    return new Promise((resolve, reject) => {
+      this.afBD.database
+        .ref("quality/" + data.userId + "/")
+        .update(data, function(error) {
+          if (error) {
+            console.log(error);
+          } else {
+            resolve(true);
+          }
+        });
+    });
   }
   public getQuality(userId) {
-    console.log(userId);
-
     return this.afBD.object("quality/" + userId);
   }
   public guardarAgenda(data) {
-    this.afBD.database.ref("agenda/" + data.orden).set(data, function(error) {
-      if (error) {
-        console.log(error);
-      } else {
-      }
+    return new Promise((resolve, reject) => {
+      this.afBD.database.ref("agenda/" + data.orden).set(data, function(error) {
+        if (error) {
+          console.log(error);
+        } else {
+          resolve(true);
+        }
+      });
     });
   }
   public getQualityAll() {
@@ -225,58 +230,82 @@ export class FirebaseService {
 
   public guardarAgendaHTecnico(data) {
     // Guarda la agenda definitiva para historico por tecnico
-    this.afBD.database
-      .ref("agendaHT/" + data.userId + "/" + data.endOk)
-      .set(data, function(error) {
-        if (error) {
-          console.log(error);
-        } else {
-        }
-      });
+    return new Promise((resolve, reject) => {
+      this.afBD.database
+        .ref("agendaHT/" + data.userId + "/" + data.endOk)
+        .set(data, function(error) {
+          if (error) {
+            console.log(error);
+          } else {
+            resolve(true);
+          }
+        });
+    });
   }
   public guardarAgendaHOrden(data) {
     // Guarda la agenda definitiva para historico por orden
-    this.afBD.database
-      .ref("agendaHO/" + data.orden + "/" + data.endOk)
-      .set(data, function(error) {
-        if (error) {
-          console.log(error);
-        } else {
-        }
-      });
+    return new Promise((resolve, reject) => {
+      this.afBD.database
+        .ref("agendaHO/" + data.orden + "/" + data.endOk)
+        .set(data, function(error) {
+          if (error) {
+            console.log(error);
+          } else {
+            resolve(true);
+          }
+        });
+    });
   }
   public guardarAgendaHfecha(data) {
     // Guarda la agenda definitiva para historico por orden
-    this.afBD.database.ref("agendaHF/" + data.endOk).set(data, function(error) {
-      if (error) {
-        console.log(error);
-      } else {
-      }
+    return new Promise((resolve, reject) => {
+      this.afBD.database
+        .ref("agendaHF/" + data.endOk)
+        .set(data, function(error) {
+          if (error) {
+            console.log(error);
+          } else {
+            resolve(true);
+          }
+        });
     });
   }
   public EliminarAgenda(data) {
     // Guarda la agenda definitiva para historico por orden
-    this.afBD.database.ref("agenda/" + data.orden).remove();
+    return new Promise((resolve, reject) => {
+      this.afBD.database
+        .ref("agenda/" + data.orden)
+        .remove()
+        .then(() => {
+          resolve(true);
+        });
+    });
   }
   public guardarLogAgenda(data) {
     //armar fecha para indice log y data Log
     let fechahoy = Date.now();
-    this.afBD.database
-      .ref("agenda/" + data.orden + "/log/" + fechahoy)
-      .set(data, function(error) {
-        if (error) {
-          console.log(error);
-        } else {
-        }
-      });
+    return new Promise((resolve, reject) => {
+      this.afBD.database
+        .ref("agenda/" + data.orden + "/log/" + fechahoy)
+        .set(data, function(error) {
+          if (error) {
+            console.log(error);
+          } else {
+            resolve(true);
+          }
+        });
+    });
   }
 
   public ActOrdenAgendada(data) {
-    this.afBD.database.ref("orden/" + data.id).update(data, function(error) {
-      if (error) {
-        console.log(error);
-      } else {
-      }
+    return new Promise((resolve, reject) => {
+      this.afBD.database.ref("orden/" + data.id).update(data, function(error) {
+        if (error) {
+          console.log(error);
+        } else {
+          resolve(true);
+        }
+      });
     });
   }
   public getAgendaTecnico(data) {
@@ -353,5 +382,14 @@ export class FirebaseService {
       });
   }
 
-  constructor(private afBD: AngularFireDatabase) {}
+  public getServerTime() {
+    let time: any = this.afBD.object(".info/serverTimeOffset");
+    let tiempo = new Date().getTime() + time;
+    return tiempo;
+    console.log(tiempo);
+  }
+
+  constructor(private afBD: AngularFireDatabase) {
+    // this.getServerTime();
+  }
 }

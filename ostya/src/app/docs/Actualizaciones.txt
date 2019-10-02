@@ -1,3 +1,25 @@
+----------------------------------------------
+v.1.08.02 - 2/10/2019
+*Mejoras*
+  + Se agrega boton permanente de "Nota" en la actualizacion de ordenes.
+  + No se permite actualizacion de la orden, si no se detecta ubicacion.
+  + Se cambia orden de informe calificaciones, ultimas primero.
+----------------------------------------------
+v.1.08.01 - 29/09/2019
+*Mejoras*
+  + Mejora listado y busqueda de clientes.
+  + Mejora reportes por orden, se incluye todos los filtros en la busqueda.
+  + Mejora campo de busqueda de cliente al crear una orden.
+  + Se agrega configuracion para evitar traduccion automatica de chrome.
+---------------------------------------------
+v.1.08.00 - 27/09/2019
+NUEVAS FUNCIONALIDADES*
+  *Facturacion de ordenes*
+    + Despues de dar solucion a una orden. queda pendiente de facturar.
+    + Despues de realizado el proceso de facturacion, se dá por termanada la orden.
+*Correciones*
+    - Se mejora procedimiento de guardado en la BD, para correguir falla esperadica de no resgistro de calificaciones.
+---------------------------------------------------------
 v.1.07.01 - 26/09/2019
 *Correcciones*
   - reporte de detallado calificaiones, fecha y hora de salida, colocaba la misma de entrada.

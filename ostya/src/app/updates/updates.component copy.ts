@@ -5,8 +5,9 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { AuthenticationService } from "../services/authentication.service";
 import * as jsPDF from "jspdf";
 import { ToolsService } from "../services/tools.service";
-import { ComunicationService } from "../services/comunication.service";
+import { promise } from "protractor";
 import { reject } from "q";
+import { resolve } from "dns";
 @Component({
   selector: "app-updates",
   templateUrl: "./updates.component.html",
@@ -58,13 +59,13 @@ export class UpdatesComponent implements OnInit {
   clienteFire: any;
   lat: number;
   lng: number;
-  distance: any;
+  distance: any = 0;
   userFire: any[];
   asignadoActual: string;
   lngFire: any;
   latFire: any;
   Nota: string;
-  userActual: any;
+  uidActual: any;
   estadoQueCierran: any;
   spinner = false;
   noSistem = [];
@@ -81,40 +82,83 @@ export class UpdatesComponent implements OnInit {
   };
   domicilio: any; //para saber si la orden es a domicilio.
   tServFire: any[];
-  eSr: boolean = false; //define estado en sitio o en remoto.
+  eSr: boolean = false;
   facturar: boolean = false;
   constructor(
     private firebaseService: FirebaseService,
     private route: ActivatedRoute,
     private ruta: Router,
     private authenticationService: AuthenticationService,
-    private tools: ToolsService,
-    private comunicationService: ComunicationService
+    private tools: ToolsService
   ) {
     this.ordenGet.id = this.route.snapshot.params["id"]; //Recupera parametro id de url
     this.agendaGet.id = this.route.snapshot.params["id"]; //Recupera parametro id de url
     //obtener agenda por ID
 
-    // firebaseService
-    //   .obtenerUnoId(this.agendaGet)
-    //   .valueChanges()
-    //   .subscribe(agenda => {
-    //     this.agendaFire = agenda;
-    //     // setTimeout(() => {
-    //     if (this.agendaFire) {
-    //       // alert("llegó la agenda del usuario : " + this.agendaFire.userId);
-    //     }
-    //     // }, 1000);
-    //   });
+    firebaseService
+      .obtenerUnoId(this.agendaGet)
+      .valueChanges()
+      .subscribe(agenda => {
+        this.agendaFire = agenda;
+        // setTimeout(() => {
+        if (this.agendaFire) {
+          this.quality.userId = this.agendaFire.userId;
+          // alert("llegó la agenda del usuario : " + this.agendaFire.userId);
+          this.loadQuality();
+        }
+        // }, 1000);
+      });
+    //obtener orden por ID
+    firebaseService
+      .obtenerUnoId(this.ordenGet)
+      .valueChanges()
+      .subscribe(orden => {
+        this.ordenFire = orden;
+        this.asignadoActual = this.ordenFire.tecnicoAsignado;
+        //actualiza variable a guardar con los datos de la orden actual
+        this.update.orden = this.ordenFire.id;
+        this.update.usuario = this.ordenFire.tecnicoAsignado;
+        this.clienteGet.id = this.ordenFire.idCliente;
+        //crea array de actualizaciones de la orden actual
+        let actualiza = Object.entries(this.ordenFire.updates);
+        this.updateFire = actualiza;
+        //filtro actualizaciones sin usuario "Sistemas"
+        let sinSistema = this.updateFire.filter(
+          sistema => sistema[1].usuario != "Sistema"
+        );
+        this.noSistem = sinSistema;
+        //determina si la orden tiene estado "Creado" o "Programado"
+        let estadoActual = this.ordenFire.estado;
+        if (
+          estadoActual == "Creado" ||
+          estadoActual == "Programado" ||
+          estadoActual == "Reprogramado"
+        ) {
+          this.cOp = true;
+        }
+        if (estadoActual == "En sitio" || estadoActual == "En remoto") {
+          this.eSr = true;
+        }
 
+        this.getCoordCliente();
+      });
     //obtener Estados
-    // firebaseService
-    //   .getPorDoc(this.data)
-    //   .valueChanges()
-    //   .subscribe(estados => {
-    //     this.estadosFire = estados;
-
-    //   });
+    firebaseService
+      .getPorDoc(this.data)
+      .valueChanges()
+      .subscribe(estados => {
+        this.estadosFire = estados;
+        this.estadoQueCierran = this.estadosFire.filter(
+          cierra => cierra.finOrden == true
+        );
+        this.estadosFire.forEach(estado => {
+          if (estado.solucionado == true) {
+            if (estado.nombre == this.ordenFire.estado) {
+              this.facturar = true;
+            }
+          }
+        });
+      });
   }
   getCoordCliente() {
     //obtener cliente por ID
@@ -123,7 +167,7 @@ export class UpdatesComponent implements OnInit {
       .valueChanges()
       .subscribe(cliente => {
         this.clienteFire = cliente;
-        console.log(this.clienteFire);
+        // console.log(this.clienteFire);
 
         for (let i = 0; i < this.clienteFire.direcciones.length; i++) {
           if (this.clienteFire.direcciones[i].sede == this.ordenFire.sede) {
@@ -235,6 +279,10 @@ export class UpdatesComponent implements OnInit {
   }
   fechaHoy = this.tools.convFechaHora(new Date(Date.now()));
   enSitio() {
+    // if (this.clienteFire.coordenadas[0] == 0) {
+    //   this.sinCoordenadas = true;
+    //   // console.log("no tiene coordenadas ");
+    // } else {
     this.agendaFire.coordenadas = [this.lat, this.lng];
     this.agendaFire.estado = "En sitio";
     this.agendaFire.startOk = Date.now();
@@ -305,14 +353,12 @@ export class UpdatesComponent implements OnInit {
       // this.ruta.navigate(["/home"]);
     }
   }
-  addNota($event) {
-    console.log();
-    let laNota: string = $event.path[2].children[1].children[0][0].value;
-    this.Nota = laNota;
-    this.ordenFire.nota += "  - " + " ( " + this.fechaHoy + "). " + this.Nota;
+  addNota() {
+    let hoy = new Date(Date.now());
+    this.ordenFire.nota += "  <+> " + this.Nota + " ( " + this.fechaHoy + "). ";
     this.firebaseService.ActOrdenEstado(this.ordenFire).then(() => {
-      alert("Nota agredada");
-      this.ruta.navigate(["/home"]);
+      this.Nota = "";
+      location.reload();
     });
   }
   cambiarEstado() {
@@ -343,6 +389,27 @@ export class UpdatesComponent implements OnInit {
       resolve(true);
     });
   }
+  ngOnInit() {
+    this.buildForm();
+    this.authenticationService.getStatus().subscribe(status => {
+      this.uidActual = status.uid;
+      this.firebaseService
+        .getUserUid(this.uidActual)
+        .valueChanges()
+        .subscribe(user => {
+          this.userFire = user;
+          // console.log(this.userFire);
+        });
+    });
+    setTimeout(() => {
+      if (this.ordenFire.estado == "En sitio") {
+        this.saliendoSitio = true;
+      } else {
+        this.saliendoSitio = false;
+      }
+      // console.log(this.ordenFire);
+    }, 1000);
+  }
   private buildForm() {
     this.formGroup = new FormGroup({
       update: new FormControl(this.update.update, [
@@ -353,9 +420,9 @@ export class UpdatesComponent implements OnInit {
       salirsitio: new FormControl(this.saliendoSitio, [])
     });
     // -------formulario nota --------
-    // this.formGroupNota = new FormGroup({
-    //   nota: new FormControl(this.update.estado, [Validators.required])
-    // });
+    this.formGroupNota = new FormGroup({
+      nota: new FormControl(this.update.estado, [Validators.required])
+    });
   }
   imprimir() {
     // Conversion de fecha de solicitud
@@ -512,7 +579,7 @@ export class UpdatesComponent implements OnInit {
   }
   loadQuality() {
     this.getQuality().then(() => {
-      console.log(this.qualityFire);
+      // console.log(this.qualityFire);
       if (this.qualityFire) {
         if (this.qualityFire.LLT) {
           this.quality.LLT = this.qualityFire.LLT;
@@ -629,84 +696,5 @@ export class UpdatesComponent implements OnInit {
         this.ruta.navigate(["/home"]);
       }, 1000);
     });
-  }
-  // --- Seleccionar estados que cierran y verifica estado solucionado de la orden para poder facturar---
-  filtroEstados() {
-    this.estadoQueCierran = this.estadosFire.filter(
-      cierra => cierra.finOrden == true
-    );
-    this.estadosFire.forEach(estado => {
-      if (estado.solucionado) {
-        if (estado.solucionado == true) {
-          if (estado.nombre == this.ordenFire.estado) {
-            this.facturar = true;
-          }
-        }
-      }
-    });
-  }
-  ngOnInit() {
-    this.buildForm();
-    //--------obtener orden por ID-----------
-    this.firebaseService
-      .obtenerUnoId(this.ordenGet)
-      .valueChanges()
-      .subscribe(orden => {
-        this.ordenFire = orden;
-        this.asignadoActual = this.ordenFire.tecnicoAsignado;
-        //actualiza variable a guardar con los datos de la orden actual
-        this.update.orden = this.ordenFire.id;
-        this.update.usuario = this.userActual.nombre;
-        this.clienteGet.id = this.ordenFire.idCliente;
-        //crea array de actualizaciones de la orden actual
-        let actualiza = Object.entries(this.ordenFire.updates);
-        this.updateFire = actualiza;
-        //filtro actualizaciones sin usuario "Sistemas"
-        let sinSistema = this.updateFire.filter(
-          sistema => sistema[1].usuario != "Sistema"
-        );
-        this.noSistem = sinSistema;
-        //determina si la orden tiene estado "Creado" o "Programado"
-        let estadoActual = this.ordenFire.estado;
-        if (
-          estadoActual == "Creado" ||
-          estadoActual == "Programado" ||
-          estadoActual == "Reprogramado"
-        ) {
-          this.cOp = true;
-        }
-        if (estadoActual == "En sitio" || estadoActual == "En remoto") {
-          this.eSr = true;
-        }
-        this.getCoordCliente();
-        this.filtroEstados();
-      });
-    // ------------get Agenda de la orden---------------
-    this.firebaseService
-      .obtenerUnoId(this.agendaGet)
-      .valueChanges()
-      .subscribe(agenda => {
-        this.agendaFire = agenda;
-      });
-    // ------------ get Usuario Actual --------------
-    this.comunicationService.getUserLogeed.subscribe(user => {
-      this.userActual = user;
-      this.quality.userId = this.userActual.id;
-      this.loadQuality();
-    });
-    // --------------get Estados ---------------------
-    this.comunicationService.getAllStates.subscribe(estados => {
-      this.estadosFire = estados;
-      console.log(this.facturar);
-    });
-    // ---------activa boton salir de sitio--------------
-    setTimeout(() => {
-      if (this.ordenFire.estado == "En sitio") {
-        this.saliendoSitio = true;
-      } else {
-        this.saliendoSitio = false;
-      }
-      console.log(this.distance);
-    }, 1000);
   }
 }

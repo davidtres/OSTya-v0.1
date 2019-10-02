@@ -24,21 +24,35 @@
     <!-- ------------inicio del formulario --------------------- -->
     <!-- ------------Cliente----------- -->
     <ng-container>
-      <div class="form-row justify-content-md-center ">
+      <!-- <div class="form-row justify-content-md-center ">
         <div class="form-group col-md-10 ">
           <label for="cliente">Cliente</label>
           <select
-            formControlName="cliente"
-            class="form-control"
-            [(ngModel)]="orden.cliente"
-            name="cliente"
-            (change)="setIdCliente()"
+          class="form-control"
+          name="cliente"
+          
           >
-            <option>Seleccione cliente ... </option>
-            <option *ngFor="let clienteSelect of clientesfire"
-              >{{ clienteSelect.nombre }}
-            </option>
-          </select>
+          <option>Seleccione cliente ... </option>
+          <option *ngFor="let clienteSelect of clientesfire"
+          >{{ clienteSelect.nombre }}
+        </option>
+      </select>
+    </div>
+  </div> -->
+      <!-- -------------------- -->
+      <div class="form-row justify-content-md-center ">
+        <div class="form-group col-md-10 ">
+          <label for="typeahead-basic">Seleccionar cliente:</label>
+          <input
+            formControlName="cliente"
+            [(ngModel)]="orden.cliente"
+            (change)="setIdCliente()"
+            id="typeahead-basic"
+            type="text"
+            class="form-control"
+            [ngbTypeahead]="search"
+          />
+          <hr />
         </div>
       </div>
     </ng-container>

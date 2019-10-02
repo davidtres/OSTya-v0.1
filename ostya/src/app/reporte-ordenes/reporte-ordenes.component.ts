@@ -2,6 +2,10 @@ import { Component, OnInit } from "@angular/core";
 import { FirebaseService } from "../services/firebase.service";
 import { ActivatedRoute, Router } from "@angular/router";
 import { FormGroup, FormControl, Validators } from "@angular/forms";
+import { resolve, reject } from "q";
+import { ComunicationService } from "../services/comunication.service";
+import { Observable } from "rxjs";
+import { debounceTime, distinctUntilChanged, map } from "rxjs/operators";
 
 @Component({
   selector: "app-reporte-ordenes",
@@ -21,9 +25,8 @@ export class ReporteOrdenesComponent implements OnInit {
     cerrada: ""
   };
   openClose = ["TODOS", "Abiertas", "Cerradas"];
-  getEstados = {
-    doc: "estados"
-  };
+  desde: any = null;
+  hasta: any = null;
   usuariosFire: any;
   clientesFire: any[];
   estadosFire: any[];
@@ -34,151 +37,244 @@ export class ReporteOrdenesComponent implements OnInit {
   listEstado: any[] = [];
   listClose: any[];
   registros: number;
+  allUsers: any;
+  allClientes: any;
+  allEstados: any;
+  clientSeleted: any;
+  spinner: boolean = false;
   constructor(
     private firebaseService: FirebaseService,
-    private route: ActivatedRoute,
-    private ruta: Router
+    private comunicationService: ComunicationService
   ) {}
   buscarOrden() {
-    this.validarFechas();
-  }
+    if (
+      this.hasta != this.busqueda.hasta ||
+      this.desde !== this.busqueda.desde
+    ) {
+      this.spinner = true;
+      this.ordenesEnFire().then(() => {
+        this.clienteFiltro().then(clientes => {
+          this.listClientsSeleted();
+          this.estadoFiltro().then(() => {
+            this.listClientsSeleted();
+            this.cerradaFiltro().then(() => {
+              this.listClientsSeleted();
+              this.usuarioFiltro().then(() => {
+                this.listClientsSeleted();
+                this.registros = this.ordenFilter.length;
+                this.ordenFilter.sort(function(a, b) {
+                  return b.id - a.id;
+                });
+                console.log(this.ordenFilter);
 
+                this.desde = this.busqueda.desde;
+                this.hasta = this.busqueda.hasta;
+                this.spinner = false;
+              });
+            });
+          });
+        });
+      });
+    } else {
+      this.rebuscarOrden();
+    }
+  }
+  listClientsSeleted() {
+    this.clientSeleted = [];
+    this.ordenFilter.forEach(orden => {
+      if (!this.clientSeleted.includes(orden.cliente)) {
+        this.clientSeleted.push(orden.cliente);
+      }
+    });
+  }
+  rebuscarOrden() {
+    this.spinner = true;
+    this.clienteFiltro().then(() => {
+      this.listClientsSeleted();
+      this.estadoFiltro().then(() => {
+        this.listClientsSeleted();
+        this.cerradaFiltro().then(() => {
+          this.listClientsSeleted();
+          this.usuarioFiltro().then(() => {
+            this.listClientsSeleted();
+            this.registros = this.ordenFilter.length;
+            this.ordenFilter.sort(function(a, b) {
+              return b.id - a.id;
+            });
+            this.spinner = false;
+          });
+        });
+      });
+    });
+  }
   validarFechas() {
     if (Date.parse(this.busqueda.desde) > Date.parse(this.busqueda.hasta)) {
-      this.error("La fecha 'Desde' no puede ser mayor");
+      alert("La fecha 'Desde' no puede ser mayor");
       this.busqueda.desde = "";
     } else {
       this.busqueda.desdeM = Date.parse(this.busqueda.desde); //conversion de fecha input a milisegundos
       this.busqueda.hastaM = Date.parse(this.busqueda.hasta); //conversion de fecha input a milisegundos
-      this.ordenesEnFire();
+      // this.ordenesEnFire();
     }
   }
+  todos() {
+    this.busqueda.cliente = "TODOS";
+  }
   ordenesEnFire() {
-    this.firebaseService
-      .getOrdenesFecha(this.busqueda)
-      .valueChanges()
-      .subscribe(ordenes => {
-        this.ordenFire = ordenes;
-        this.ordenFilter = ordenes;
-        this.llenarListas();
-      });
+    return new Promise((resolve, reject) => {
+      this.firebaseService
+        .getOrdenesFecha(this.busqueda)
+        .valueChanges()
+        .subscribe(ordenes => {
+          this.ordenFire = ordenes;
+          console.log(ordenes);
+          resolve(this.ordenFire);
+        });
+    }).catch(this.error);
   }
   error(arg0: string) {
     alert(arg0);
   }
   clienteFiltro() {
-    this.busqueda.estado = "";
-    this.busqueda.cerrada = "";
-    this.busqueda.tecnico = "";
-    if (this.busqueda.cliente == "TODOS") {
-      this.listCliente = [];
-      this.ordenFilter = this.ordenFire.filter(orden => orden.cliente);
-      this.llenarListas();
-    } else {
-      this.listCliente = [];
-      this.ordenFilter = this.ordenFire.filter(
-        orden => orden.cliente == this.busqueda.cliente
-      );
-      this.llenarListas();
-    }
-  }
-  estadoFiltro() {
-    this.busqueda.cliente = "";
-    this.busqueda.cerrada = "";
-    this.busqueda.tecnico = "";
-    if (this.busqueda.estado == "TODOS") {
-      this.listEstado = [];
-      this.ordenFilter = this.ordenFire.filter(orden => orden.cliente);
-      this.llenarListas();
-    } else {
-      this.listEstado = [];
-      this.ordenFilter = this.ordenFire.filter(
-        orden => orden.estado == this.busqueda.estado
-      );
-      this.llenarListas();
-    }
-  }
-  usuarioFiltro() {
-    this.busqueda.estado = "";
-    this.busqueda.cerrada = "";
-    this.busqueda.cliente = "";
-    if (this.busqueda.tecnico == "TODOS") {
-      this.listUser = [];
-      this.ordenFilter = this.ordenFire.filter(orden => orden.cliente);
-      this.llenarListas();
-    } else {
-      this.listUser = [];
-      this.ordenFilter = this.ordenFire.filter(
-        orden => orden.tecnicoAsignado == this.busqueda.tecnico
-      );
-      this.llenarListas();
-    }
-  }
-  cerradaFiltro() {
-    this.busqueda.estado = "";
-    this.busqueda.cliente = "";
-    this.busqueda.tecnico = "";
-    if (this.busqueda.cerrada == "TODOS") {
-      this.ordenFilter = this.ordenFire.filter(orden => orden.cliente);
-      this.llenarListas();
-    } else {
-      if (this.busqueda.cerrada == "ABIERTAS") {
-        this.ordenFilter = this.ordenFire.filter(
-          orden => orden.cerrada == false
-        );
+    return new Promise((resolve, reject) => {
+      this.clientSeleted = [];
+      if (this.busqueda.cliente == "TODOS") {
+        this.ordenFilter = this.ordenFire.filter(orden => orden.cliente);
+
+        resolve(this.ordenFilter);
       } else {
         this.ordenFilter = this.ordenFire.filter(
-          orden => orden.cerrada == true
+          orden => orden.cliente == this.busqueda.cliente
         );
+        resolve(this.ordenFilter);
       }
-      this.llenarListas();
-    }
+    });
   }
-
+  estadoFiltro() {
+    return new Promise((resolve, reject) => {
+      if (this.busqueda.estado == "TODOS") {
+        this.ordenFilter = this.ordenFilter.filter(orden => orden.cliente);
+        resolve(this.ordenFilter);
+      } else {
+        this.ordenFilter = this.ordenFilter.filter(
+          orden => orden.estado == this.busqueda.estado
+        );
+        resolve(this.ordenFilter);
+      }
+    });
+  }
+  usuarioFiltro() {
+    return new Promise((resolve, reject) => {
+      if (this.busqueda.tecnico == "TODOS") {
+        this.ordenFilter = this.ordenFilter.filter(orden => orden.cliente);
+        resolve(this.ordenFilter);
+      } else {
+        this.ordenFilter = this.ordenFilter.filter(
+          orden => orden.tecnicoAsignado == this.busqueda.tecnico
+        );
+        resolve(this.ordenFilter);
+      }
+    });
+  }
+  cerradaFiltro() {
+    return new Promise((resolve, reject) => {
+      if (this.busqueda.cerrada == "TODOS") {
+        this.ordenFilter = this.ordenFilter.filter(orden => orden.cliente);
+        resolve(this.ordenFilter);
+      } else {
+        if (this.busqueda.cerrada == "ABIERTAS") {
+          this.ordenFilter = this.ordenFilter.filter(
+            orden => orden.cerrada == false
+          );
+          resolve(this.ordenFilter);
+        } else {
+          this.ordenFilter = this.ordenFilter.filter(
+            orden => orden.cerrada == true
+          );
+          resolve(this.ordenFilter);
+        }
+      }
+    });
+  }
+  // -----------llenado de select's---------------
   listaClientes() {
-    this.registros = this.ordenFilter.length;
     this.listCliente = [];
-    this.ordenFilter.forEach(orden => {
-      if (!this.listCliente.includes(orden.cliente)) {
-        this.listCliente.push(orden.cliente);
+    this.allClientes.forEach(cliente => {
+      if (!this.listCliente.includes(cliente.nombre)) {
+        this.listCliente.push(cliente.nombre);
         this.listCliente.sort();
       }
     });
   }
   listaEstados() {
     this.listEstado = [];
-    this.ordenFilter.forEach(orden => {
-      if (!this.listEstado.includes(orden.estado)) {
-        this.listEstado.push(orden.estado);
+    this.allEstados.forEach(estado => {
+      if (!this.listEstado.includes(estado.nombre)) {
+        this.listEstado.push(estado.nombre);
         this.listEstado.sort();
       }
     });
   }
   listaUsuario() {
     this.listUser = [];
-    this.ordenFilter.forEach(orden => {
-      if (!this.listUser.includes(orden.tecnicoAsignado)) {
-        this.listUser.push(orden.tecnicoAsignado);
+    this.allUsers.forEach(user => {
+      if (!this.listUser.includes(user.nombre)) {
+        this.listUser.push(user.nombre);
         this.listUser.sort();
       }
     });
   }
-  llenarListas() {
-    this.listaClientes();
-    this.listaEstados();
-    this.listaUsuario();
-  }
+  // llenarListas() {
+  //   this.listaClientes();
+  //   this.listaEstados();
+  //   this.listaUsuario();
+  // }
   ngOnInit() {
+    // --------obtener clientes --------
+    this.comunicationService.getAllClients.subscribe(clientes => {
+      this.allClientes = clientes;
+      this.listaClientes();
+    });
+    // ------obtener usuarios-------
+    this.comunicationService.getAllUser.subscribe(users => {
+      this.allUsers = users;
+      this.listaUsuario();
+    });
+    // --------obtener estados-------
+    this.comunicationService.getAllStates.subscribe(estados => {
+      this.allEstados = estados;
+      this.listaEstados();
+    });
     this.buildForm();
+    setTimeout(() => {
+      console.log(this.busqueda);
+    }, 2000);
   }
+  // -----------formulario------------
   private buildForm() {
     this.formGroup = new FormGroup({
       desde: new FormControl(this.busqueda.desde, [Validators.required]),
       hasta: new FormControl(this.busqueda.hasta, [Validators.required]),
-      tecnico: new FormControl(this.busqueda.tecnico, []),
-      estado: new FormControl(this.busqueda.estado, []),
-      cliente: new FormControl(this.busqueda.cliente, []),
-      cerrada: new FormControl(this.busqueda.cerrada, [])
+      tecnico: new FormControl(this.busqueda.tecnico, [Validators.required]),
+      estado: new FormControl(this.busqueda.estado, [Validators.required]),
+      cliente: new FormControl(this.busqueda.cliente, [
+        Validators.required,
+        Validators.minLength(5)
+      ]),
+      cerrada: new FormControl(this.busqueda.cerrada, [Validators.required])
     });
   }
+  // Filtro busqueda de cliente
+  search = (text$: Observable<string>) =>
+    text$.pipe(
+      debounceTime(200),
+      distinctUntilChanged(),
+      map(term =>
+        term.length < 3
+          ? []
+          : this.listCliente
+              .filter(v => v.toLowerCase().indexOf(term.toLowerCase()) > -1)
+              .slice(0, 10)
+      )
+    );
 }

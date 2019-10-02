@@ -35,28 +35,30 @@
         />
       </div>
       <!-- ----------------Cliente-------------- -->
-      <div class="form-group col-md-3">
-        <label for="Long">Cliente</label>
-        <select
-          formControlName="cliente"
-          (change)="clienteFiltro()"
-          class="form-control"
+      <div class="form-group col-md-5">
+        <a href=""
+          ><label id="todos" for="typeahead-basic" (click)="todos()"
+            >TODOS</label
+          >
+        </a>
+        <input
+          placeholder="Buscar cliente...."
           [(ngModel)]="busqueda.cliente"
-        >
-          <option></option>
-          <option>TODOS</option>
-          <option *ngFor="let cliente of listCliente">{{ cliente }} </option>
-        </select>
+          formControlName="cliente"
+          id="typeahead-basic"
+          type="text"
+          class="form-control"
+          [ngbTypeahead]="search"
+        />
       </div>
-      <div class="form-group col-md-1"></div>
+      <!-- <div class="form-group col-md-1"></div> -->
     </div>
+    <!-- -------------- Estado ------------------ -->
     <div class="form-row justify-content-md-center">
-      <!-- -------------- Estado ------------------ -->
       <div class="form-group col-md-3">
         <label for="Long">Estado</label>
         <select
           formControlName="estado"
-          (change)="estadoFiltro()"
           class="form-control"
           [(ngModel)]="busqueda.estado"
         >
@@ -70,7 +72,6 @@
         <label for="Long">Cerrada</label>
         <select
           formControlName="cerrada"
-          (change)="cerradaFiltro()"
           class="form-control"
           [(ngModel)]="busqueda.cerrada"
         >
@@ -85,7 +86,6 @@
         <label for="Long">Usuario</label>
         <select
           formControlName="tecnico"
-          (change)="usuarioFiltro()"
           class="form-control"
           [(ngModel)]="busqueda.tecnico"
         >
@@ -96,9 +96,17 @@
       </div>
       <!-- -------boton buscar ---------- -->
       <div class="form-group col-md-1" style="margin-top: 32px">
-        <!-- <button type="submit" class="btn btn-primary">
+        <button type="submit" class="btn btn-primary">
           Buscar
-        </button> -->
+        </button>
+      </div>
+      <div class="form-group col-md-1" style="margin-top: 32px">
+        <div
+          *ngIf="spinner"
+          class="spinner-border ml-auto text-primary"
+          role="status"
+          aria-hidden="true"
+        ></div>
       </div>
     </div>
 
@@ -108,12 +116,12 @@
   <div class="container" *ngIf="registros">
     <h6>Registros: {{ registros }}</h6>
   </div>
-  <ng-container *ngFor="let cliente of listCliente">
+  <ng-container *ngFor="let cliente of clientSeleted">
     <br />
     <h4>
-      <strong style="color:#004085">{{ cliente }} </strong>
+      <strong *ngIf="ordenFilter" style="color:#004085">{{ cliente }} </strong>
     </h4>
-    <table class="d table-bordered table-sm ">
+    <table *ngIf="ordenFilter" class="d table-bordered table-sm ">
       <thead class="encabezado">
         <tr>
           <th id="orden" scope="col">Orden</th>
@@ -130,11 +138,14 @@
           <td id="ingreso">
             {{ ordenes.fechaSolicitud | date: "dd/MM/yyyy , hh:mm a" }}
           </td>
-          <td id="cliente">{{ ordenes.tecnicoAsignado }}.</td>
-          <td id="solicitud">
+          <td id="asignado">{{ ordenes.tecnicoAsignado }}.</td>
+          <td id="soliReporte">
             {{ ordenes.solicitud }}
             <span class="badge badge-pill badge-secondary">{{
               ordenes.estado
+            }}</span
+            ><span class="badge badge-pill badge-primary">{{
+              ordenes.solucionador
             }}</span>
           </td>
         </tr>

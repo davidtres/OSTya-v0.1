@@ -18,13 +18,11 @@ export class QualityDetalleComponent implements OnInit {
   listOrden: any[] = [];
   constructor(
     private firebaseService: FirebaseService,
-    private route: ActivatedRoute,
-    private ruta: Router
+    private route: ActivatedRoute
   ) {}
   qltParams: any;
   ngOnInit() {
     this.id = this.route.snapshot.params["id"];
-    // this.user = this.route.snapshot.queryParams["user"];
     this.route.queryParamMap.subscribe(params => {
       this.qltParams = { ...params.keys, ...params };
     });
@@ -37,9 +35,10 @@ export class QualityDetalleComponent implements OnInit {
         this.qualityFire.LLT.forEach(qlt => {
           if (!this.listOrden.includes(qlt.orden)) {
             this.listOrden.push(qlt.orden);
-            this.listOrden.sort();
+            // console.log(this.qualityFire.LLT.length);
           }
         });
+        this.listOrden.reverse();
       });
   }
 }

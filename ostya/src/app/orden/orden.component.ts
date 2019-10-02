@@ -3,6 +3,15 @@ import { FormGroup, FormControl, Validators } from "@angular/forms";
 import { Orden } from "../interfaces/orden";
 import { FirebaseService } from "../services/firebase.service";
 import { ActivatedRoute, Router } from "@angular/router";
+import { Observable } from "rxjs";
+import {
+  debounceTime,
+  distinctUntilChanged,
+  map,
+  filter
+} from "rxjs/operators";
+import { ComunicationService } from "../services/comunication.service";
+import { DATE_PROPS } from "@fullcalendar/core/structs/event";
 
 @Component({
   selector: "app-orden",
@@ -10,8 +19,10 @@ import { ActivatedRoute, Router } from "@angular/router";
   styleUrls: ["./orden.component.css"]
 })
 export class OrdenComponent implements OnInit {
+  dateFire: any = this.firebaseService.dateFire;
   public formGroup: FormGroup; //variable para formulario
   usuariosfire: any; //almacena usuarios obtenidos de firebase
+  tipoOrden: any;
   clientesfire: any; //almacena clientes obtenidos de firebase
   consecutivofire: any; //almacena clientes obtenidos de firebase
   id: any = null; //para capturar parametro
@@ -23,7 +34,7 @@ export class OrdenComponent implements OnInit {
   orden: Orden = {
     id: 0,
     cliente: "",
-    fechaSolicitud: new Date(Date.now()),
+    fechaSolicitud: this.dateFire,
     tecnicoAsignado: "1. POR ASIGNAR",
     tipo: "",
     equipo: "",
@@ -39,13 +50,18 @@ export class OrdenComponent implements OnInit {
     uid: "",
     Solucionador: "",
     sede: "",
-    domicilio: null
+    domicilio: null,
+    factura: "0",
+    valor: 0,
+    facturada: false
   };
-
+  clientes: any;
+  userLogged: any;
   constructor(
     private firebaseService: FirebaseService,
     private route: ActivatedRoute,
-    private ruta: Router
+    private ruta: Router,
+    private comunication: ComunicationService
   ) {
     let dataTserv = {
       doc: "tServ"
@@ -65,6 +81,10 @@ export class OrdenComponent implements OnInit {
       .subscribe(clientes => {
         this.clientesfire = clientes;
         firebaseService.ordenanzaNombre(this.clientesfire);
+        this.clientes = this.clientesfire.map(cliente => {
+          return cliente.nombre;
+        });
+        console.log(this.clientes);
       });
 
     //Se guardan los usuarios obtenidos de firebase
@@ -114,6 +134,9 @@ export class OrdenComponent implements OnInit {
   }
   ngOnInit() {
     this.buildForm();
+    this.comunication.getUserLogeed.subscribe(user => {
+      this.userLogged = user;
+    });
   }
   domicilio() {
     this.tipoOrden.forEach(element => {
@@ -147,7 +170,7 @@ export class OrdenComponent implements OnInit {
   guardarOrden() {
     this.guardando = true;
     //Asignacion de fecha de creacion del la orden
-    this.asignarFecha();
+    // this.asignarFecha();
     //Si es nuevo, incrementa ID y se lo asigna
     if (this.orden.modificador == "new") {
       this.orden.id = this.consecutivofire[1] + 1;
@@ -157,13 +180,14 @@ export class OrdenComponent implements OnInit {
 
     //tiempo para guardado en firebase, reseteear formulario e ir a "Programacion".
     setTimeout(() => {
-      let startAgenda = new Date(this.orden.fechaSolicitud);
+      let startAgenda = new Date(Date.now());
       console.log(startAgenda.toDateString());
       this.update = {
         update:
           "Orden Creada el dia : " +
           startAgenda.toUTCString() +
-          ", por el usuario: LOGUEADO",
+          ", por el usuario: " +
+          this.userLogged.nombre,
         estado: this.orden.estado,
         usuario: "Sistema",
         orden: this.orden.id,
@@ -189,7 +213,6 @@ export class OrdenComponent implements OnInit {
         console.log(this.clienteSeleccionado[0].direcciones);
       }
     }
-    // console.log(this.orden.idCliente);
   }
 
   // Validacion si el cliente existe.
@@ -201,16 +224,25 @@ export class OrdenComponent implements OnInit {
       this.existe = true;
       setTimeout(() => {
         this.existe = false;
-        // this.orden = null;
       }, 3000);
     }
   }
-  asignarFecha() {
-    let fechaHoy: any;
-    fechaHoy = Date.now();
-    this.orden.fechaSolicitud = fechaHoy;
-    //return console.log(this.cliente.fechaCreacion);
-  }
-
-  tipoOrden: any;
+  // asignarFecha() {
+  //   let fechaHoy: any;
+  //   fechaHoy = Date.now();
+  //   this.orden.fechaSolicitud = fechaHoy;
+  // }
+  // Filtro busqueda de cliente
+  search = (text$: Observable<string>) =>
+    text$.pipe(
+      debounceTime(200),
+      distinctUntilChanged(),
+      map(term =>
+        term.length < 3
+          ? []
+          : this.clientes
+              .filter(v => v.toLowerCase().indexOf(term.toLowerCase()) > -1)
+              .slice(0, 10)
+      )
+    );
 }
