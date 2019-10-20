@@ -29,16 +29,17 @@ export class MapaComponent implements OnInit {
       console.log(position);
       let startLat = parseFloat(startPos.coords.latitude);
       let startLon = parseFloat(startPos.coords.longitude);
+      let accuracy = Math.trunc(startPos.coords.accuracy);
       this.lat = startLat;
       this.lng = startLon;
       document.getElementById("accuracy").innerHTML =
         " Precisión: " +
-        startPos.coords.accuracy +
+        accuracy +
         " mts ." +
-        "Latitud: " +
-        startPos.coords.latitude +
-        " Longitud: " +
-        startPos.coords.longitude;
+        "Lat: " +
+        startLat.toFixed(6) +
+        " Long: " +
+        startLon.toFixed(6);
     };
     var geoError = function(error) {
       console.log("Error occurred. Error code: " + error.code);

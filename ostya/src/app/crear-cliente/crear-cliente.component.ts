@@ -17,7 +17,7 @@ export class CrearClienteComponent implements OnInit {
   cero: number = 0; //contador de direcciones
   // Variable contiene formulario HTML
   public formGroup: FormGroup;
-  private searchField: FormControl;
+  public searchField: FormControl;
   results$: Observable<any>;
   // varible para interactuar con campos del HTML (Interfaces)
   cliente: Cliente = {
@@ -29,8 +29,8 @@ export class CrearClienteComponent implements OnInit {
       {
         sede: null,
         direccion: null,
-        lat: null,
-        lng: null
+        lat: 0,
+        lng: 0
       }
     ],
     telefono: null,
@@ -55,6 +55,7 @@ export class CrearClienteComponent implements OnInit {
   clienteObtenido: any; //se guarda cliente filtrado por el paramtro
   results: Observable<any>;
   spinner: boolean = false;
+  edit: boolean = false;
 
   constructor(
     private firebaseService: FirebaseService,
@@ -78,7 +79,6 @@ export class CrearClienteComponent implements OnInit {
       .valueChanges()
       .subscribe(clientes => {
         this.clientesfire = clientes;
-        console.log(this.clientesfire);
       });
     //Se captura parametro de la URl
     this.id = this.route.snapshot.params["id"];
@@ -89,10 +89,16 @@ export class CrearClienteComponent implements OnInit {
         .valueChanges()
         .subscribe(cliente => {
           this.clienteObtenido = cliente;
-          //console.log(this.clienteObtenido);
-          //this.cliente = this.clienteObtenido
+          console.log(this.clienteObtenido);
           this.cliente = this.clienteObtenido;
+          this.verificarDir();
         });
+    }
+  }
+  verificarDir() {
+    if (!this.cliente.direcciones) {
+      this.cliente.direcciones = [];
+      console.log(this.cliente);
     }
   }
   buscarDir: string;
@@ -107,6 +113,11 @@ export class CrearClienteComponent implements OnInit {
   }
   irSede(): void {
     this.sedeCliente.nativeElement.focus();
+  }
+  eliminarSede() {
+    if (confirm("Seguro quiere eliminar esta sede?")) {
+      this.clearAdress();
+    }
   }
   // asignar o remover software a un equipo.
   clearAdress() {
@@ -123,10 +134,37 @@ export class CrearClienteComponent implements OnInit {
     lat: null,
     lng: null
   };
+  editarDir($event) {
+    let sede = $event.path[3].children[1].innerText;
+    if (this.newDireccion.sede) {
+      alert("Termine con la edicion actual");
+    } else {
+      this.cliente.direcciones.forEach((direccion, i) => {
+        if (direccion.sede == sede) {
+          this.newDireccion.sede = direccion.sede;
+          this.newDireccion.direccion = direccion.direccion;
+          if (direccion.lat) {
+            this.newDireccion.lat = direccion.lat;
+            this.newDireccion.lng = direccion.lng;
+          }
+
+          this.edit = true;
+          this.cliente.direcciones.splice(i, 1);
+        }
+      });
+    }
+  }
+  eliminarCoords() {
+    if (confirm("Seguro quiere eliminar coordenadas?")) {
+      this.newDireccion.lat = null;
+      this.newDireccion.lng = null;
+    }
+  }
   addDireccion() {
     if (!this.newDireccion.sede || !this.newDireccion.direccion) {
       return alert("Faltan sede o dirección.");
     } else {
+      this.newDireccion.sede = this.newDireccion.sede.trim();
       if (
         this.cliente.direcciones.length == 1 &&
         !this.cliente.direcciones[0].sede
@@ -139,8 +177,10 @@ export class CrearClienteComponent implements OnInit {
       } else {
         this.cliente.direcciones.push(this.newDireccion);
         this.clearAdress();
+        this.edit = false;
       }
     }
+    console.log(this.cliente);
   }
   removeDir() {
     if (this.cliente.direcciones.length == 1) {
@@ -198,19 +238,23 @@ export class CrearClienteComponent implements OnInit {
 
   // funcion del boton "Crear cliente"
   guardarCliente() {
-    this.spinner = true;
-    //Asignacion de fecha de creacion del cliente
-    this.asignarFecha();
-    // llamado al metodo "guardarCliente del servicio para comunicacion con firebase"
-    this.firebaseService.guardarCliente(this.cliente);
-    //NewCliente verdadero para enviar alert de creacion en html
-    this.NewCliente = true;
-    //tiempo para guardado en firebase, reseteear formulario y regregar al listado de clientes.
-    setTimeout(() => {
-      this.NewCliente = false;
-      this.onReset();
-      this.ruta.navigate(["/listar-cliente"]);
-    }, 3000);
+    if (!this.newDireccion.sede && !this.newDireccion.direccion) {
+      this.spinner = true;
+      //Asignacion de fecha de creacion del cliente
+      this.asignarFecha();
+      // llamado al metodo "guardarCliente del servicio para comunicacion con firebase"
+      this.firebaseService.guardarCliente(this.cliente);
+      //NewCliente verdadero para enviar alert de creacion en html
+      this.NewCliente = true;
+      //tiempo para guardado en firebase, reseteear formulario y regregar al listado de clientes.
+      setTimeout(() => {
+        this.NewCliente = false;
+        this.onReset();
+        this.ruta.navigate(["/listar-cliente"]);
+      }, 3000);
+    } else {
+      alert("Debe terminar de editar direccion antes de guardar");
+    }
   }
 
   // Borrar el formulario

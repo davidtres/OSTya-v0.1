@@ -35,10 +35,11 @@ export class QualityDetalleComponent implements OnInit {
         this.qualityFire.LLT.forEach(qlt => {
           if (!this.listOrden.includes(qlt.orden)) {
             this.listOrden.push(qlt.orden);
-            // console.log(this.qualityFire.LLT.length);
+            // console.log(this.qualityFire.LLT);
           }
         });
         this.listOrden.reverse();
+        console.log(this.qualityFire);
       });
   }
 }

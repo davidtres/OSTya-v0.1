@@ -3,14 +3,14 @@
 </div>
 <br />
 <div class="container card">
-  <h3>TIPOS DE SERVICIOS</h3>
+  <h3>TIPOS DE EQUIPOS</h3>
   <br />
   <div class="col-sm-4">
     <a
       class="dropdown-item"
-      routerLink="/tipo-servicio/new"
+      routerLink="/tipo-equipo/new"
       class="btn btn-primary"
-      >Nuevo Tipo Servicio</a
+      >Nuevo Tipo Equipo</a
     >
   </div>
 
@@ -22,17 +22,14 @@
           <tr>
             <th scope="col">ID</th>
             <th scope="col">NOMBRE</th>
-            <th scope="col">DOMICILIO</th>
           </tr>
         </thead>
-        <tbody *ngFor="let tServ of tServfire; let i = index">
+        <tbody *ngFor="let tServ of tEquipoFire; let i = index">
           <tr>
             <th scope="row">{{ i + 1 }}</th>
-            <a routerLink="/tipo-servicio/{{ tServ.id }}"
+            <a routerLink="/tipo-equipo/{{ tServ.id }}"
               ><td>{{ tServ.nombre }}</td></a
             >
-            <td *ngIf="tServ.visita">SI</td>
-            <td *ngIf="!tServ.visita">NO</td>
           </tr>
         </tbody>
       </table>

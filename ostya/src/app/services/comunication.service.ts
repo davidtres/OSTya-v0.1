@@ -29,10 +29,23 @@ export class ComunicationService {
   public allClientsChange(clients: []): void {
     this.allClients.next(clients);
   }
+  // ------------Todos los clientes solo nombre -----------
+  private allClientsNames = new BehaviorSubject<[]>([]);
+  public getAllClientsNames = this.allClientsNames.asObservable();
+  public allClientsNamesChange(clients: []): void {
+    this.allClientsNames.next(clients);
+    // console.log(clients);
+  }
   // ---------------Todas las Agendas------------
   private allAgendas = new BehaviorSubject<[]>([]);
   public getAllAgendas = this.allAgendas.asObservable();
   public allAgendasChange(clients: []): void {
     this.allAgendas.next(clients);
+  }
+  // ----------Coordenas actuales ------------
+  private coordsNow = new BehaviorSubject<{}>({});
+  public getCoordsNow = this.coordsNow.asObservable();
+  public coordsChange(coords: {}): void {
+    this.coordsNow.next(coords);
   }
 }

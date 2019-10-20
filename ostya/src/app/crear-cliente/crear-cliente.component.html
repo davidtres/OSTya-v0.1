@@ -1,6 +1,6 @@
 <br />
 <div class="container card">
-  <ng-container *ngIf="cliente.id == new; then Crea; else Edita">
+  <ng-container *ngIf="!(cliente.id == id); then Crea; else Edita">
   </ng-container>
   <ng-template #Crea>
     <div>
@@ -188,16 +188,77 @@
             readonly="readonly"
           />
         </div>
-        <div class="form-group col-md-1" style="padding-top: 31px">
+        <!-----------botones agregar eliminar direccion-------- -->
+        <div *ngIf="!edit" class="form-group " style="padding-top: 31px">
           <button
+            style="padding: 4px"
             type="button"
             class="btn btn-success"
             (click)="addDireccion()"
+            ngbPopover=""
+            triggers="mouseenter:mouseleave"
+            popoverTitle="Agregar sede"
           >
-            +
+            <img
+              src="https://img.icons8.com/material-outlined/24/000000/filled-plus-2-math.png"
+            />
           </button>
-          <button type="button" class="btn btn-danger" (click)="removeDir()">
-            <strong>-</strong>
+          <button
+            style="padding: 4px"
+            type="button"
+            class="btn btn-danger"
+            (click)="removeDir()"
+            ngbPopover=""
+            triggers="mouseenter:mouseleave"
+            popoverTitle="Eliminar Sede"
+          >
+            <img
+              src="https://img.icons8.com/material-outlined/24/000000/minus-2-math.png"
+            />
+          </button>
+        </div>
+        <!-- -----------Editar sedes ------------------ -->
+        <!-- ----------------Guardar Edicion----------- -->
+        <div style="padding-top: 26px" *ngIf="edit">
+          <button
+            ngbPopover=" Debe guardar el cliente al finalizar ediciones"
+            triggers="mouseenter:mouseleave"
+            popoverTitle="Guardar edición"
+            type="button"
+            class="btn btn-ligth"
+            (click)="addDireccion()"
+          >
+            <img
+              src="https://img.icons8.com/cute-clipart/35/000000/save-all.png"
+            />
+          </button>
+          <!-- -------------Eliminar Coordenadas ------- -->
+          <button
+            style="padding: 0px 0px 4px 0px;"
+            type="button"
+            class="btn btn-ligth"
+            ngbPopover="Se deben volver a asignar"
+            triggers="mouseenter:mouseleave"
+            popoverTitle="Eliminar Coordenadas"
+            (click)="eliminarCoords()"
+          >
+            <img
+              src="https://img.icons8.com/color/40/000000/gps-disconnected.png"
+            />
+          </button>
+          <!-- ----------------Eliminar sedes ---------- -->
+          <button
+            style="padding: 0px 0px 4px 4px;"
+            type="button"
+            class="btn btn-ligth"
+            ngbPopover="No se podrá recuperar"
+            triggers="mouseenter:mouseleave"
+            popoverTitle="Eliminar Sede"
+            (click)="eliminarSede()"
+          >
+            <img
+              src="https://img.icons8.com/cute-clipart/35/000000/delete-property.png"
+            />
           </button>
         </div>
       </div>
@@ -222,6 +283,18 @@
               <td>{{ item.direccion }}</td>
               <td>{{ item.lat }}</td>
               <td>{{ item.lng }}</td>
+              <td>
+                <button
+                  style="padding:0px"
+                  type="button"
+                  class="btn btn-ligth"
+                  (click)="editarDir($event)"
+                >
+                  <img
+                    src="https://img.icons8.com/officel/25/000000/edit.png"
+                  />
+                </button>
+              </td>
             </tr>
           </tbody>
         </table>

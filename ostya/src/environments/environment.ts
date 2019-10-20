@@ -15,7 +15,7 @@ export const environment = {
   }
 };
 
-// // OSTYA -DEMO
+// OSTYA -DEMO
 // export const environment = {
 //   production: false,
 //   firebase: {

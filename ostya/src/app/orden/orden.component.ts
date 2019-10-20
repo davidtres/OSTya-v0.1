@@ -4,14 +4,8 @@ import { Orden } from "../interfaces/orden";
 import { FirebaseService } from "../services/firebase.service";
 import { ActivatedRoute, Router } from "@angular/router";
 import { Observable } from "rxjs";
-import {
-  debounceTime,
-  distinctUntilChanged,
-  map,
-  filter
-} from "rxjs/operators";
+import { debounceTime, distinctUntilChanged, map } from "rxjs/operators";
 import { ComunicationService } from "../services/comunication.service";
-import { DATE_PROPS } from "@fullcalendar/core/structs/event";
 
 @Component({
   selector: "app-orden",
@@ -19,7 +13,7 @@ import { DATE_PROPS } from "@fullcalendar/core/structs/event";
   styleUrls: ["./orden.component.css"]
 })
 export class OrdenComponent implements OnInit {
-  dateFire: any = this.firebaseService.dateFire;
+  // dateFire: any = this.firebaseService.dateFire;
   public formGroup: FormGroup; //variable para formulario
   usuariosfire: any; //almacena usuarios obtenidos de firebase
   tipoOrden: any;
@@ -34,7 +28,7 @@ export class OrdenComponent implements OnInit {
   orden: Orden = {
     id: 0,
     cliente: "",
-    fechaSolicitud: this.dateFire,
+    fechaSolicitud: new Date(Date.now()),
     tecnicoAsignado: "1. POR ASIGNAR",
     tipo: "",
     equipo: "",
@@ -48,7 +42,7 @@ export class OrdenComponent implements OnInit {
     modificador: "new",
     idCliente: 0,
     uid: "",
-    Solucionador: "",
+    solucionador: "",
     sede: "",
     domicilio: null,
     factura: "0",
@@ -80,11 +74,6 @@ export class OrdenComponent implements OnInit {
       .valueChanges()
       .subscribe(clientes => {
         this.clientesfire = clientes;
-        firebaseService.ordenanzaNombre(this.clientesfire);
-        this.clientes = this.clientesfire.map(cliente => {
-          return cliente.nombre;
-        });
-        console.log(this.clientes);
       });
 
     //Se guardan los usuarios obtenidos de firebase
@@ -137,6 +126,9 @@ export class OrdenComponent implements OnInit {
     this.comunication.getUserLogeed.subscribe(user => {
       this.userLogged = user;
     });
+    this.comunication.getAllClientsNames.subscribe(clientes => {
+      this.clientes = clientes;
+    });
   }
   domicilio() {
     this.tipoOrden.forEach(element => {
@@ -170,7 +162,7 @@ export class OrdenComponent implements OnInit {
   guardarOrden() {
     this.guardando = true;
     //Asignacion de fecha de creacion del la orden
-    // this.asignarFecha();
+    this.asignarFecha();
     //Si es nuevo, incrementa ID y se lo asigna
     if (this.orden.modificador == "new") {
       this.orden.id = this.consecutivofire[1] + 1;
@@ -227,12 +219,14 @@ export class OrdenComponent implements OnInit {
       }, 3000);
     }
   }
-  // asignarFecha() {
-  //   let fechaHoy: any;
-  //   fechaHoy = Date.now();
-  //   this.orden.fechaSolicitud = fechaHoy;
-  // }
+  asignarFecha() {
+    let fechaHoy: any;
+    fechaHoy = Date.now();
+    this.orden.fechaSolicitud = fechaHoy;
+  }
   // Filtro busqueda de cliente
+
+  // ----------typeahead cliente---------------
   search = (text$: Observable<string>) =>
     text$.pipe(
       debounceTime(200),

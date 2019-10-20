@@ -65,5 +65,8 @@ export class ListarClienteComponent implements OnInit {
       }
     });
   }
+  cantList(){
+    this.page = 1;
+  }
   ngOnInit() {}
 }

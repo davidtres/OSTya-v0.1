@@ -17,6 +17,7 @@ export class MenuComponent implements OnInit {
   clientesFire: any;
   estadosFire: any;
   agendasFire: any;
+  clientes: any;
   constructor(
     private firebaseService: FirebaseService,
     private router: Router,
@@ -42,11 +43,36 @@ export class MenuComponent implements OnInit {
       });
     });
   }
+  obtenerUbicacion() {
+    let coords;
+    let startPos;
+    let geoOptions = {
+      enableHighAccuracy: true
+    };
+    let geoSuccess = position => {
+      startPos = position;
+      let startLat = parseFloat(startPos.coords.latitude);
+      let startLon = parseFloat(startPos.coords.longitude);
+      coords = {
+        lat: startLat,
+        lng: startLon
+      };
+    };
+    let geoError = function(error) {
+      // console.log("Error occurred. Error code: " + error.code);
+    };
+    navigator.geolocation.getCurrentPosition(geoSuccess, geoError, geoOptions);
+    setTimeout(() => {
+      let coordsNow = coords;
+      this.comunicationService.coordsChange(coordsNow);
+      console.log(coordsNow);
+    }, 1000);
+  }
   ngOnInit() {
     // --------obtener usuario logueado-----------
     this.getUserStatus().then(user => {
       if (user) {
-        console.log(user);
+        // console.log(user);
         this.firebaseService
           .getUserUid(this.userFireAuth.uid)
           .valueChanges()
@@ -80,6 +106,11 @@ export class MenuComponent implements OnInit {
       .subscribe(clientes => {
         this.clientesFire = clientes;
         this.comunicationService.allClientsChange(this.clientesFire);
+        this.firebaseService.ordenanzaNombre(this.clientesFire);
+        this.clientes = this.clientesFire.map(cliente => {
+          return cliente.nombre;
+        });
+        this.comunicationService.allClientsNamesChange(this.clientes);
       });
     // --------obtener todos los estados--------
     let estados = {
@@ -92,6 +123,7 @@ export class MenuComponent implements OnInit {
         this.estadosFire = estados;
         this.comunicationService.allStatesChange(this.estadosFire);
       });
+    // -----------obtener todas las agendas-----------
     this.firebaseService
       .getAllAgendas()
       .valueChanges()
@@ -99,5 +131,6 @@ export class MenuComponent implements OnInit {
         this.agendasFire = agendas;
         this.comunicationService.allAgendasChange(this.agendasFire);
       });
+    this.obtenerUbicacion();
   }
 }

@@ -1,9 +1,12 @@
 <!-- <div class="well"><a [routerLink]="['/home']">Home</a> / Ordenes Abiertas</div> -->
-<div class="container">
+<!-- <div class="container">
   <br />
   <div style="text-align: center">
     <h3 class="alert alert-primary">ORDENES ABIERTAS POR USUARIO</h3>
   </div>
+  <p>
+    <b *ngIf="ordenFire"> Ordenes abiertas: {{ ordenFire.length }}</b>
+  </p>
   <ng-container *ngFor="let User of listUser">
     <br />
     <h4>
@@ -64,4 +67,85 @@
       </tbody>
     </table> </ng-container
   ><br />
+</div> -->
+<br />
+<div class="text-center">
+  <h3 class="alert alert-primary">ORDENES ABIERTAS POR USUARIO</h3>
 </div>
+<p>
+  <b *ngIf="ordenFire"> Ordenes abiertas: {{ ordenFire.length }}</b>
+</p>
+<ngb-accordion
+  #acc="ngbAccordion"
+  activeIds="ngb-panel-0"
+  *ngFor="let User of listUser"
+>
+  <ngb-panel>
+    <ng-template ngbPanelTitle>
+      <span
+        ><b>{{ User }}</b></span
+      >
+    </ng-template>
+    <ng-template id="acordeon" ngbPanelContent>
+      <table class="d table-bordered table-sm ">
+        <thead class="encabezado">
+          <tr>
+            <th id="orden" scope="col">Orden</th>
+            <th id="ingreso" scope="col">Ingreso</th>
+            <th id="cliente" scope="col">Cliente</th>
+            <th id="solicitud" scope="col">Solicitud</th>
+          </tr>
+        </thead>
+        <tbody
+          (click)="bobo($event)"
+          *ngFor="let ordenes of ordenFire; let i = index"
+        >
+          <tr *ngIf="ordenes.tecnicoAsignado == User">
+            <th scope="row" id="orden">
+              <a routerLink="/updates/{{ ordenes.id }}">{{ ordenes.id }}</a>
+            </th>
+            <td id="ingreso">
+              {{ ordenes.fechaSolicitud | date: "dd/MM/yyyy , hh:mm a" }}
+            </td>
+            <td id="cliente">
+              {{ ordenes.cliente }}.
+              <span
+                [ngClass]="{
+                  'badge-success badge-pill badge': ordenes.bgNew == 'Nuevo'
+                }"
+                >{{ ordenes.bgNew }}</span
+              >
+              <span
+                [ngClass]="{
+                  'badge-warning badge-pill badge':
+                    ordenes.bgUpd == 'Actualizado'
+                }"
+                >{{ ordenes.bgUpd }}</span
+              >
+              <span
+                [ngClass]="{
+                  'badge-danger badge-pill badge':
+                    ordenes.bgDes == 'Desactualizado'
+                }"
+                >{{ ordenes.bgDes }}</span
+              >
+              <span
+                [ngClass]="{
+                  'badge-dark badge-pill badge': ordenes.bgOld == 'Antiguo'
+                }"
+                >{{ ordenes.bgOld }}</span
+              >
+            </td>
+            <td id="solicitud">
+              {{ ordenes.solicitud }}
+              <span class="badge badge-pill badge-secondary">{{
+                ordenes.estado
+              }}</span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </ng-template>
+  </ngb-panel>
+</ngb-accordion>
+<br />

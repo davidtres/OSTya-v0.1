@@ -1,7 +1,7 @@
 <h2 class="text-center alert-warning">Mi Ubicacion</h2>
 <br />
 <h4 class="alert-primary text-center" id="accuracy"></h4>
-<div class="container card" style="padding: 10px;">
+<div *ngIf="lat && lng" class="container card" style="padding: 10px;">
   <agm-map [latitude]="lat" [longitude]="lng" [zoom]="18">
     <agm-marker [latitude]="lat" [longitude]="lng"></agm-marker>
   </agm-map>
@@ -19,4 +19,9 @@
       <a class="btn btn-danger" href="javascript: history.go(-1)">Regresar</a>
     </div>
   </div>
+</div>
+<div *ngIf="!(lat && lng)">
+  <p class="alert alert-danger">
+    Ubicacion no detectada, revise GPS de su dispositivo
+  </p>
 </div>

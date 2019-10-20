@@ -11,6 +11,9 @@ import { NgbRadioGroup } from "@ng-bootstrap/ng-bootstrap";
 import { Licencias } from "../interfaces/licencias";
 import { PCS } from "../interfaces/ePcs";
 import { eComunicacion } from "../interfaces/eComunicacion";
+import { Observable } from "rxjs";
+import { debounceTime, distinctUntilChanged, map } from "rxjs/operators";
+import { ComunicationService } from "../services/comunication.service";
 
 @Component({
   selector: "app-crear-equipo",
@@ -74,6 +77,7 @@ export class CrearEquipoComponent implements OnInit {
   radioGroupForm: FormGroup;
   formEquipo: FormGroup;
   frmAddLicencia: FormGroup;
+  clientes: any;
   private buildForm() {
     this.formEquipo = new FormGroup({
       cliente: new FormControl(this.newEquipo.cliente, [Validators.required]),
@@ -136,7 +140,8 @@ export class CrearEquipoComponent implements OnInit {
   newEquipoListo: boolean = false;
   constructor(
     private firebaseService: FirebaseService,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private comunicationServices: ComunicationService
   ) {
     firebaseService
       .getCliente()
@@ -150,7 +155,7 @@ export class CrearEquipoComponent implements OnInit {
       .valueChanges()
       .subscribe(next => {
         this.nextFire = next;
-        console.log(this.nextFire);
+        // console.log(this.nextFire);
         //verificar Consecutivo vacio desde el servicio y lo crea
         if (this.nextFire == 0) {
           this.nextFire = {
@@ -168,7 +173,18 @@ export class CrearEquipoComponent implements OnInit {
     this.radioGroupForm = this.formBuilder.group({
       model: true
     });
-    console.log(this.newEquipo);
+    this.comunicationServices.getAllClientsNames.subscribe(clientes => {
+      this.clientes = clientes;
+    });
+    let data: any = {
+      doc: "tEquipo"
+    };
+    this.firebaseService
+      .getPorDocObj(data)
+      .valueChanges()
+      .subscribe(equipos => {
+        this.tipoEquipos = equipos;
+      });
   }
 
   // **************** ------------------------------------********************************
@@ -179,7 +195,7 @@ export class CrearEquipoComponent implements OnInit {
     setTimeout(() => {
       this.newEquipoListo = false;
       this.onReset();
-    }, 5000);
+    }, 3000);
   }
 
   // Funcion para asignar consecutivo de equipo creado, guardar el equipo e ingrementar consecutivo en firebase.
@@ -264,7 +280,20 @@ export class CrearEquipoComponent implements OnInit {
   }
   // tslint:disable-next-line: member-ordering
   tipoEquipos: any = {
-    comunicaciones: ["modem", "Router", "AP", "Swich"],
-    equipos: ["Pc", "Portatil", "Impresora", "DVR"]
+    comunicaciones: [],
+    equipos: []
   };
+  // ----------typeahead---------------
+  search = (text$: Observable<string>) =>
+    text$.pipe(
+      debounceTime(200),
+      distinctUntilChanged(),
+      map(term =>
+        term.length < 3
+          ? []
+          : this.clientes
+              .filter(v => v.toLowerCase().indexOf(term.toLowerCase()) > -1)
+              .slice(0, 10)
+      )
+    );
 }

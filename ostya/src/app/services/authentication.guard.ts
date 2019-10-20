@@ -9,8 +9,6 @@ import { Observable } from "rxjs";
 import { AuthenticationService } from "./authentication.service";
 import { map } from "rxjs/operators";
 import { FirebaseService } from "./firebase.service";
-import { resolve } from "path";
-import { reject, nextTick } from "q";
 
 @Injectable({
   providedIn: "root"

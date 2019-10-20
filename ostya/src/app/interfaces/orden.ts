@@ -18,7 +18,7 @@ export interface Orden {
   modificador: string;
   idCliente: number;
   uid: string;
-  Solucionador: string;
+  solucionador: string;
   sede: string;
   domicilio: boolean;
   factura: string;

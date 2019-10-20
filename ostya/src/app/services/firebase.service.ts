@@ -19,7 +19,6 @@ export class FirebaseService {
         }
       });
   }
-  public dateFire = firebase.database.ServerValue.TIMESTAMP;
   //metodo obtener todos los clientes
   public getCliente() {
     return this.afBD.list("clientes/");
@@ -39,6 +38,15 @@ export class FirebaseService {
         } else {
         }
       });
+  }
+  //metodo guardar tipo de equipo
+  public guardarTequipo(tEquipo) {
+    this.afBD.database.ref("tEquipo/").set(tEquipo, function(error) {
+      if (error) {
+        console.log(error);
+      } else {
+      }
+    });
   }
   /* --------------CONSECUTIVOS ---------------------*/
   // metodo para actualizar consecutivo de documentos
@@ -90,6 +98,7 @@ export class FirebaseService {
   /* --------------POR ID ---------------------*/
   // guarda por ID consecutivo. Se solicitan 2 parametros, el dato a guardar y el consecutivo actual.
   public guardarPorId(data, next) {
+    debugger;
     // Se hace comparativo para saber si el dato es una actualizacion y se actualiza en el mismo ID.
     if (data.modificador == "act") {
       this.afBD.database
@@ -125,10 +134,26 @@ export class FirebaseService {
   public getPorDoc(data) {
     return this.afBD.list(data.doc + "/");
   }
+  public getPorDocObj(data) {
+    return this.afBD.object(data.doc + "/");
+  }
   public getEstadosCierre() {
     return this.afBD.list("estados/", ref =>
       ref.orderByChild("cerrada").equalTo(true)
     );
+  }
+  public guardarXdocYid(data, info) {
+    this.afBD.database
+      .ref(data.doc + "/" + data.id + "/")
+      .set(info, function(error) {
+        if (error) {
+          console.log(error);
+        } else {
+        }
+      });
+  }
+  public getIcloud(data) {
+    return this.afBD.list(data.doc + "/" + data.id + "/");
   }
   /* --------------ORDENES---------------------*/
   public guardarOrdenM(data) {

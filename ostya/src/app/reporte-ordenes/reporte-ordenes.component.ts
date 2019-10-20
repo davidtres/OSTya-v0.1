@@ -20,9 +20,9 @@ export class ReporteOrdenesComponent implements OnInit {
     desdeM: 0,
     hastaM: 0,
     cliente: "",
-    tecnico: "",
-    estado: "",
-    cerrada: ""
+    tecnico: "TODOS",
+    estado: "TODOS",
+    cerrada: "TODOS"
   };
   openClose = ["TODOS", "Abiertas", "Cerradas"];
   desde: any = null;

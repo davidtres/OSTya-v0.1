@@ -6,7 +6,6 @@ import { AuthenticationService } from "../services/authentication.service";
 import * as jsPDF from "jspdf";
 import { ToolsService } from "../services/tools.service";
 import { ComunicationService } from "../services/comunication.service";
-import { reject } from "q";
 @Component({
   selector: "app-updates",
   templateUrl: "./updates.component.html",
@@ -56,13 +55,13 @@ export class UpdatesComponent implements OnInit {
   agendaFire: any;
   cOp: boolean = false; //para saber si la orden tiene estados "Creado" o "Programado"
   clienteFire: any;
-  lat: number;
-  lng: number;
+  lat: number = 0;
+  lng: number = 0;
   distance: any;
   userFire: any[];
   asignadoActual: string;
-  lngFire: any;
-  latFire: any;
+  lngFire: any = 0;
+  latFire: any = 0;
   Nota: string;
   userActual: any;
   estadoQueCierran: any;
@@ -83,6 +82,7 @@ export class UpdatesComponent implements OnInit {
   tServFire: any[];
   eSr: boolean = false; //define estado en sitio o en remoto.
   facturar: boolean = false;
+  tipoOrden: unknown[];
   constructor(
     private firebaseService: FirebaseService,
     private route: ActivatedRoute,
@@ -123,22 +123,35 @@ export class UpdatesComponent implements OnInit {
       .valueChanges()
       .subscribe(cliente => {
         this.clienteFire = cliente;
-        console.log(this.clienteFire);
-
-        for (let i = 0; i < this.clienteFire.direcciones.length; i++) {
-          if (this.clienteFire.direcciones[i].sede == this.ordenFire.sede) {
-            this.latFire = this.clienteFire.direcciones[i].lat;
-            this.lngFire = this.clienteFire.direcciones[i].lng;
-            this.ordenFire.direccion = this.clienteFire.direcciones[
-              i
-            ].direccion;
-            if (!this.clienteFire.direcciones[i].lat) {
+        this.clienteFire.direcciones.forEach(cliente => {
+          // debugger;
+          if (cliente.sede == this.ordenFire.sede) {
+            this.latFire = cliente.lat;
+            this.lngFire = cliente.lng;
+            this.ordenFire.direccion = cliente.direccion;
+            console.log(this.latFire + "-" + this.lngFire);
+            if (!this.latFire || !this.lngFire) {
               this.sinCoordenadas = true;
+              console.log(this.sinCoordenadas);
             } else {
               this.obtenetUbicacion();
             }
           }
-        }
+        });
+        // for (let i = 0; i < this.clienteFire.direcciones.length; i++) {
+        //   if (this.clienteFire.direcciones[i].sede == this.ordenFire.sede) {
+        //     this.latFire = this.clienteFire.direcciones[i].lat;
+        //     this.lngFire = this.clienteFire.direcciones[i].lng;
+        //     this.ordenFire.direccion = this.clienteFire.direcciones[
+        //       i
+        //     ].direccion;
+        //     if (!this.clienteFire.direcciones[i].lat) {
+        //       this.sinCoordenadas = true;
+        //     } else {
+        //       this.obtenetUbicacion();
+        //     }
+        //   }
+        // }
       });
   }
   guardarUpdates() {
@@ -201,7 +214,7 @@ export class UpdatesComponent implements OnInit {
     };
 
     let geoError = function(error) {
-      // console.log("Error occurred. Error code: " + error.code);
+      alert("Error occurrido. Error code: " + error.code);
     };
     navigator.geolocation.getCurrentPosition(geoSuccess, geoError, geoOptions);
     setTimeout(() => {
@@ -213,7 +226,7 @@ export class UpdatesComponent implements OnInit {
         this.lngFire
       );
       // console.log(this.distance);
-    }, 500);
+    }, 1000);
   }
   // -----Calcular distancia del cliente -----
   getKilometros(lat1, lon1, lat2, lon2) {
@@ -306,7 +319,7 @@ export class UpdatesComponent implements OnInit {
     }
   }
   addNota($event) {
-    console.log();
+    // console.log();
     let laNota: string = $event.path[2].children[1].children[0][0].value;
     this.Nota = laNota;
     this.ordenFire.nota += "  - " + " ( " + this.fechaHoy + "). " + this.Nota;
@@ -512,7 +525,7 @@ export class UpdatesComponent implements OnInit {
   }
   loadQuality() {
     this.getQuality().then(() => {
-      console.log(this.qualityFire);
+      // console.log(this.qualityFire);
       if (this.qualityFire) {
         if (this.qualityFire.LLT) {
           this.quality.LLT = this.qualityFire.LLT;
@@ -571,8 +584,9 @@ export class UpdatesComponent implements OnInit {
       distance: this.distance,
       calif: valor
     };
-    if (this.quality.LLT.length == 30) {
-      this.quality.LLT.slice(-30, 1);
+    if (this.quality.LLT.length >= 30) {
+      let aEliminar = this.quality.LLT.length - 29;
+      this.quality.LLT.splice(-30, aEliminar);
       this.quality.LLT.push(data);
     } else {
       this.quality.LLT.push(data);
@@ -588,8 +602,9 @@ export class UpdatesComponent implements OnInit {
       distance: this.distance,
       calif: valor
     };
-    if (this.quality.RES.length == 30) {
-      this.quality.RES.slice(-30, 1);
+    if (this.quality.RES.length >= 30) {
+      let aEliminar = this.quality.RES.length - 29;
+      this.quality.RES.splice(-30, aEliminar);
       this.quality.RES.push(data);
       this.subirQuality();
     } else {
@@ -610,8 +625,9 @@ export class UpdatesComponent implements OnInit {
       calif: valor
     };
     this.firebaseService.EliminarAgenda(this.agendaFire).then(() => {
-      if (this.quality.RSS.length == 30) {
-        this.quality.RSS.slice(-30, 1);
+      if (this.quality.RSS.length >= 30) {
+        let aEliminar = this.quality.RSS.length - 29;
+        this.quality.RSS.splice(-30, aEliminar);
         this.quality.RSS.push(data);
         this.subirQuality();
       } else {
@@ -645,7 +661,55 @@ export class UpdatesComponent implements OnInit {
       }
     });
   }
+  getTiposServicios() {
+    let dataTserv = {
+      doc: "tServ"
+    };
+    //obtener tipos de servicios
+    this.firebaseService
+      .getPorDoc(dataTserv)
+      .valueChanges()
+      .subscribe(tserv => {
+        this.tipoOrden = tserv;
+        console.log(this.tipoOrden);
+      });
+  }
+  changeTipo($event) {
+    let newType =
+      $event.path[3].firstElementChild.children[1].children[0][0].value;
+    let visita: any = this.tipoOrden.filter((tipo: any) => {
+      if (tipo.nombre == newType) {
+        return tipo;
+      }
+    });
+    if (confirm("Seguro quiere cambiar tipo a: " + newType + "?")) {
+      this.ordenFire.tipo = newType;
+      this.ordenFire.domicilio = visita[0].visita;
+      this.firebaseService.ActOrdenEstado(this.ordenFire).then(() => {
+        this.update = {
+          update:
+            "Cambio tipo de orden a: " +
+            newType +
+            " " +
+            this.fechaHoy +
+            ", por: " +
+            this.userActual.nombre,
+          estado: this.ordenFire.estado,
+          usuario: this.userActual.nombre,
+          orden: this.update.orden,
+          fecha: Date.now()
+        };
+        this.firebaseService.guardarUpdates(this.update).then(() => {
+          alert("Cambio realizado");
+          this.ruta.navigate(["/home"]);
+        });
+      });
+    } else {
+      alert("Cambio Cancelado");
+    }
+  }
   ngOnInit() {
+    this.obtenetUbicacion();
     this.buildForm();
     //--------obtener orden por ID-----------
     this.firebaseService
@@ -680,6 +744,7 @@ export class UpdatesComponent implements OnInit {
         }
         this.getCoordCliente();
         this.filtroEstados();
+        // console.log(this.ordenFire);
       });
     // ------------get Agenda de la orden---------------
     this.firebaseService
@@ -697,16 +762,19 @@ export class UpdatesComponent implements OnInit {
     // --------------get Estados ---------------------
     this.comunicationService.getAllStates.subscribe(estados => {
       this.estadosFire = estados;
-      console.log(this.facturar);
+      // console.log(this.facturar);
     });
     // ---------activa boton salir de sitio--------------
     setTimeout(() => {
-      if (this.ordenFire.estado == "En sitio") {
+      if (
+        this.ordenFire.estado == "En sitio" ||
+        this.ordenFire.estado == "En remoto"
+      ) {
         this.saliendoSitio = true;
       } else {
         this.saliendoSitio = false;
       }
-      console.log(this.distance);
+      // console.log(this.distance);
     }, 1000);
   }
 }

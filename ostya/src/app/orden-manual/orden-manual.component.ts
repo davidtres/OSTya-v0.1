@@ -37,7 +37,7 @@ export class OrdenManualComponent implements OnInit {
     modificador: "new",
     idCliente: 0,
     uid: "",
-    Solucionador: "",
+    solucionador: "",
     sede: "",
     updates: {
       0: {

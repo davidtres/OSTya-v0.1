@@ -6,18 +6,15 @@
     <!-- Primera fila -->
     <div class="form-row">
       <div class="form-group col-md-3">
-        <h3><label for="cliente">Cliente</label></h3>
-        <select
-          formControlName="cliente"
-          class="form-control"
-          [(ngModel)]="newEquipo.cliente"
-          name="cliente"
-        >
-          <option>Seleccione cliente ... </option>
-          <option *ngFor="let cliente of clientesFire"
-            >{{ cliente.nombre }}
-          </option>
-        </select>
+            <label for="typeahead-basic">Seleccionar cliente:</label>
+            <input
+              formControlName="cliente"
+              [(ngModel)]="newEquipo.cliente"
+              id="typeahead-basic"
+              type="text"
+              class="form-control"
+              [ngbTypeahead]="search"
+            />
       </div>
       <div class="form-group col-md-1"></div>
       <div class="form-group col-md-3" style="padding-top: 45px">
@@ -28,10 +25,10 @@
             name="radioBasic"
             formControlName="model"
           >
-            <label ngbButtonLabel class="btn btn-warning">
+            <label ngbButtonLabel class="btn btn-primary">
               <input ngbButton type="radio" [value]="true" /> Equipos_PCS
             </label>
-            <label ngbButtonLabel class="btn btn-warning">
+            <label ngbButtonLabel class="btn btn-primary">
               <input ngbButton type="radio" value="false" /> Comunicaciones
             </label>
           </div>
@@ -39,7 +36,7 @@
       </div>
       <div class="form-group col-md-1"></div>
       <div class="form-group col-md-3">
-        <h3><label for="tEquipo">Tipo de Equipo</label></h3>
+        <label for="tEquipo">Tipo de Equipo</label>
         <div *ngIf="radioGroupForm.value['model'] == 'false'">
           <select
             formControlName="tEquipo"

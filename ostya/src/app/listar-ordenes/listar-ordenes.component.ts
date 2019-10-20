@@ -1,5 +1,4 @@
 import { Component, OnInit, Input } from "@angular/core";
-import { FirebaseService } from "../services/firebase.service";
 
 @Component({
   selector: "app-listar-ordenes",
@@ -12,13 +11,9 @@ export class ListarOrdenesComponent implements OnInit {
   constructor() {
     this.listUser = [];
   }
-  // ----- CRITERIO DE NOTIFICACIONES  ------
-  // - NUEVO: Servicios ingresados las ultimas 24 horas.
-  // - ACTUALIZADO: Ultima actualizacion hace menos de 24h.
-  // - DESACTUALIZADO: Ultima actualizacion tiene mas de 3 dias y menos de 7 dias.
-  // - ANTIGUO: Ultima actualizacion tiene mas de 7 dias.
-  // - SIN NOTIFICACION: Está en periodo de ejecucion ultima actualizacion tiene menos de 3 dias y mas de 24h
-
+  bobo($event) {
+    console.log($event);
+  }
   ngOnInit() {
     // filtrado de tecnicos que tienen ordenes abiertas asignadas.
     setTimeout(() => {

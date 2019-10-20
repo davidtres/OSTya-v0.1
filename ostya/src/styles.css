@@ -89,4 +89,7 @@ body {
   div h3 {
     font-size: large;
   }
+  div .card-body {
+    padding: 0px;
+  }
 }

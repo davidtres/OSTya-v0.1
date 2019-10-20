@@ -1,24 +1,138 @@
 <div class="container">
-  <h1>SERVICIOS ICLOUD DEL CLIENTE</h1>
-  <br />
-  <hr />
-  <form [formGroup]="formIcloud">
-    <!-- Primera fila -->
+  <form [formGroup]="formIcloud" (validSubmit)="guardarIcloud()">
+    <div class="form-row justify-content-md-center">
+      <div class="form-group col-md-6 text-center">
+        <br />
+        <h3 class="alert alert-primary">SERVICIOS ICLOUD</h3>
+      </div>
+    </div>
     <div class="form-row">
-      <div class="form-group col-md-3">
-        <h3><label for="cliente">Cliente</label></h3>
-        <select
-          formControlName="cliente"
-          class="form-control"
-          [(ngModel)]="newIcloud.cliente"
-          name="cliente"
-        >
-          <option>Seleccione cliente ... </option>
-          <option *ngFor="let cliente of clienteFire"
-            >{{ cliente.nombre }}
-          </option>
-        </select>
+      <!-- ------------caja izquierda--------- -->
+      <div class="col-md-4">
+        <!-- --------Seleccionar Cliente-------------- -->
+        <div class="form-group">
+          <label for="typeahead-basic">Seleccionar cliente:</label>
+          <input
+            formControlName="Cliente"
+            [(ngModel)]="clienteDigitado"
+            id="typeahead-basic"
+            type="text"
+            class="form-control"
+            [ngbTypeahead]="search"
+            placeholder="Digite nombre cliente"
+            (change)="asignarIdClient()"
+          />
+        </div>
+        <!-- -------Botones guardar, reset ---------------- -->
+        <div class="row align-items-center" *ngIf="icloudFire">
+          <div class="form-group col-md-3">
+            <div *ngIf="formIcloud.status == 'VALID'">
+              <button type="submit" class="btn btn-primary">Guardar</button>
+            </div>
+            <div *ngIf="formIcloud.status == 'INVALID' && !editando">
+              <button type="submit" class="btn btn-danger" (click)="onReset()">
+                Reset
+              </button>
+            </div>
+          </div>
+          <div class="form-group col-md-3">
+            <div *ngIf="editando">
+              <button class="btn btn-dark" (click)="cancelar()">
+                Cancelar
+              </button>
+            </div>
+            <div *ngIf="nuevo && newIcloud.id">
+              <button class="btn btn-primary" (click)="nuevoIcloud()">
+                Nuevo
+              </button>
+            </div>
+          </div>
+          <div class="form-group col-md-3">
+            <div *ngIf="editando">
+              <button class="btn btn-danger" (click)="eliminar()">
+                Eliminar
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- ------------caja derecha--------- -->
+      <div class="col-md-8 card" *ngIf="!nuevo && newIcloud.id">
+        <h5><b>Nuevo Icloud</b></h5>
+        <!-- ----------Digitar proveedor ------------- -->
+        <div class="form-row">
+          <div class="col-md-8">
+            <label for="Nombre">Tipo / Proveedor</label>
+            <input
+              type="text"
+              class="form-control"
+              formControlName="Proveedor"
+              placeholder="Nuevo Tipo / Proveedor"
+              [(ngModel)]="newIcloud.proveedor"
+            />
+          </div>
+          <!-- --------------Vencimiento -------------- -->
+          <div class="col-md-4">
+            <label for="Long">Vencimiento</label>
+            <input
+              type="date"
+              class="form-control"
+              (change)="validarFecha()"
+              formControlName="Vencimiento"
+              [(ngModel)]="fechaDigitado"
+            />
+          </div>
+        </div>
+        <!-- ----------Digitar descripcion------------ -->
+        <div class="form-group">
+          <label for="Nombre">Descripcion</label>
+          <textarea
+            name="Descripcion"
+            id=""
+            cols="30"
+            rows="4"
+            class="form-control"
+            formControlName="Descripcion"
+            placeholder="Descripcion del Servicio Icloud"
+            [(ngModel)]="newIcloud.descripcion"
+          ></textarea>
+        </div>
       </div>
     </div>
   </form>
+  <!-- ----------------Listado de tipos de equipo------------------ -->
+  <div class="form-group card" style="padding: 30px">
+    <div class="text-center">
+      <h5 class="bg-warning">{{ clienteSeleccionado }}</h5>
+    </div>
+    <table class="table table-small">
+      <thead class="thead-dark">
+        <tr>
+          <th scope="col">SERVICIO</th>
+          <th scope="col">DESCRIPCION</th>
+          <th scope="col">VENCIMIENTO</th>
+          <th scope="col" *ngIf="!editando">
+            <img src="https://img.icons8.com/officel/25/000000/edit.png" />
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let icloud of icloudFire">
+          <td>{{ icloud.proveedor }}</td>
+          <td>{{ icloud.descripcion }}</td>
+          <td>{{ icloud.vencimiento | date: "yyyy-MM-dd" }}</td>
+          <td *ngIf="!editando">
+            <button
+              style="padding:0px"
+              type="button"
+              class="btn btn-ligth"
+              (click)="editarIcloud($event)"
+            >
+              <img src="https://img.icons8.com/officel/25/000000/edit.png" />
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </div>

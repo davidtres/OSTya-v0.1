@@ -80,7 +80,7 @@
         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
           <a class="dropdown-item" routerLink="/agenda">Agenda actual</a>
           <div class="dropdown-divider"></div>
-          <h6 class="dropdown-header">Agendas Historicas</h6>
+          <h6 class="dropdown-header alert-warning">Agendas Historicas</h6>
           <a class="dropdown-item" routerLink="/agenda-tecnico"
             >Agenda x tecnico
           </a>
@@ -126,6 +126,9 @@
           <a class="dropdown-item" routerLink="/listar-tservicio"
             >Tipos de Servicios</a
           >
+          <a class="dropdown-item" routerLink="/tipo-equipo"
+            >Tipos de Equipos</a
+          >
           <div class="dropdown-divider"></div>
           <a class="dropdown-item" routerLink="/crear-usuario/new"
             >Crear Usuario</a
@@ -139,7 +142,7 @@
     <!-- -------------Version ------------------ -->
     <div class="row align-items-center">
       <div class="col" style="margin-right: 3px">
-        <a [routerLink]="['/versiones']">v.1.08.02</a>
+        <a [routerLink]="['/versiones']">v.1.10.01</a>
       </div>
     </div>
 

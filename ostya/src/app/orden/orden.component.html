@@ -8,7 +8,7 @@
   >
     <!-- -----------seleccion de encabezado a mostrar new o editar ------------  -->
     <div class="form-row justify-content-md-center">
-      <ng-container *ngIf="orden.id == 'new'; then Crea; else Edita">
+      <ng-container *ngIf="!(orden.id == id); then Crea; else Edita">
       </ng-container>
       <ng-template #Crea>
         <div>

@@ -71,14 +71,20 @@
           ></ngb-pagination>
         </div>
         <div class="col-md-1">
-          <select class="form-control" [(ngModel)]="pageSize">
+          <select
+            class="form-control"
+            (focus)="cantList()"
+            [(ngModel)]="pageSize"
+          >
             <option selected>10</option>
             <option>20</option>
             <option>30</option>
             <option>50</option>
+            <option>100</option>
           </select>
         </div>
       </div>
     </ng-container>
   </ul>
+  <br />
 </div>

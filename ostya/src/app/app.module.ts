@@ -55,6 +55,8 @@ import { OrdenManualComponent } from "./orden-manual/orden-manual.component";
 import { QualityComponent } from "./quality/quality.component";
 import { QualityDetalleComponent } from "./quality-detalle/quality-detalle.component";
 import { FinOrdenComponent } from "./fin-orden/fin-orden.component";
+import { TequipoComponent } from "./tequipo/tequipo.component";
+import { ListarTequipoComponent } from "./listar-tequipo/listar-tequipo.component";
 
 const appRoutes: Routes = [
   { path: "", component: HomeComponent },
@@ -219,6 +221,14 @@ const appRoutes: Routes = [
   {
     path: "fin-orden",
     component: FinOrdenComponent
+  },
+  {
+    path: "tipo-equipo",
+    component: TequipoComponent
+  },
+  {
+    path: "listar-tequipo",
+    component: ListarTequipoComponent
   }
 ];
 @NgModule({
@@ -259,7 +269,9 @@ const appRoutes: Routes = [
     OrdenManualComponent,
     QualityComponent,
     QualityDetalleComponent,
-    FinOrdenComponent
+    FinOrdenComponent,
+    TequipoComponent,
+    ListarTequipoComponent
   ],
   imports: [
     BrowserModule,

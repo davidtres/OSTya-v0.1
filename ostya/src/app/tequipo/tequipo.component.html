@@ -1,0 +1,116 @@
+<br />
+<div class="container card col-md-6">
+  <form
+    [formGroup]="formGroup"
+    (validSubmit)="guardartEquipo()"
+    autocomplete="off"
+  >
+    <div class="form-row justify-content-md-center">
+      <div>
+        <br />
+        <h4>Configurar Tipos de Equipos</h4>
+        <hr />
+        <br />
+      </div>
+    </div>
+    <div class="form-row justify-content-md-center">
+      <div class="form-group col-md-6">
+        <label for="Nombre">Nombre tipo equipo</label>
+        <input
+          #nombre
+          type="text"
+          class="form-control"
+          formControlName="Nombre"
+          placeholder="Nuevo tipo de equipo"
+          [(ngModel)]="equipo"
+          name="Nombre"
+        />
+      </div>
+    </div>
+    <div class="form-row justify-content-md-center">
+      <div class="form-group col-md-6">
+        <label for="Tipo">Tipo</label>
+        <select
+          formControlName="Tipo"
+          class="form-control"
+          name="Tipo"
+          [(ngModel)]="categoria"
+        >
+          <option></option>
+          <option>Comunicaciones</option>
+          <option>Equipos_PCS</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-row justify-content-md-center">
+      <div *ngIf="formGroup.status == 'VALID'">
+        <button type="submit" class="btn btn-primary" [disabled]="disabled">
+          GUARDAR EQUIPO
+        </button>
+      </div>
+      <div *ngIf="formGroup.status == 'INVALID'">
+        <a class="btn btn-danger" routerLink="/home/">CANCELAR</a>
+      </div>
+      <div
+        style="padding-left: 35px"
+        class="d-flex align-items-center"
+        *ngIf="Guardando"
+      >
+        <strong>Guardando...</strong>
+        <div
+          class="spinner-border ml-auto text-primary"
+          role="status"
+          aria-hidden="true"
+        ></div>
+      </div>
+    </div>
+  </form>
+  <br />
+  <!-- ----------------Listado de tipos de equipo------------------ -->
+  <div class="form-group card" style="padding: 50px">
+    <table class="table table-small">
+      <thead class="thead-dark">
+        <tr>
+          <th scope="col">EQUIPOS</th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of arrayEquipos">
+          <td>{{ item }}</td>
+          <td>
+            <button
+              style="padding:0px"
+              type="button"
+              class="btn btn-ligth"
+              (click)="editarEquipo($event)"
+            >
+              <img src="https://img.icons8.com/officel/25/000000/edit.png" />
+            </button>
+          </td>
+        </tr>
+      </tbody>
+      <thead class="thead-dark">
+        <tr>
+          <th scope="col">COMUNICACIONES</th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of arrayComunicaciones">
+          <td>{{ item }}</td>
+          <td>
+            <button
+              style="padding:0px"
+              type="button"
+              class="btn btn-ligth"
+              (click)="editarEquipo($event)"
+            >
+              <img src="https://img.icons8.com/officel/25/000000/edit.png" />
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

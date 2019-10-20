@@ -5,9 +5,13 @@
     <h5 class="alert alert-success">
       ACTUALIZACION ORDEN N° {{ ordenFire.id }}
     </h5>
+
+    <h6 class="alert alert-danger" *ngIf="sinCoordenadas">
+      Sede sin coordenadas
+    </h6>
   </div>
   <!-- ------------------Datos de la orden----------------- -->
-  <div class="card-body">
+  <div class="card-body card">
     <table class="table table-sm">
       <thead>
         <tr>
@@ -21,18 +25,20 @@
           <strong>{{ ordenFire.id }}</strong>
         </td>
         <td>
-          <strong
-            >{{ ordenFire.cliente }}
-            <span *ngIf="agendaFire" class="badge  badge-dark">{{
-              ordenFire.sede
-            }}</span></strong
-          >
+          <strong>{{ ordenFire.cliente }}</strong>
+          <span class="badge  badge-dark">{{
+            ordenFire.sede
+          }}</span>
         </td>
         <td>
           {{ ordenFire.solicitud }}
-          <span *ngIf="agendaFire" class="badge  badge-secondary">{{
+          <span class="badge  badge-secondary">{{
             ordenFire.tipo
           }}</span>
+          <a (click)="getTiposServicios()" *ngIf="ordenFire.estado != 'En sitio' && userActual.rol == 'admin'"data-toggle="modal"
+          data-target="#cambiarTipo"><img
+            src="https://img.icons8.com/officel/20/000000/edit.png"
+          /></a>
           <span
             *ngIf="agendaFire"
             [ngStyle]="{ 'background-color': agendaFire.color }"
@@ -43,16 +49,19 @@
       </tr>
     </table>
 
-    <hr />
+    <div>
+      <b>Direccion: </b><span>{{ ordenFire.direccion }}</span>
+    </div>
+
     <!-- -------------------Notas ----------------------- -->
     <div *ngIf="ordenFire.nota">
       <strong
-        >NOTA:
+        >Notas:
         <p style="color: red; display: inline">{{ ordenFire.nota }}</p></strong
       >
     </div>
   </div>
-  <hr />
+  <br />
   <!-- ----------------botones de opciones -------------- -->
   <!-- -------Seleccion Boton agendar o re agendar------- -->
   <div class="container">
@@ -66,15 +75,14 @@
         "
       >
       </ng-container>
-
       <ng-template #agendar>
         <!-- ----------Boton Agendar ------------ -->
-        <div *ngIf="userFire">
+        <div *ngIf="userActual">
           <div
             class="form-group col-md-2 col-4"
             *ngIf="
               !(ordenFire.estado == 'En sitio') &&
-              userFire[0].rol == 'admin' &&
+              userActual.rol == 'admin' &&
               !ordenFire.cerrada
             "
           >
@@ -88,12 +96,12 @@
       </ng-template>
       <ng-template #Reagendar>
         <!-- ----------Boton Re-Agendar ------------ -->
-        <div *ngIf="userFire">
+        <div *ngIf="userActual">
           <div
             class="form-group "
             *ngIf="
               !(ordenFire.estado == 'En sitio') &&
-              userFire[0].rol == 'admin' &&
+              userActual.rol == 'admin' &&
               !ordenFire.cerrada
             "
           >
@@ -105,31 +113,36 @@
           </div>
         </div>
       </ng-template>
-
       <!-- ------------------Boton Imprimir Orden------------------ -->
-      <div class=" form-group col-md-2 col-4">
-        <a (click)="imprimir()" class="btn btn-warning"> Imprimir</a>
+      <div class=" form-group col-md-1 col-3 text-center">
+        <a (click)="imprimir()" class="btn btn-warning"
+          ><img src="https://img.icons8.com/metro/22/000000/print.png"
+        /></a>
       </div>
-      <div class=" form-group col-md-2 col-4">
+      <!-- ---------------------Boton Nota------------------- -->
+      <div class=" form-group">
         <button
           type="button"
-          class="btn btn-primary"
+          class="btn btn-info"
           data-toggle="modal"
           data-target="#nota"
-          data-whatever="@mdo"
         >
           Nota
         </button>
       </div>
-
+      <!-- ---------Icono ubicacion--------- -->
+      <div class=" text-center col-md-1 col-2">
+        <div>
+          <a style="padding: 0px" class="btn btn-light" [routerLink]="['/mapa']"
+            ><img src="https://img.icons8.com/color/40/000000/place-marker.png"
+          /></a>
+        </div>
+      </div>
       <!-- -----------Aviso no tiene agenda--------------- -->
-      <div class="form-group col-md-6 col-6" *ngIf="!agendaFire">
+      <div class="form-group" *ngIf="!agendaFire">
         <strong
           ><p style="color: tomato" *ngIf="!ordenFire.cerrada">
             Esta orden no tiene agenda programada
-          </p>
-          <p style="color: tomato" *ngIf="ordenFire.cerrada">
-            ORDEN CERRADA.
           </p>
         </strong>
       </div>
@@ -138,7 +151,6 @@
       ></ng-container>
       <ng-template #ensitio>
         <div
-          class="col-md-10 col-8"
           *ngIf="
             (ordenFire.uid == userActual.uid &&
               ordenFire.estado == 'Programado') ||
@@ -146,38 +158,20 @@
               ordenFire.estado == 'Reprogramado')
           "
         >
-          <div class="row">
+          <div>
             <!-- -----Boton En sitio ----- -->
-            <div *ngIf="!sinCoordenadas" class="col-md-3 col-5">
-              <div>
-                <a
-                  data-toggle="modal"
-                  data-target="#exampleModal"
-                  class="btn btn-danger"
-                  style="color: white"
-                  >En sitio</a
-                >
-              </div>
+            <div *ngIf="!sinCoordenadas" class="form-group">
+              <a
+                data-toggle="modal"
+                data-target="#exampleModal"
+                class="btn btn-danger"
+                style="color: white"
+                >En sitio</a
+              >
             </div>
-            <!-- ---------Icono ubicacion--------- -->
-            <div class=" text-center col-md-1 col-2">
-              <div>
-                <a [routerLink]="['/mapa']"
-                  ><img
-                    src="https://img.icons8.com/color/48/000000/place-marker.png"
-                /></a>
-              </div>
-            </div>
-            <!-- ---------Aviso de Distancia ------------ -->
-            <div *ngIf="distance > 200" class="col-md-8 col-12">
-              <div>
-                <p class="alert alert-danger">
-                  Estas fuera de sitio por: {{ distance }} mts
-                </p>
-              </div>
-            </div>
+
             <!-------- Button asignar coordenadas -------->
-            <div class="form-group col-md-4 col-12" *ngIf="sinCoordenadas">
+            <div class="form-group col-12" *ngIf="sinCoordenadas">
               <a
                 [routerLink]="['/set-coordenadas', ordenFire.idCliente]"
                 [queryParams]="{ sede: ordenFire.sede }"
@@ -205,6 +199,16 @@
           </button>
         </div>
       </ng-template>
+    </div>
+    <div *ngIf="distance > 200" class="form-row text-center">
+      <!-- ---------Aviso de Distancia ------------ -->
+      <div *ngIf="distance > 200" class="col-md-8 offset-md-2 col-12">
+        <div *ngIf="!ordenFire.cerrada">
+          <p class="alert alert-danger">
+            Estas fuera de sitio por: {{ distance }} mts
+          </p>
+        </div>
+      </div>
     </div>
   </div>
   <!-- --------------Historial Actualizaciones------------------------>
@@ -309,11 +313,16 @@
     <br />
   </ng-template>
   <!-- -----------------New Updates ------------------------->
+  <p class="alert alert-danger text-center" *ngIf="ordenFire.cerrada">
+      ORDEN CERRADA.
+    </p>
   <ng-container *ngIf="!ordenFire.cerrada && !facturar">
     <div class="col-md-8 col offset-md-2">
-      <p class="alert alert-danger text-center" *ngIf="distance == 'NaN'">No se detecta ubicacion, revise GPS o recargue la pagina</p>
+      <p class="alert alert-danger text-center" *ngIf="distance == 'NaN'">
+        Cliente sin coordenadas, no se puede actualizar la orden
+      </p>
     </div>
-    <div *ngIf="distance >0">
+    <div *ngIf="distance > 0">
       <div class="container card" *ngIf="update.orden != 0 && !cOp">
         <br />
         <div class="form-row  justify-content-md-center ">
@@ -549,6 +558,60 @@
           class="btn btn-primary"
           data-dismiss="modal"
           (click)="addNota($event)"
+        >
+          Guardar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- -----------modal para cambiar Tipo de servicio------------------ -->
+<div
+  class="modal fade"
+  id="cambiarTipo"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">
+          CAMBIAR TIPO DE SERVICIO
+        </h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="form-group" class="modal-nota">
+            <label for="message-text" class="col-form-label">Tipo actual: {{ordenFire.tipo}}</label>
+            <select
+            formControlName="tiposerv"
+            class="form-control"
+          >
+            <option>Seleccione tipo ... </option>
+            <option *ngFor="let tipo of tipoOrden">{{ tipo.nombre }} </option>
+          </select>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+          Cancelar
+        </button>
+        <button
+          type="button"
+          class="btn btn-primary"
+          data-dismiss="modal"
+          (click)="changeTipo($event)"
         >
           Guardar
         </button>

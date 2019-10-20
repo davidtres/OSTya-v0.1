@@ -51,6 +51,7 @@ export class AgendaComponent implements OnInit {
     // console.log(this.calendarEvents);
     this.filtrarTecnico();
   }
+  guardarAgenda() {}
   filtrarTecnico() {
     this.listUser = [];
     this.listUserColor = [];
